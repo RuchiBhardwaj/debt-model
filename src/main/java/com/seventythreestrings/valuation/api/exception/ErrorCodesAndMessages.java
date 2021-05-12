@@ -12,6 +12,7 @@ public enum ErrorCodesAndMessages {
 	DEBT_MODEL_YEAR_FRAC_ERROR("DME00009","Exception while computing year frac"),
 	DEBT_MODEL_INTEREST_ERROR("DME000010","Exception while computing interest"),
 	DEBT_MODEL_DATE_INVALID("DME000011","Invalid prepayment dates"),
+	NOT_FOUND_EXCEPTION("NOT_FOUND","Not found"),
 	UNKNOWN_EXCEPTION("UNKNOWN","Unknown Exception, Please contact System Admin"),
 	;
 	String code;

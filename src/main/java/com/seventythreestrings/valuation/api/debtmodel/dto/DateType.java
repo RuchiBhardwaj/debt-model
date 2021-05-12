@@ -1,9 +1,11 @@
 package com.seventythreestrings.valuation.api.debtmodel.dto;
 
 public enum DateType {
-	O,
-	I,
-	P,
-	IP
+	ORIGINATION,
+	INTEREST,
+	PREPAYMENT,
+	INTEREST_AND_PREPAYMENT,
+	MATURITY,
+	INTEREST_AND_MATURITY,
 	;
 }

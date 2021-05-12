@@ -1,0 +1,59 @@
+version: '3.1'
+services:
+  app:
+    image: 293373126892.dkr.ecr.ap-south-1.amazonaws.com/debt-model-api:latest
+    container_name: debt-model-api
+#    build: .
+    restart: on-failure
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/debt_model?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: db_user
+      SPRING_DATASOURCE_PASSWORD: db_user_password
+      "cors.allowed-origins": "http://localhost:4200,http://localhost,http://65.2.13.132,https://65.2.13.132"
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysqldb
+    networks:
+      - backend
+
+  mysqldb:
+    image: mysql:8.0
+    container_name: debt-model-db
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=debt_model
+      - MYSQL_USER=db_user
+      - MYSQL_PASSWORD=db_user_password
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - backend
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mysqldb
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 8000:80
+    networks:
+      - backend
+  ui:
+    image: 293373126892.dkr.ecr.ap-south-1.amazonaws.com/debt-model-ui:latest
+    container_name: debt-model-ui
+    restart: always
+    ports:
+      - 80:80
+    networks:
+      - backend
+volumes:
+  mysql-data:
+
+networks:
+  backend:
