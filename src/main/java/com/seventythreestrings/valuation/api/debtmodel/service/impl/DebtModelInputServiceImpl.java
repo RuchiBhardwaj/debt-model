@@ -1,13 +1,8 @@
 package com.seventythreestrings.valuation.api.debtmodel.service.impl;
 
 import com.seventythreestrings.valuation.api.debtmodel.dto.*;
-import com.seventythreestrings.valuation.api.debtmodel.model.DebtModel;
-import com.seventythreestrings.valuation.api.debtmodel.model.GeneralDetails;
-import com.seventythreestrings.valuation.api.debtmodel.model.InterestDetails;
-import com.seventythreestrings.valuation.api.debtmodel.model.PrepaymentDetails;
-import com.seventythreestrings.valuation.api.debtmodel.repository.GeneralDetailsRepository;
-import com.seventythreestrings.valuation.api.debtmodel.repository.InterestDetailsRepository;
-import com.seventythreestrings.valuation.api.debtmodel.repository.PrepaymentDetailsRepository;
+import com.seventythreestrings.valuation.api.debtmodel.model.*;
+import com.seventythreestrings.valuation.api.debtmodel.repository.*;
 import com.seventythreestrings.valuation.api.debtmodel.service.DebtModelInputService;
 import com.seventythreestrings.valuation.api.debtmodel.service.DebtModelService;
 import com.seventythreestrings.valuation.api.exception.AppException;
@@ -29,6 +24,10 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
     private final GeneralDetailsRepository generalDetailsRepository;
     private final InterestDetailsRepository interestDetailsRepository;
     private final PrepaymentDetailsRepository prepaymentDetailsRepository;
+    private final DealFeesRepository dealFeesRepository;
+    private final InterestUndrwanCapitalRepository interestUndrwanCapitalRepository;
+    private final SkimsRepository skimsRepository;
+    private final CallPremiumRepository callPremiumRepository;
 
     private final DebtModelService debtModelService;
     private final ModelMapper modelMapper;
@@ -80,6 +79,22 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                 PrepaymentDetails prepaymentDetails = prepaymentDetailsRepository.findById(id)
                         .orElseThrow(() -> new AppException(ErrorCodesAndMessages.NOT_FOUND_EXCEPTION));
                 return modelMapper.map(prepaymentDetails, PrepaymentDetailsDto.class);
+            case DEAL_FEES:
+                DealFees dealFees = dealFeesRepository.findById(id)
+                        .orElseThrow(() -> new AppException(ErrorCodesAndMessages.NOT_FOUND_EXCEPTION));
+                return modelMapper.map(dealFees,DealFeesDto.class);
+            case INTEREST_UNDRAWN_CAPITAL:
+                InterestUndrawnCapital interestUndrawnCapital = interestUndrwanCapitalRepository.findById(id)
+                        .orElseThrow(() -> new AppException(ErrorCodesAndMessages.NOT_FOUND_EXCEPTION));
+                return modelMapper.map(interestUndrawnCapital,InterestUndrawnCapitalDto.class);
+            case SKIMS:
+                Skims skims = skimsRepository.findById(id)
+                        .orElseThrow(() -> new AppException(ErrorCodesAndMessages.NOT_FOUND_EXCEPTION));
+                return modelMapper.map(skims,SkimsDto.class);
+            case CALL_PREMIUM:
+                CallPremium callPremium = callPremiumRepository.findById(id)
+                        .orElseThrow(() -> new AppException(ErrorCodesAndMessages.NOT_FOUND_EXCEPTION));
+                return modelMapper.map(callPremium,CallPremiumDto.class);
             default:
                 return null;
         }
@@ -105,6 +120,26 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                 prepaymentDetails.setDebtModel(debtModel);
                 prepaymentDetails.getPaymentSchedules().forEach(paymentSchedule -> paymentSchedule.setPrepaymentDetails(prepaymentDetails));
                 return modelMapper.map(prepaymentDetailsRepository.save(prepaymentDetails), PrepaymentDetailsDto.class);
+            case DEAL_FEES:
+                DealFees dealFees = modelMapper.map(o,DealFees.class);
+                dealFees.setDebtModel(debtModel);
+                DealFees savedDealFees = dealFeesRepository.save(dealFees);
+                return modelMapper.map(savedDealFees,DealFeesDto.class);
+            case INTEREST_UNDRAWN_CAPITAL:
+                InterestUndrawnCapital interestUndrawnCapital = modelMapper.map(o,InterestUndrawnCapital.class);
+                interestUndrawnCapital.setDebtModel(debtModel);
+                InterestUndrawnCapital savedInterestCapital = interestUndrwanCapitalRepository.save(interestUndrawnCapital);
+                return modelMapper.map(savedInterestCapital,InterestUndrawnCapitalDto.class);
+            case SKIMS:
+                Skims skims = modelMapper.map(o,Skims.class);
+                skims.setDebtModel(debtModel);
+                Skims savedSkim = skimsRepository.save(skims);
+                return modelMapper.map(savedSkim,SkimsDto.class);
+            case CALL_PREMIUM:
+                CallPremium callPremium = modelMapper.map(o,CallPremium.class);
+                callPremium.setDebtModel(debtModel);
+                CallPremium savedCallPremium = callPremiumRepository.save(callPremium);
+                return modelMapper.map(savedCallPremium,CallPremiumDto.class);
             default:
                 break;
         }

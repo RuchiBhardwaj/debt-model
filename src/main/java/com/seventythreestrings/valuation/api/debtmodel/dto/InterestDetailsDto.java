@@ -26,7 +26,13 @@ public class InterestDetailsDto {
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate lastInterestPaymentDate;
+	private LocalDate regimeStartDate;
+
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate regimeEndDate;
+
 
 	private PaymentFrequency interestPaymentFrequency;
 

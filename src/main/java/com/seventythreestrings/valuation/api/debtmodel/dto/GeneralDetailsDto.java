@@ -2,6 +2,7 @@ package com.seventythreestrings.valuation.api.debtmodel.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -10,7 +11,22 @@ import java.time.LocalDate;
 public class GeneralDetailsDto {
 	private Long id;
 
-	private String fundName;
+	private String issuerName;
+
+	private String geography;
+
+	private String sector;
+
+	private String description;
+
+	private String securityType;
+
+	@URL
+	private String websites;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private String exit_date;
 
 	private String portfolioCompanyName;
 

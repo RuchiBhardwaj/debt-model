@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -32,8 +33,36 @@ public class GeneralDetails extends BaseEntity {
     @NotNull
     @NotEmpty
     @Size(max = 255)
-    @Column(name = "fund_name")
-    private String fundName;
+    @Column(name = "issuer_name")
+    private String issuerName;
+
+
+    @Size(max = 255)
+    @Column(name = "geography")
+    private String geography;
+
+    @Size(max = 255)
+    @Column(name = "sector")
+    private String sector;
+
+    @Lob
+    @URL
+    @Column(name = "websites")
+    private String websites;
+
+    @Size(max = 255)
+    @Column(name = "security_type")
+    private String securityType;
+
+
+    @Lob
+    @Column(name = "description")
+    private String description;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "exit_date")
+    private LocalDate exit_date;
 
     @NotNull
     @NotEmpty

@@ -46,11 +46,15 @@ public class InterestDetails extends BaseEntity {
     @Column(name = "first_interest_payment_date")
     private LocalDate firstInterestPaymentDate;
 
-    @Column(name = "last_interest_payment_date")
-    private LocalDate lastInterestPaymentDate;
+    @Column(name = "regime_end_date")
+    private LocalDate regimeEndDate;
 
     @Column(name = "interest_payment_frequency")
     private PaymentFrequency interestPaymentFrequency;
+
+    @Column(name = "regime_start_date")
+    private LocalDate regimeStartDate;
+
 
     @Min(0)
     @Max(28)
@@ -91,19 +95,19 @@ public class InterestDetails extends BaseEntity {
         }
 
         LocalDate firstInterestPaymentDate = this.getFirstInterestPaymentDate();
-        LocalDate lastInterestPaymentDate = this.getLastInterestPaymentDate();
+        LocalDate regimeEndDate = this.getRegimeEndDate();
 
         int dayOfPayment = this.getInterestPaymentDay();
         int monthIncrement = DateUtil.getMonthIncrementForPaymentFrequency(this.getInterestPaymentFrequency());
 
         LocalDate nextCouponDate = firstInterestPaymentDate;
-        while (nextCouponDate.isBefore(lastInterestPaymentDate)) {
+        while (nextCouponDate.isBefore(regimeEndDate)) {
             couponDates.add(nextCouponDate);
             nextCouponDate = nextCouponDate.plusMonths(monthIncrement);
             nextCouponDate = nextCouponDate.withDayOfMonth(dayOfPayment == END_OF_MONTH ? nextCouponDate.lengthOfMonth() : dayOfPayment);
         }
         // add last payment date
-        couponDates.add(lastInterestPaymentDate);
+        couponDates.add(regimeEndDate);
 
         return couponDates;
     }
