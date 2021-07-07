@@ -18,4 +18,5 @@ public class CallPremiumDto {
 
     private Long debtModelId;
 
+    private int version;
 }

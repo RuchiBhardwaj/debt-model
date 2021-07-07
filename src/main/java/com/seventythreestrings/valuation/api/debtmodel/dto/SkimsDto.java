@@ -33,6 +33,10 @@ public class SkimsDto {
 
     private PaymentFrequency skimPaymentFrequency;
 
+    private String regimeName;
+
+    private int version;
+
 
     private Long debtModelId;
 

@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Entity
@@ -45,6 +48,14 @@ public class DealFees extends BaseEntity {
 
     @Column(name = "interest_payment_frequency")
     private PaymentFrequency interestPaymentFrequency;
+
+
+    @Size(max = 255)
+    @Column(name = "regime_name")
+    private String regimeName;
+
+    @Column(name = "versionId")
+    private int version;
 
     @OneToOne
     @JoinColumn(name = "debt_model_id", nullable = false)

@@ -2,6 +2,7 @@ package com.seventythreestrings.valuation.api.debtmodel.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.seventythreestrings.valuation.api.common.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "call_premium")
-public class CallPremium {
+public class CallPremium extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,6 +28,9 @@ public class CallPremium {
 
     @Column(name = "percentage")
     private double percentage;
+
+    @Column(name = "versionId")
+    private int version;
 
     @OneToOne
     @JoinColumn(name = "debt_model_id", nullable = false)

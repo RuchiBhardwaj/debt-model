@@ -56,6 +56,14 @@ public class InterestDetails extends BaseEntity {
     private LocalDate regimeStartDate;
 
 
+    @Size(max = 255)
+    @Column(name = "regime_name")
+    private String regimeName;
+
+    @Column(name = "versionId")
+    private int version;
+
+
     @Min(0)
     @Max(28)
     @Column(name = "interest_payment_day")

@@ -4,6 +4,7 @@ import com.seventythreestrings.valuation.api.debtmodel.dto.*;
 import com.seventythreestrings.valuation.api.debtmodel.model.*;
 import org.modelmapper.*;
 import org.modelmapper.convention.MatchingStrategies;
+import org.modelmapper.spi.PropertyType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,6 +56,22 @@ public class ModelMapperExplicitMappings {
         // Base Rate Curve
         modelMapper.addMappings(mapBaseRateCurveDtoToModel());
         modelMapper.addMappings(mapBaseRateCurveModelToDto());
+
+        //Deal Fees
+        modelMapper.addMappings((mapDealFeesDtoToModel()));
+        modelMapper.addMappings(mapDealFeesModelToDto());
+
+        //InterestUndrawnCapital
+        modelMapper.addMappings((mapInterestUndrawnDtoToModel()));
+        modelMapper.addMappings((mapInterestUndrawnModeltoDto()));
+
+        //Skims
+        modelMapper.addMappings((mapSkimsDtoToModel()));
+        modelMapper.addMappings((mapSkimsModelToDto()));
+
+        //Call Premium
+        modelMapper.addMappings((mapCallPremiumDtoToModel()));
+        modelMapper.addMappings((mapCallPremiumModelToDto()));
 
         // LocalDate
         modelMapper.createTypeMap(String.class, LocalDate.class);
@@ -202,6 +219,82 @@ public class ModelMapperExplicitMappings {
             @Override
             protected void configure() {
                 map().setBaseRateId(source.getBaseRate().getId());
+            }
+        };
+    }
+
+    //Deal Fees
+    PropertyMap<DealFeesDto,DealFees> mapDealFeesDtoToModel(){
+        return  new PropertyMap<DealFeesDto, DealFees>() {
+            @Override
+            protected void configure() {
+                map().getDebtModel().setId(source.getDebtModelId());
+            }
+        };
+    }
+
+    PropertyMap<DealFees, DealFeesDto> mapDealFeesModelToDto () {
+        return new PropertyMap<DealFees, DealFeesDto>() {
+            @Override
+            protected void configure() {
+                map().setDebtModelId(source.getDebtModel().getId());
+            }
+        };
+    }
+
+    //InterestUndrawnCapital
+    PropertyMap<InterestUndrawnCapitalDto,InterestUndrawnCapital> mapInterestUndrawnDtoToModel(){
+        return  new PropertyMap<InterestUndrawnCapitalDto,InterestUndrawnCapital>() {
+            @Override
+            protected void configure() {
+                map().getDebtModel().setId(source.getDebtModelId());
+            }
+        };
+    }
+
+    PropertyMap<InterestUndrawnCapital,InterestUndrawnCapitalDto> mapInterestUndrawnModeltoDto () {
+        return new PropertyMap<InterestUndrawnCapital,InterestUndrawnCapitalDto>() {
+            @Override
+            protected void configure() {
+                map().setDebtModelId(source.getDebtModel().getId());
+            }
+        };
+    }
+
+    //Skim
+    PropertyMap<SkimsDto,Skims> mapSkimsDtoToModel(){
+        return  new PropertyMap<SkimsDto, Skims>() {
+            @Override
+            protected void configure() {
+                map().getDebtModel().setId(source.getDebtModelId());
+            }
+        };
+    }
+
+    PropertyMap<Skims,SkimsDto> mapSkimsModelToDto () {
+        return new PropertyMap<Skims,SkimsDto>() {
+            @Override
+            protected void configure() {
+                map().setDebtModelId(source.getDebtModel().getId());
+            }
+        };
+    }
+
+    //Call Premium
+    PropertyMap<CallPremiumDto,CallPremium> mapCallPremiumDtoToModel(){
+        return  new PropertyMap<CallPremiumDto, CallPremium>() {
+            @Override
+            protected void configure() {
+                map().getDebtModel().setId(source.getDebtModelId());
+            }
+        };
+    }
+
+    PropertyMap<CallPremium,CallPremiumDto> mapCallPremiumModelToDto () {
+        return new PropertyMap<CallPremium,CallPremiumDto>() {
+            @Override
+            protected void configure() {
+                map().setDebtModelId(source.getDebtModel().getId());
             }
         };
     }

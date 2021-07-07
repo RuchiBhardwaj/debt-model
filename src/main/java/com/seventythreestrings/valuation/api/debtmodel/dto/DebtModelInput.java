@@ -6,7 +6,7 @@ public enum DebtModelInput {
     PREPAYMENT_DETAILS("prepayment_details"),
     DEAL_FEES("deal_fees"),
     INTEREST_UNDRAWN_CAPITAL("interest_undrawn_capital"),
-    SKIMS("skim"),
+    SKIMS("skims"),
     CALL_PREMIUM("call_premium"),
     ;
 
