@@ -73,6 +73,10 @@ public class ModelMapperExplicitMappings {
         modelMapper.addMappings((mapCallPremiumDtoToModel()));
         modelMapper.addMappings((mapCallPremiumModelToDto()));
 
+        //Cnjgj
+        modelMapper.addMappings((mapDiscountRateComputationModelToDto()));
+
+
         // LocalDate
         modelMapper.createTypeMap(String.class, LocalDate.class);
         modelMapper.addConverter(toStringDate);
@@ -298,5 +302,16 @@ public class ModelMapperExplicitMappings {
             }
         };
     }
+
+    PropertyMap<DiscountRateComputationDto,DiscountRateComputaion> mapDiscountRateComputationModelToDto () {
+        return new PropertyMap<DiscountRateComputationDto,DiscountRateComputaion>() {
+            @Override
+            protected void configure() {
+                map().getDebtModel().setId(source.getDebtModelId());
+            }
+        };
+    }
+
+
 
 }

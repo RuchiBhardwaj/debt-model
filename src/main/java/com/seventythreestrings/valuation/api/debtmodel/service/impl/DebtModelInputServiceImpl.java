@@ -11,9 +11,11 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.ObjectError;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -112,9 +114,11 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                 debtModelService.save(debtModel);
                 return modelMapper.map(generalDetailsRepository.save(generalDetails), GeneralDetailsDto.class);
             case INTEREST_DETAILS:
-                InterestDetails interestDetails = modelMapper.map(o, InterestDetails.class);
-                interestDetails.setDebtModel(debtModel);
-                return modelMapper.map(interestDetailsRepository.save(interestDetails), InterestDetailsDto.class);
+                List<InterestDetails> interestDetails = Arrays.asList(modelMapper.map(o, InterestDetails[].class));
+                for(InterestDetails interestDetail: interestDetails){
+                    interestDetail.setDebtModel(debtModel);
+                }
+                return Arrays.asList(modelMapper.map(interestDetailsRepository.saveAll(interestDetails), InterestDetailsDto[].class));
             case PREPAYMENT_DETAILS:
                 PrepaymentDetails prepaymentDetails = modelMapper.map(o, PrepaymentDetails.class);
                 prepaymentDetails.setDebtModel(debtModel);
@@ -145,6 +149,26 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
         }
         return null;
     }
+//
+//
+//    public Object createDiscount(DiscountRateComputationDto discountRateComputationDto){
+//        DiscountRateComputaion discountRateComputaion = modelMapper.map(discountRateComputationDto,DiscountRateComputaion.class);
+//        return discountRateComputationRepository.save(discountRateComputaion);
+//    }
+
+
+
+//    public Object create(DebtModelInput inputType, List<Object> o, Long debModelId){
+//
+//        int size = o.size();
+//        List<Object> list = new ArrayList<>();
+//        for(Object ob: o){
+//            list.add(ob);
+//
+//        }
+//
+//
+//    }
 
     @Override
     public Object update(DebtModelInput inputType, Object o, Long debtModelId) {

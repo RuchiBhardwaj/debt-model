@@ -1,10 +1,16 @@
 package com.seventythreestrings.valuation.api.debtmodel.controller;
 
+import com.seventythreestrings.valuation.api.debtmodel.dto.DebtModelDto;
 import com.seventythreestrings.valuation.api.debtmodel.dto.DebtModelInput;
 import com.seventythreestrings.valuation.api.debtmodel.dto.DebtModelInputDto;
+import com.seventythreestrings.valuation.api.debtmodel.dto.DiscountRateComputationDto;
+import com.seventythreestrings.valuation.api.debtmodel.model.DebtModel;
+import com.seventythreestrings.valuation.api.debtmodel.model.DiscountRateComputaion;
 import com.seventythreestrings.valuation.api.debtmodel.service.DebtModelInputService;
+import com.seventythreestrings.valuation.api.exception.ErrorCodesAndMessages;
 import com.seventythreestrings.valuation.api.util.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +26,12 @@ public class DebtModelInputController {
 
     private final DebtModelInputService debtModelInputService;
 
+    private final ModelMapper modelMapper;
+
     @Autowired
-    public DebtModelInputController(DebtModelInputService debtModelInputService) {
+    public DebtModelInputController(DebtModelInputService debtModelInputService,ModelMapper modelMapper) {
         this.debtModelInputService = debtModelInputService;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping
@@ -52,6 +61,23 @@ public class DebtModelInputController {
         apiResponse.setMessage("Debt Model Input Created successfully");
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
+
+//    @PostMapping("/discount")
+//    public ResponseEntity<ApiResponse<DiscountRateComputationDto>> createDiscount(@RequestBody DiscountRateComputationDto discountRateComputationDto){
+//        ApiResponse<DiscountRateComputationDto> apiResponse = new ApiResponse<>();
+//        try {
+//            Object discount = debtModelInputService.createDiscount(discountRateComputationDto);
+//            apiResponse.setSuccess(true);
+//            apiResponse.setResponse((modelMapper.map(discount,DiscountRateComputationDto.class)));
+//            apiResponse.setMessage("Debt Model Created Successfully");
+//            return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+//        } catch (Exception e) {
+//            apiResponse.setSuccess(false);
+//            apiResponse.setMessage(e.getMessage());
+//            apiResponse.setErrorCode(ErrorCodesAndMessages.UNKNOWN_EXCEPTION.getCode());
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
+//        }
+//    }
 
     @GetMapping("/{inputType}/{id}")
     public ResponseEntity<ApiResponse<DebtModelInputDto>> get(
