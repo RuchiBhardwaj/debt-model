@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.ObjectError;
 
 import javax.transaction.Transactional;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -125,25 +126,29 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                 prepaymentDetails.getPaymentSchedules().forEach(paymentSchedule -> paymentSchedule.setPrepaymentDetails(prepaymentDetails));
                 return modelMapper.map(prepaymentDetailsRepository.save(prepaymentDetails), PrepaymentDetailsDto.class);
             case DEAL_FEES:
-                DealFees dealFees = modelMapper.map(o,DealFees.class);
-                dealFees.setDebtModel(debtModel);
-                DealFees savedDealFees = dealFeesRepository.save(dealFees);
-                return modelMapper.map(savedDealFees,DealFeesDto.class);
+                List<DealFees> dealFees = Arrays.asList(modelMapper.map(o,DealFees[].class));
+                for(DealFees dealFee: dealFees){
+                    dealFee.setDebtModel(debtModel);
+                }
+                return Arrays.asList(modelMapper.map(dealFeesRepository.saveAll(dealFees),DealFeesDto[].class));
             case INTEREST_UNDRAWN_CAPITAL:
-                InterestUndrawnCapital interestUndrawnCapital = modelMapper.map(o,InterestUndrawnCapital.class);
-                interestUndrawnCapital.setDebtModel(debtModel);
-                InterestUndrawnCapital savedInterestCapital = interestUndrwanCapitalRepository.save(interestUndrawnCapital);
-                return modelMapper.map(savedInterestCapital,InterestUndrawnCapitalDto.class);
+                List<InterestUndrawnCapital> interestUndrawnCapital = Arrays.asList(modelMapper.map(o,InterestUndrawnCapital[].class));
+                for(InterestUndrawnCapital interestUndrawn:interestUndrawnCapital) {
+                    interestUndrawn.setDebtModel(debtModel);
+                }
+                return Arrays.asList(modelMapper.map(interestUndrwanCapitalRepository.saveAll(interestUndrawnCapital),InterestUndrawnCapitalDto[].class));
             case SKIMS:
-                Skims skims = modelMapper.map(o,Skims.class);
-                skims.setDebtModel(debtModel);
-                Skims savedSkim = skimsRepository.save(skims);
-                return modelMapper.map(savedSkim,SkimsDto.class);
+                List<Skims> skims = Arrays.asList(modelMapper.map(o,Skims[].class));
+                for(Skims ski:skims) {
+                    ski.setDebtModel(debtModel);
+                }
+                return Arrays.asList(modelMapper.map(skimsRepository.saveAll(skims),SkimsDto[].class));
             case CALL_PREMIUM:
-                CallPremium callPremium = modelMapper.map(o,CallPremium.class);
-                callPremium.setDebtModel(debtModel);
-                CallPremium savedCallPremium = callPremiumRepository.save(callPremium);
-                return modelMapper.map(savedCallPremium,CallPremiumDto.class);
+                List<CallPremium> callPremium = Arrays.asList(modelMapper.map(o,CallPremium[].class));
+                for(CallPremium call:callPremium) {
+                    call.setDebtModel(debtModel);
+                }
+                return Arrays.asList(modelMapper.map(callPremiumRepository.saveAll(callPremium),CallPremiumDto[].class));
             default:
                 break;
         }
@@ -156,19 +161,6 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
 //        return discountRateComputationRepository.save(discountRateComputaion);
 //    }
 
-
-
-//    public Object create(DebtModelInput inputType, List<Object> o, Long debModelId){
-//
-//        int size = o.size();
-//        List<Object> list = new ArrayList<>();
-//        for(Object ob: o){
-//            list.add(ob);
-//
-//        }
-//
-//
-//    }
 
     @Override
     public Object update(DebtModelInput inputType, Object o, Long debtModelId) {
