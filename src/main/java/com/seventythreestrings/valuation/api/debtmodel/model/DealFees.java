@@ -50,12 +50,8 @@ public class DealFees extends BaseEntity {
     private PaymentFrequency interestPaymentFrequency;
 
 
-    @Size(max = 255)
-    @Column(name = "regime_name")
-    private String regimeName;
-
-    @Column(name = "versionId")
-    private int version;
+    @Column(name = "version_id")
+    private int versionId;
 
     @OneToOne
     @JoinColumn(name = "debt_model_id", nullable = false)

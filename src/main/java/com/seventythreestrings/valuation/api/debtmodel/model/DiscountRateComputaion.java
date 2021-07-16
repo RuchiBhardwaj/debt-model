@@ -6,11 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -51,12 +49,11 @@ public class DiscountRateComputaion extends BaseEntity {
     private double ytmMedium;
 
     @Column(name = "ytm_quarter3")
-    private double ytmRateQuarter3;
+    private double ytmQuarter3;
 
-//    @ManyToOne
-//    @JoinColumn(name = "discount_id", nullable = false)
-//    @ElementCollection(fetch = FetchType.EAGER)
-//    private List<DiscountAdjustment> discountAdjustmentList;
+
+    @OneToMany(targetEntity=DiscountAdjustment.class, mappedBy="discountId",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<DiscountAdjustment> discountAdjustments = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "debt_model_id", nullable = false)

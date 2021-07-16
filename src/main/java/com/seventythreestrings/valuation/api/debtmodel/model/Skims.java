@@ -31,7 +31,7 @@ public class Skims extends BaseEntity {
     private double skimPercentage;
 
     @Column(name = "outstanding_Balance_Of_ValuationDate")
-    private double Balance;
+    private double balance;
 
     @Column(name = "skim_base")
     private int skimBase;
@@ -51,12 +51,9 @@ public class Skims extends BaseEntity {
     @Column(name = "skim_payment_frequency")
     private PaymentFrequency skimPaymentFrequency;
 
-    @Size(max = 255)
-    @Column(name = "regime_name")
-    private String regimeName;
 
-    @Column(name = "versionId")
-    private int version;
+    @Column(name = "version_id")
+    private int versionId;
 
     @OneToOne
     @JoinColumn(name = "debt_model_id", nullable = false)

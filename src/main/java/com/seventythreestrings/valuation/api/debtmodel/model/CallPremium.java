@@ -24,13 +24,13 @@ public class CallPremium extends BaseEntity {
     private Long id;
 
     @Column(name = "date")
-    private LocalDate Date;
+    private LocalDate date;
 
     @Column(name = "percentage")
     private double percentage;
 
-    @Column(name = "versionId")
-    private int version;
+    @Column(name = "version_id")
+    private int versionId;
 
     @OneToOne
     @JoinColumn(name = "debt_model_id", nullable = false)

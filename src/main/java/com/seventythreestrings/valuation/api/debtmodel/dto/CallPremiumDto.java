@@ -14,9 +14,9 @@ public class CallPremiumDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate Date;
+    private LocalDate date;
 
     private Long debtModelId;
 
-    private int version;
+    private int versionId;
 }

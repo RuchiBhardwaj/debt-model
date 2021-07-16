@@ -18,7 +18,7 @@ public interface DebtModelInputService {
 
 	void delete(DebtModelInput inputType, Long id, Long debtModelId);
 
-//	Object createDiscount(DiscountRateComputationDto discountRateComputationDto);
+	Object createDiscount(DiscountRateComputationDto discountRateComputationDto);
 
 
 }

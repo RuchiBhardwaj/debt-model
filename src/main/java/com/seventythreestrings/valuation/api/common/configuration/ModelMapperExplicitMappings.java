@@ -4,7 +4,6 @@ import com.seventythreestrings.valuation.api.debtmodel.dto.*;
 import com.seventythreestrings.valuation.api.debtmodel.model.*;
 import org.modelmapper.*;
 import org.modelmapper.convention.MatchingStrategies;
-import org.modelmapper.spi.PropertyType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -73,7 +72,7 @@ public class ModelMapperExplicitMappings {
         modelMapper.addMappings((mapCallPremiumDtoToModel()));
         modelMapper.addMappings((mapCallPremiumModelToDto()));
 
-        //Cnjgj
+        //DiscountRate
         modelMapper.addMappings((mapDiscountRateComputationModelToDto()));
 
 
@@ -303,6 +302,7 @@ public class ModelMapperExplicitMappings {
         };
     }
 
+    //DiscountRate
     PropertyMap<DiscountRateComputationDto,DiscountRateComputaion> mapDiscountRateComputationModelToDto () {
         return new PropertyMap<DiscountRateComputationDto,DiscountRateComputaion>() {
             @Override

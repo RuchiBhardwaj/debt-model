@@ -19,7 +19,7 @@ public class AnnualHistoricalFinancial extends BaseEntity {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @NotNull
@@ -77,7 +77,7 @@ public class AnnualHistoricalFinancial extends BaseEntity {
 
     @NotNull
     @Column(name = "interest_expanse")
-    private double interestExppanse;
+    private double interestExpanse;
 
     @NotNull
     @Column(name = "earning_before_taxes")

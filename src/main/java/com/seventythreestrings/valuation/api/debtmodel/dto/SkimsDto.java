@@ -11,7 +11,7 @@ public class SkimsDto {
     private Long id;
 
     private double skimPercentage;
-    private double Balance;
+    private double balance;
     private int skimBase;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -33,9 +33,8 @@ public class SkimsDto {
 
     private PaymentFrequency skimPaymentFrequency;
 
-    private String regimeName;
 
-    private int version;
+    private int versionId;
 
 
     private Long debtModelId;

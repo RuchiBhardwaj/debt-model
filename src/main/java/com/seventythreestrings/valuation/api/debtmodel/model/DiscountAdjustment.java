@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -38,10 +36,9 @@ public class DiscountAdjustment extends BaseEntity {
     @Column(name = "quarter3")
     private int quarter3;
 
+    @ManyToOne
+    @JoinColumn(name="discount_id")
+    private DiscountRateComputaion discountId;
 
 
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "discount_id", nullable = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    private DiscountRateComputaion discountRateComputaion;
 }

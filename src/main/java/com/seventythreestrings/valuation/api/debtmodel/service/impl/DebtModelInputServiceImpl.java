@@ -11,10 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.ObjectError;
 
 import javax.transaction.Transactional;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +29,7 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
     private final InterestUndrwanCapitalRepository interestUndrwanCapitalRepository;
     private final SkimsRepository skimsRepository;
     private final CallPremiumRepository callPremiumRepository;
+    private final DiscountRateComputationRepository discountRateComputationRepository;
 
     private final DebtModelService debtModelService;
     private final ModelMapper modelMapper;
@@ -154,12 +153,13 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
         }
         return null;
     }
-//
-//
-//    public Object createDiscount(DiscountRateComputationDto discountRateComputationDto){
-//        DiscountRateComputaion discountRateComputaion = modelMapper.map(discountRateComputationDto,DiscountRateComputaion.class);
-//        return discountRateComputationRepository.save(discountRateComputaion);
-//    }
+
+
+    @Override
+    public Object createDiscount(DiscountRateComputationDto discountRateComputationDto){
+        DiscountRateComputaion discountRateComputaion = modelMapper.map(discountRateComputationDto,DiscountRateComputaion.class);
+        return discountRateComputationRepository.save(discountRateComputaion);
+    }
 
 
     @Override

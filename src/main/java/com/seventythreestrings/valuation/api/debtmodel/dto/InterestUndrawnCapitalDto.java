@@ -30,9 +30,8 @@ public class InterestUndrawnCapitalDto {
 
     private PaymentFrequency interestPaymentFrequency;
 
-    private String regimeName;
 
-    private int version;
+    private int versionId;
 
 
     private Long debtModelId;

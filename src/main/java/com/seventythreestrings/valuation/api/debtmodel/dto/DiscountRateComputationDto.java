@@ -16,11 +16,10 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class DiscountRateComputationDto {
+
     private Long id;
 
-
     private double concludedCreditSpreadQuarter1;
-
 
     private double concludedCreditSpreadMedium;
 
@@ -30,20 +29,16 @@ public class DiscountRateComputationDto {
 
     private double riskFreeRateMedium;
 
-
     private double riskFreeRateQuarter3;
-
 
     private double ytmQuarter1;
 
-
     private double ytmMedium;
 
-
-    private double ytmRateQuarter3;
+    private double ytmQuarter3;
 
     private Long debtModelId;
 
-    private List<DiscountAdjustment> discountAdjustmentList;
+    private List<DiscountAdjustment> discountAdjustments;
 
 }

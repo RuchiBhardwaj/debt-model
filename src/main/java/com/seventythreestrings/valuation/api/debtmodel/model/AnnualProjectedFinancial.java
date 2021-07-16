@@ -87,7 +87,7 @@ public class AnnualProjectedFinancial extends BaseEntity {
 
     @NotNull
     @Column(name = "inventory")
-    private double Inventory;
+    private double inventory;
 
     @NotNull
     @Column(name = "accounts_payable")
