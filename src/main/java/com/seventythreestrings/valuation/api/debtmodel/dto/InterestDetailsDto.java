@@ -28,14 +28,11 @@ public class InterestDetailsDto {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate regimeStartDate;
 
-
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate regimeEndDate;
 
-	private String regimeName;
-
-	private int version;
+	private int versionId;
 
 	private PaymentFrequency interestPaymentFrequency;
 

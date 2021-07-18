@@ -50,8 +50,12 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                     generalDetails.ifPresent(details -> inputs.add(new DebtModelInputDto(DebtModelInput.GENERAL_DETAILS, modelMapper.map(details, GeneralDetailsDto.class))));
                     break;
                 case INTEREST_DETAILS:
-                    Optional<InterestDetails> interestDetails = interestDetailsRepository.findFirstByDebtModelId(debtModelId);
-                    interestDetails.ifPresent(details -> inputs.add(new DebtModelInputDto(DebtModelInput.INTEREST_DETAILS, modelMapper.map(details, InterestDetailsDto.class))));
+                    Optional<InterestDetails> versionIdLatest = interestDetailsRepository.findFirstByDebtModelIdOrderByVersionIdDesc(debtModelId);
+                    if (versionIdLatest.isPresent()) {
+                        int versionId = versionIdLatest.get().getVersionId();
+                        List<InterestDetails> interestDetails = interestDetailsRepository.findAllByDebtModelIdAndVersionId(debtModelId, versionId);
+                        inputs.add(new DebtModelInputDto(DebtModelInput.INTEREST_DETAILS, modelMapper.map(interestDetails, InterestDetailsDto[].class)));
+                    }
                     break;
                 case PREPAYMENT_DETAILS:
                     Optional<PrepaymentDetails> prepaymentDetails = prepaymentDetailsRepository.findFirstByDebtModelId(debtModelId);

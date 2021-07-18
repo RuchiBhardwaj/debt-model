@@ -23,7 +23,6 @@ import java.util.Set;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "cashflow")
 public class Cashflow extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -51,6 +50,9 @@ public class Cashflow extends BaseEntity {
 
     @Column(name = "percentage_par")
     private double percentagePar;
+
+    @Column(name = "internal_rate_of_return", columnDefinition = "double default 0.0")
+    private double internalRateOfReturn;
 
     @Column(name = "day_count_convention")
     private DayCountConvention dayCountConvention;
