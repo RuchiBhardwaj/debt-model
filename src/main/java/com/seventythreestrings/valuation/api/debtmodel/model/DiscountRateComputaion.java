@@ -9,7 +9,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -21,7 +23,7 @@ import java.util.List;
 public class DiscountRateComputaion extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "concluded_credit_spread_quarter1")
@@ -52,8 +54,9 @@ public class DiscountRateComputaion extends BaseEntity {
     private double ytmQuarter3;
 
 
-    @OneToMany(targetEntity=DiscountAdjustment.class, mappedBy="discountId",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<DiscountAdjustment> discountAdjustments = new ArrayList<>();
+    @OneToMany(mappedBy="discountRateComputation", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("date ASC")
+    private Set<DiscountAdjustment> discountAdjustments = new HashSet<>();
 
     @OneToOne
     @JoinColumn(name = "debt_model_id", nullable = false)

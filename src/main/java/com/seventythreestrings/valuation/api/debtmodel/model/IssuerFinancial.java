@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -20,6 +22,14 @@ public class IssuerFinancial extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+
+    @Column(name = "debt_senior_issue")
+    private double debtSeniorIssue;
+
+
+    @Column(name = "enterprise_value")
+    private double enterpriseValue;
+
     @OneToOne
     @JoinColumn(name = "annual_historical_id", nullable = false)
     private AnnualHistoricalFinancial annualHistoricalFinancial;
@@ -27,6 +37,9 @@ public class IssuerFinancial extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "annual_projected_id", nullable = false)
     private AnnualProjectedFinancial annualProjectedFinancial;
+
+    @Column(name = "version_id")
+    private int versionId;
 
     @OneToOne
     @JoinColumn(name = "debt_model_id", nullable = false)

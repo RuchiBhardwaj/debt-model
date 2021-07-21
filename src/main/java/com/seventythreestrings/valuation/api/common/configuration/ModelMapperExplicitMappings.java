@@ -72,8 +72,26 @@ public class ModelMapperExplicitMappings {
         modelMapper.addMappings((mapCallPremiumDtoToModel()));
         modelMapper.addMappings((mapCallPremiumModelToDto()));
 
+        //Issuer Financial
+        modelMapper.addMappings((mapIssuerFinancialDtoToModel()));
+        modelMapper.addMappings((mapIssuerFinancialModelToDto()));
+
+        //Annual Projected Financial
+        modelMapper.addMappings((mapAnnualProjectedFinancialDtoTOModel()));
+        modelMapper.addMappings((mapAnnualProjectedFinancialModelToDto()));
+
+        //Annual Historical Financial
+        modelMapper.addMappings((mapAnnualHistoricalFinancialDtoTOModel()));
+        modelMapper.addMappings((mapAnnualHistoricalFinancialModelToDto()));
+
+
         //DiscountRate
         modelMapper.addMappings((mapDiscountRateComputationModelToDto()));
+        modelMapper.addMappings((mapDiscountRateComputationDtoToModel()));
+
+        //DiscountAdjustment
+        modelMapper.addMappings((mapDiscountAdjustmentModelToDto()));
+        modelMapper.addMappings((mapDiscountAdjustmentDtoToModel()));
 
 
         // LocalDate
@@ -303,10 +321,99 @@ public class ModelMapperExplicitMappings {
     }
 
     //DiscountRate
-    PropertyMap<DiscountRateComputationDto,DiscountRateComputaion> mapDiscountRateComputationModelToDto () {
+    PropertyMap<DiscountRateComputationDto,DiscountRateComputaion> mapDiscountRateComputationDtoToModel () {
         return new PropertyMap<DiscountRateComputationDto,DiscountRateComputaion>() {
             @Override
             protected void configure() {
+                map().getDebtModel().setId(source.getDebtModelId());
+            }
+        };
+    }
+
+    PropertyMap<DiscountRateComputaion,DiscountRateComputationDto> mapDiscountRateComputationModelToDto () {
+        return new PropertyMap<DiscountRateComputaion,DiscountRateComputationDto>() {
+            @Override
+            protected void configure() {
+                map().setDebtModelId(source.getDebtModel().getId());
+            }
+        };
+    }
+
+    //DiscountAdjustment
+    PropertyMap<DiscountAdjustmentDto,DiscountAdjustment> mapDiscountAdjustmentDtoToModel () {
+        return new PropertyMap<DiscountAdjustmentDto,DiscountAdjustment>() {
+            @Override
+            protected void configure() {
+                map().getDiscountRateComputation().setId(source.getDiscountRateComputationId());
+            }
+        };
+    }
+
+    PropertyMap<DiscountAdjustment,DiscountAdjustmentDto> mapDiscountAdjustmentModelToDto () {
+        return new PropertyMap<DiscountAdjustment,DiscountAdjustmentDto>() {
+            @Override
+            protected void configure() {
+                map().setDiscountRateComputationId(source.getDiscountRateComputation().getId());
+            }
+        };
+    }
+
+    //AnnualHistoricalFinancial
+    PropertyMap<AnnualHistoricalFinancial,AnnualHistoricalFinancialDto> mapAnnualHistoricalFinancialModelToDto () {
+        return new PropertyMap<AnnualHistoricalFinancial, AnnualHistoricalFinancialDto>() {
+            @Override
+            protected void configure() {
+            }
+        };
+    }
+
+
+    PropertyMap<AnnualHistoricalFinancialDto,AnnualHistoricalFinancial> mapAnnualHistoricalFinancialDtoTOModel () {
+        return new PropertyMap<AnnualHistoricalFinancialDto,AnnualHistoricalFinancial>() {
+            @Override
+            protected void configure() {
+            }
+        };
+    }
+
+    //AnnualProjectedFinancial
+
+    PropertyMap<AnnualProjectedFinancialDto,AnnualProjectedFinancial> mapAnnualProjectedFinancialDtoTOModel () {
+        return new PropertyMap<AnnualProjectedFinancialDto,AnnualProjectedFinancial>() {
+            @Override
+            protected void configure() {
+            }
+        };
+    }
+
+
+    PropertyMap<AnnualProjectedFinancial,AnnualProjectedFinancialDto> mapAnnualProjectedFinancialModelToDto () {
+        return new PropertyMap<AnnualProjectedFinancial,AnnualProjectedFinancialDto>() {
+            @Override
+            protected void configure() {
+            }
+        };
+    }
+
+    //IssuerFinancial
+
+    PropertyMap<IssuerFinancial,IssuerFinancialDto> mapIssuerFinancialModelToDto () {
+        return new PropertyMap<IssuerFinancial,IssuerFinancialDto>() {
+            @Override
+            protected void configure() {
+                map().setAnnualHistoricalFinancialId(source.getAnnualHistoricalFinancial().getId());
+                map().setAnnualProjectedFinancialId(source.getAnnualProjectedFinancial().getId());
+                map().setDebtModelId(source.getDebtModel().getId());
+            }
+        };
+    }
+
+    PropertyMap<IssuerFinancialDto,IssuerFinancial> mapIssuerFinancialDtoToModel () {
+        return new PropertyMap<IssuerFinancialDto,IssuerFinancial>() {
+            @Override
+            protected void configure() {
+                map().getAnnualHistoricalFinancial().setId(source.getAnnualHistoricalFinancialId());
+                map().getAnnualProjectedFinancial().setId(source.getAnnualProjectedFinancialId());
                 map().getDebtModel().setId(source.getDebtModelId());
             }
         };

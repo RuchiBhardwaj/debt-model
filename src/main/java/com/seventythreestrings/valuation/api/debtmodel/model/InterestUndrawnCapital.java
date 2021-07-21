@@ -44,8 +44,6 @@ public class InterestUndrawnCapital extends BaseEntity {
     @Column(name = "interest_payment_frequency")
     private PaymentFrequency interestPaymentFrequency;
 
-
-
     @Column(name = "version_id")
     private int versionId;
 

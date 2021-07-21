@@ -37,8 +37,8 @@ public class DiscountAdjustment extends BaseEntity {
     private int quarter3;
 
     @ManyToOne
-    @JoinColumn(name="discount_id")
-    private DiscountRateComputaion discountId;
+    @JoinColumn(name = "discount_adjustment", nullable = false)
+    private DiscountRateComputaion discountRateComputation;
 
 
 }

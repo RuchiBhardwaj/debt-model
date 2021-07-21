@@ -34,6 +34,9 @@ public class PrepaymentDetails extends BaseEntity {
     @JoinColumn(name = "debt_model_id", nullable = false)
     private DebtModel debtModel;
 
+    @Column(name = "version_id")
+    private int versionId;
+
     @OneToMany(mappedBy="prepaymentDetails", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("date ASC")
     private Set<PaymentSchedule> paymentSchedules = new HashSet<>();

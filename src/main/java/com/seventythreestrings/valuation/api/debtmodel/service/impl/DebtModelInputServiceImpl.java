@@ -30,6 +30,10 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
     private final SkimsRepository skimsRepository;
     private final CallPremiumRepository callPremiumRepository;
     private final DiscountRateComputationRepository discountRateComputationRepository;
+    private final IssuerFinancialRepository issuerFinancialRepository;
+    private final AnnualHistoricalFinancialRepository annualHistoricalFinancialRepository;
+    private final AnnualProjectedFinancialRepository annualProjectedFinancialRepository;
+
 
     private final DebtModelService debtModelService;
     private final ModelMapper modelMapper;
@@ -148,19 +152,28 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                     call.setDebtModel(debtModel);
                 }
                 return Arrays.asList(modelMapper.map(callPremiumRepository.saveAll(callPremium),CallPremiumDto[].class));
+            case ISSUER_FINANCIAL:
+                IssuerFinancial issuerFinancial = modelMapper.map(o,IssuerFinancial.class);
+                issuerFinancial.setDebtModel(debtModel);
+                AnnualHistoricalFinancial annualHistoricalFinancial =   issuerFinancial.getAnnualHistoricalFinancial();
+                issuerFinancial.setAnnualHistoricalFinancial(annualHistoricalFinancial);
+                AnnualProjectedFinancial annualProjectedFinancial = issuerFinancial.getAnnualProjectedFinancial();
+                issuerFinancial.setAnnualProjectedFinancial(annualProjectedFinancial);
+                modelMapper.map(annualHistoricalFinancialRepository.save(annualHistoricalFinancial),AnnualHistoricalFinancialDto.class);
+                modelMapper.map(annualProjectedFinancialRepository.save(annualProjectedFinancial),AnnualProjectedFinancialDto.class);
+                  return modelMapper.map(issuerFinancialRepository.save(issuerFinancial),IssuerFinancialDto.class);
             default:
                 break;
         }
         return null;
     }
 
-
     @Override
     public Object createDiscount(DiscountRateComputationDto discountRateComputationDto){
-        DiscountRateComputaion discountRateComputaion = modelMapper.map(discountRateComputationDto,DiscountRateComputaion.class);
-        return discountRateComputationRepository.save(discountRateComputaion);
+        DiscountRateComputaion discountRateComputaion = modelMapper.map(discountRateComputationDto, DiscountRateComputaion.class);
+        discountRateComputaion.getDiscountAdjustments().forEach(discountAdjustment -> discountAdjustment.setDiscountRateComputation(discountRateComputaion));
+        return modelMapper.map(discountRateComputationRepository.save(discountRateComputaion), DiscountRateComputationDto.class);
     }
-
 
     @Override
     public Object update(DebtModelInput inputType, Object o, Long debtModelId) {
@@ -171,7 +184,6 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
     @Override
     public void delete(DebtModelInput inputType, Long id, Long debtModelId) {
         DebtModel debtModel = debtModelService.get(debtModelId);
-
         switch (inputType) {
             case GENERAL_DETAILS:
                 generalDetailsRepository.deleteById(id);
