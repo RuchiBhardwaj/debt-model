@@ -26,7 +26,6 @@ import java.util.Set;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "interest_details")
 public class InterestDetails extends BaseEntity {
-
     public static final int END_OF_MONTH = 0;
 
     @Id
@@ -46,20 +45,17 @@ public class InterestDetails extends BaseEntity {
     @Column(name = "first_interest_payment_date")
     private LocalDate firstInterestPaymentDate;
 
-    @Column(name = "regime_end_date")
-    private LocalDate regimeEndDate;
-
-    @Column(name = "interest_payment_frequency")
-    private PaymentFrequency interestPaymentFrequency;
-
     @Column(name = "regime_start_date")
     private LocalDate regimeStartDate;
 
-
+    @Column(name = "regime_end_date")
+    private LocalDate regimeEndDate;
 
     @Column(name = "version_id")
     private int versionId;
 
+    @Column(name = "interest_payment_frequency")
+    private PaymentFrequency interestPaymentFrequency;
 
     @Min(0)
     @Max(28)

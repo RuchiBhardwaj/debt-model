@@ -84,12 +84,11 @@ public class CashflowServiceImpl implements CashflowService {
         Set<CashflowSchedule> schedules = new LinkedHashSet<>();
         Set<CashflowScheduleDate> scheduleDates = getCashflowScheduleDates(inputs);
         Optional<GeneralDetails> generalDetailsInput = getGeneralDetailsFromInputs(inputs);
-        Optional<InterestDetails> interestDetailsInput = getInterestDetailsFromInputs(inputs);
+        List<InterestDetails> interestDetailsInput = getInterestDetailsFromInputs(inputs);
         Optional<PrepaymentDetails> prepaymentDetailsInput = getPrepaymentDetailsFromInputs(inputs);
         if (!generalDetailsInput.isPresent()) {
             return;
         }
-        boolean isInterestAccrued = interestDetailsInput.map(interestDetails -> interestDetails.getInterestPaidOrAccrued().equals(InterestType.ACCRUED)).orElse(false);
         double principalAmount = generalDetailsInput.get().getPrincipalAmount();
 
         DayCountConvention dayCountConvention = cashflow.getDayCountConvention();
@@ -118,6 +117,8 @@ public class CashflowServiceImpl implements CashflowService {
             }
             cashflowSchedule.setToDate(scheduleDate.getDate());
             cashflowSchedule.setDateType(scheduleDate.getType());
+
+            boolean isInterestAccrued = getIsInterestAccrued(interestDetailsInput, cashflowSchedule.getToDate());
 
             // Set Interest details, Calculate Interest Outflow
             addInterestDetailsToCashflowSchedule(cashflowSchedule, interestDetailsInput, dayCountConvention, principalOutstanding);
@@ -188,13 +189,59 @@ public class CashflowServiceImpl implements CashflowService {
         if (principalOutstanding != 0) {
             cashflow.setPercentagePar(presentValueSum * 100 / principalOutstanding);
         }
+
+        // Add irr to Cashflow
+        double irr = getInternalRateOfReturn(cashflow, generalDetailsInput.get().getPrincipalAmount());
+        cashflow.setInternalRateOfReturn(irr);
     }
 
-    private void addInterestDetailsToCashflowSchedule(CashflowSchedule cashflowSchedule, Optional<InterestDetails> interestDetails, DayCountConvention dayCountConvention, double principalOutstanding) {
+    private double getSumOfDiscountedPV(Set<CashflowSchedule> schedules, LocalDate valuationDate, double irr) {
+        double spv = 0; // spv = sum of present value
+        for (CashflowSchedule schedule: schedules) {
+            if (schedule.getToDate().isAfter(schedule.getFromDate())) {
+                double cashMovement = schedule.getTotalCashMovement();
+                LocalDate date = schedule.getToDate();
+
+                double discountingFactor = CashflowUtil.getDiscountingFactor(irr, schedule.getPartialPeriod());
+                double presentValue = CashflowUtil.getPresentValue(cashMovement, discountingFactor, date, valuationDate);
+                spv += presentValue;
+            }
+        }
+        return spv;
+    }
+
+    private double getInternalRateOfReturn(Cashflow cashflow, double principalAmount) {
+        Set<CashflowSchedule> schedules = cashflow.getSchedules();
+        LocalDate valuationDate = cashflow.getValuationDate();
+        // Initial approximate irr
+        double irr = schedules.stream()
+                .filter(cashflowSchedule -> cashflowSchedule.getToDate().isAfter(valuationDate))
+                .mapToDouble(CashflowSchedule::getTotalInterestRate).average().orElse(0.0);
+        double spv = getSumOfDiscountedPV(schedules, valuationDate, irr);
+        if (spv > principalAmount) {
+            while(spv > principalAmount) {
+                System.out.println("irr "+ irr + " spv " + spv);
+                irr += 0.001;
+                spv = getSumOfDiscountedPV(schedules, valuationDate, irr);
+            }
+            return irr;
+        } else if (principalAmount > spv) {
+            while(principalAmount > spv) {
+                System.out.println("irr "+ irr + " spv " + spv);
+                irr -= 0.001;
+                spv = getSumOfDiscountedPV(schedules, valuationDate, irr);
+            }
+            return irr;
+        }
+        return irr;
+    }
+
+    private void addInterestDetailsToCashflowSchedule(CashflowSchedule cashflowSchedule, List<InterestDetails> interestDetails, DayCountConvention dayCountConvention, double principalOutstanding) {
         // TODO: This would vary based on the Base Rate Curve
-        double totalInterestRate = getTotalInterestRate(interestDetails, cashflowSchedule.getToDate());
-        double interestBaseRate = getInterestBaseRate(interestDetails, cashflowSchedule.getToDate());
-        double interestBaseRateSpread = getInterestBaseRateSpread(interestDetails, cashflowSchedule.getToDate());
+        Optional<InterestDetails> interestDetail = getInterestDetailsByDate(interestDetails, cashflowSchedule.getToDate());
+        double totalInterestRate = getTotalInterestRate(interestDetail, cashflowSchedule.getToDate());
+        double interestBaseRate = getInterestBaseRate(interestDetail, cashflowSchedule.getToDate());
+        double interestBaseRateSpread = getInterestBaseRateSpread(interestDetail, cashflowSchedule.getToDate());
         double interestOutflow = CashflowUtil.getInterestOutflow(cashflowSchedule.getFromDate(), cashflowSchedule.getToDate(), dayCountConvention, principalOutstanding, totalInterestRate);
         cashflowSchedule.setInterestOutflow(interestOutflow);
         cashflowSchedule.setBaseRate(interestBaseRate);
@@ -225,6 +272,18 @@ public class CashflowServiceImpl implements CashflowService {
         }
         Set<PaymentSchedule> schedules = input.get().getPaymentSchedules();
         return schedules.stream().filter(schedule -> schedule.getDate().isEqual(date)).findFirst().map(PaymentSchedule::getAmount).orElse(0.0);
+    }
+
+    private Optional<InterestDetails> getInterestDetailsByDate(List<InterestDetails> input, LocalDate date) {
+        // get single interest details
+        // regime start date and end dates are inclusive
+        return input.stream().filter(interestDetail -> !interestDetail.getRegimeStartDate().isAfter(date)).
+                filter(interestDetail -> !interestDetail.getRegimeEndDate().isBefore(date)).findFirst();
+    }
+
+    private boolean getIsInterestAccrued(List<InterestDetails> input, LocalDate date) {
+        Optional<InterestDetails> interestDetail = getInterestDetailsByDate(input , date);
+        return interestDetail.map(interestDetails -> interestDetails.getInterestPaidOrAccrued().equals(InterestType.ACCRUED)).orElse(false);
     }
 
     private double getTotalInterestRate(Optional<InterestDetails> input, LocalDate date) {
@@ -258,23 +317,22 @@ public class CashflowServiceImpl implements CashflowService {
         LocalDate maturityDate = generalDetails.get().getMaturityDate();
 
         // Coupon dates
-        Optional<InterestDetails> interestDetails = getInterestDetailsFromInputs(inputs);
-        if (interestDetails.isPresent()) {
-            Set<LocalDate> couponDates = interestDetails.get().getCouponDates();
-            AtomicBoolean hasMaturityDateCoupon = new AtomicBoolean(false);
-            scheduleDates.addAll(
-                    couponDates.stream()
-                            .map(couponDate -> {
-                                if (couponDate.isEqual(maturityDate)) {
-                                    hasMaturityDateCoupon.set(true);
-                                }
-                                return new CashflowScheduleDate(couponDate, couponDate.isEqual(maturityDate) ? DateType.INTEREST_AND_MATURITY : DateType.INTEREST);
-                            })
-                            .collect(Collectors.toSet())
-            );
-            if (!hasMaturityDateCoupon.get()) {
-                scheduleDates.add(new CashflowScheduleDate(maturityDate, DateType.MATURITY));
-            }
+        List<InterestDetails> interestDetails = getInterestDetailsFromInputs(inputs);
+        AtomicBoolean hasMaturityDateCoupon = new AtomicBoolean(false);
+        for (InterestDetails interestDetail : interestDetails) {
+                Set<LocalDate> couponDates = interestDetail.getCouponDates();
+                scheduleDates.addAll(
+                        couponDates.stream()
+                                .map(couponDate -> {
+                                    if (couponDate.isEqual(maturityDate)) {
+                                        hasMaturityDateCoupon.set(true);
+                                    }
+                                    return new CashflowScheduleDate(couponDate, couponDate.isEqual(maturityDate) ? DateType.INTEREST_AND_MATURITY : DateType.INTEREST);
+                                })
+                                .collect(Collectors.toSet()));
+        }
+        if (!hasMaturityDateCoupon.get()) {
+            scheduleDates.add(new CashflowScheduleDate(maturityDate, DateType.MATURITY));
         }
 
         // Prepayment dates
@@ -305,8 +363,8 @@ public class CashflowServiceImpl implements CashflowService {
         return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.GENERAL_DETAILS).map(input -> modelMapper.map(input.getPayload(), GeneralDetails.class)).findFirst();
     }
 
-    private Optional<InterestDetails> getInterestDetailsFromInputs(List<DebtModelInputDto> inputs) {
-        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.INTEREST_DETAILS).map(input -> modelMapper.map(input.getPayload(), InterestDetails.class)).findFirst();
+    private List<InterestDetails> getInterestDetailsFromInputs(List<DebtModelInputDto> inputs) {
+        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.INTEREST_DETAILS).map(input -> Arrays.asList(modelMapper.map(input.getPayload(), InterestDetails[].class))).findFirst().orElse(new ArrayList<InterestDetails>());
     }
 
     private Optional<PrepaymentDetails> getPrepaymentDetailsFromInputs(List<DebtModelInputDto> inputs) {

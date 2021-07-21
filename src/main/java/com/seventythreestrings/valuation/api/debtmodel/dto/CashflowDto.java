@@ -9,7 +9,6 @@ import java.util.List;
 
 @Data
 public class CashflowDto {
-
     private Long id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -29,6 +28,8 @@ public class CashflowDto {
     private double presentValueSum;
 
     private double percentagePar;
+
+    private double internalRateOfReturn;
 
     private List<CashflowScheduleDto> schedules;
 }
