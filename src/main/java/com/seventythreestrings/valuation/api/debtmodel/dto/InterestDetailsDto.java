@@ -32,9 +32,7 @@ public class InterestDetailsDto {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate regimeEndDate;
 
-
 	private int versionId;
-
 
 	private PaymentFrequency interestPaymentFrequency;
 

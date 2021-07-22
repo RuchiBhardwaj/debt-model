@@ -9,12 +9,12 @@ import java.time.LocalDate;
 @Data
 public class InterestUndrawnCapitalDto {
     private Long id;
+
     private double interestUndrawnPercentage;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate regimeStartDate;
-
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -24,17 +24,11 @@ public class InterestUndrawnCapitalDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate firstPaymentDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dayOfPaymentDate;
+    private int dayOfPayment;
 
     private PaymentFrequency interestPaymentFrequency;
 
-
     private int versionId;
 
-
     private Long debtModelId;
-
-
 }

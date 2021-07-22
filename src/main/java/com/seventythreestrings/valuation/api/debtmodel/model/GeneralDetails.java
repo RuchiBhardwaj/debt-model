@@ -25,7 +25,6 @@ import java.time.LocalDate;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "general_details")
 public class GeneralDetails extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -36,45 +35,26 @@ public class GeneralDetails extends BaseEntity {
     @Column(name = "issuer_name")
     private String issuerName;
 
-
     @Size(max = 255)
     @Column(name = "geography")
     private String geography;
+
+    @Lob
+    @URL
+    @Column(name = "website")
+    private String website;
 
     @Size(max = 255)
     @Column(name = "sector")
     private String sector;
 
     @Lob
-    @URL
-    @Column(name = "websites")
-    private String websites;
-
-    @Size(max = 255)
-    @Column(name = "security_type")
-    private String securityType;
-
-
-    @Lob
     @Column(name = "description")
     private String description;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "exit_date")
-    private LocalDate exit_date;
-
-    @NotNull
-    @NotEmpty
     @Size(max = 255)
-    @Column(name = "portfolio_company_name")
-    private String portfolioCompanyName;
-
-    @NotNull
-    @NotEmpty
-    @Size(max = 255)
-    @Column(name = "debt_security_name")
-    private String debtSecurityName;
+    @Column(name = "security_name")
+    private String securityName;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -88,8 +68,17 @@ public class GeneralDetails extends BaseEntity {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "exit_date")
+    private LocalDate exitDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "maturity_date")
     private LocalDate maturityDate;
+
+    @NotNull
+    @Column(name = "day_count_convention")
+    private DayCountConvention dayCountConvention;
 
     @NotNull
     @NotEmpty
@@ -97,19 +86,24 @@ public class GeneralDetails extends BaseEntity {
     private String currency;
 
     @NotNull
-    @Column(name = "principal_amount")
-    private double principalAmount;
-
-    @NotNull
     @Column(name = "principal_outstanding")
     private double principalOutstanding;
 
     @NotNull
-    @Column(name = "day_count_convention")
-    private DayCountConvention dayCountConvention;
+    @Column(name = "principal_amount")
+    private double principalAmount;
+
+    @NotNull
+    @NotEmpty
+    @Size(max = 255)
+    @Column(name = "portfolio_company_name")
+    private String portfolioCompanyName;
 
     @Column(name = "discount_rate")
     private double discountRate = -1;
+
+    @Column(name = "version_id")
+    private int versionId;
 
     @OneToOne
     @JoinColumn(name = "debt_model_id", nullable = false)

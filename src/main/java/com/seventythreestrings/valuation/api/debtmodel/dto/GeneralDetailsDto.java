@@ -15,22 +15,14 @@ public class GeneralDetailsDto {
 
 	private String geography;
 
+	@URL
+	private String website;
+
 	private String sector;
 
 	private String description;
 
-	private String securityType;
-
-	@URL
-	private String websites;
-
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private String exit_date;
-
-	private String portfolioCompanyName;
-
-	private String debtSecurityName;
+	private String securityName;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -42,17 +34,25 @@ public class GeneralDetailsDto {
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private String exitDate;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate maturityDate;
-
-	private String currency;
-
-	private double principalAmount;
-
-	private double principalOutstanding;
 
 	private DayCountConvention dayCountConvention;
 
+	private String currency;
+
+	private double principalOutstanding;
+
+	private double principalAmount;
+
+	private String portfolioCompanyName;
+
 	private double discountRate;
+
+	private int versionId;
 
 	private Long debtModelId;
 }
