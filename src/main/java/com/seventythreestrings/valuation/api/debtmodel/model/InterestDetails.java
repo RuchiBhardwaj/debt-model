@@ -82,7 +82,7 @@ public class InterestDetails extends BaseEntity {
     @JoinColumn(name = "base_rate_curve")
     private BaseRateCurve baseRateCurve;
 
-    @OneToOne
+    @OneToMany
     @JoinColumn(name = "debt_model_id", nullable = false)
     private DebtModel debtModel;
 

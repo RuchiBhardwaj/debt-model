@@ -11,13 +11,14 @@ public class SkimsDto {
     private Long id;
 
     private double skimPercentage;
-    private double balance;
+
+    private double outstandingBalance;
+
     private int skimBase;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate regimeStartDate;
-
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -27,16 +28,11 @@ public class SkimsDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate firstPaymentDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dayOfPaymentDate;
+    private int dayOfPayment;
 
     private PaymentFrequency skimPaymentFrequency;
 
-
     private int versionId;
 
-
     private Long debtModelId;
-
 }

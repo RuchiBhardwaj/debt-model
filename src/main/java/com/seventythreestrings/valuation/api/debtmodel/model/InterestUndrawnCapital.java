@@ -1,18 +1,21 @@
 package com.seventythreestrings.valuation.api.debtmodel.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.seventythreestrings.valuation.api.common.entity.BaseEntity;
 import com.seventythreestrings.valuation.api.debtmodel.dto.PaymentFrequency;
+import com.seventythreestrings.valuation.api.debtmodel.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -22,6 +25,8 @@ import java.time.LocalDate;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "interest_undrawn_capital")
 public class InterestUndrawnCapital extends BaseEntity {
+    public static final int END_OF_MONTH = 0;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,8 +43,10 @@ public class InterestUndrawnCapital extends BaseEntity {
     @Column(name = "first_payment_date")
     private LocalDate firstPaymentDate;
 
-    @Column(name = "day_of_payment_date")
-    private LocalDate dayOfPaymentDate;
+    @Min(0)
+    @Max(28)
+    @Column(name = "day_of_payment")
+    private int dayOfPayment;
 
     @Column(name = "interest_payment_frequency")
     private PaymentFrequency interestPaymentFrequency;
@@ -47,7 +54,29 @@ public class InterestUndrawnCapital extends BaseEntity {
     @Column(name = "version_id")
     private int versionId;
 
-    @OneToOne
+    @OneToMany
     @JoinColumn(name = "debt_model_id", nullable = false)
     private DebtModel debtModel;
+
+    @JsonIgnore
+    public Set<LocalDate> getCouponDates() {
+        Set<LocalDate> couponDates = new HashSet<>();
+
+        LocalDate firstPaymentDate = this.getFirstPaymentDate();
+        LocalDate regimeEndDate = this.getRegimeEndDate();
+
+        int dayOfPayment = this.getDayOfPayment();
+        int monthIncrement = DateUtil.getMonthIncrementForPaymentFrequency(this.getInterestPaymentFrequency());
+
+        LocalDate nextCouponDate = firstPaymentDate;
+        while (nextCouponDate.isBefore(regimeEndDate)) {
+            couponDates.add(nextCouponDate);
+            nextCouponDate = nextCouponDate.plusMonths(monthIncrement);
+            nextCouponDate = nextCouponDate.withDayOfMonth(dayOfPayment == END_OF_MONTH ? nextCouponDate.lengthOfMonth() : dayOfPayment);
+        }
+        // add last payment date
+        couponDates.add(regimeEndDate);
+
+        return couponDates;
+    }
 }

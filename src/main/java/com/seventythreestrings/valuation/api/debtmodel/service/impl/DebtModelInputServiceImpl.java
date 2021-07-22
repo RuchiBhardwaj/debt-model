@@ -54,9 +54,9 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                     generalDetails.ifPresent(details -> inputs.add(new DebtModelInputDto(DebtModelInput.GENERAL_DETAILS, modelMapper.map(details, GeneralDetailsDto.class))));
                     break;
                 case INTEREST_DETAILS:
-                    Optional<InterestDetails> versionIdLatest = interestDetailsRepository.findFirstByDebtModelIdOrderByVersionIdDesc(debtModelId);
-                    if (versionIdLatest.isPresent()) {
-                        int versionId = versionIdLatest.get().getVersionId();
+                    Optional<InterestDetails> interesetDetailsVersionIdLatest = interestDetailsRepository.findFirstByDebtModelIdOrderByVersionIdDesc(debtModelId);
+                    if (interesetDetailsVersionIdLatest.isPresent()) {
+                        int versionId = interesetDetailsVersionIdLatest.get().getVersionId();
                         List<InterestDetails> interestDetails = interestDetailsRepository.findAllByDebtModelIdAndVersionId(debtModelId, versionId);
                         inputs.add(new DebtModelInputDto(DebtModelInput.INTEREST_DETAILS, modelMapper.map(interestDetails, InterestDetailsDto[].class)));
                     }
@@ -64,6 +64,30 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                 case PREPAYMENT_DETAILS:
                     Optional<PrepaymentDetails> prepaymentDetails = prepaymentDetailsRepository.findFirstByDebtModelId(debtModelId);
                     prepaymentDetails.ifPresent(details -> inputs.add(new DebtModelInputDto(DebtModelInput.PREPAYMENT_DETAILS, modelMapper.map(details, PrepaymentDetailsDto.class))));
+                    break;
+                case DEAL_FEES:
+                    Optional<DealFees> dealFeesVersionIdLatest = dealFeesRepository.findFirstByDebtModelIdOrderByVersionIdDesc(debtModelId);
+                    if (dealFeesVersionIdLatest.isPresent()) {
+                        int versionId = dealFeesVersionIdLatest.get().getVersionId();
+                        List<DealFees> dealFees = dealFeesRepository.findAllByDebtModelIdAndVersionId(debtModelId, versionId);
+                        inputs.add(new DebtModelInputDto(DebtModelInput.DEAL_FEES, modelMapper.map(dealFees, DealFees[].class)));
+                    }
+                    break;
+                case INTEREST_UNDRAWN_CAPITAL:
+                    Optional<InterestUndrawnCapital> undrawnVersionIdLatest = interestUndrwanCapitalRepository.findFirstByDebtModelIdOrderByVersionIdDesc(debtModelId);
+                    if (undrawnVersionIdLatest.isPresent()) {
+                        int versionId = undrawnVersionIdLatest.get().getVersionId();
+                        List<InterestUndrawnCapital> undrawnCapitals = interestUndrwanCapitalRepository.findAllByDebtModelIdAndVersionId(debtModelId, versionId);
+                        inputs.add(new DebtModelInputDto(DebtModelInput.INTEREST_UNDRAWN_CAPITAL, modelMapper.map(undrawnCapitals, InterestUndrawnCapital[].class)));
+                    }
+                    break;
+                case SKIMS:
+                    Optional<Skims> skimsVersionIdLatest = skimsRepository.findFirstByDebtModelIdOrderByVersionIdDesc(debtModelId);
+                    if (skimsVersionIdLatest.isPresent()) {
+                        int versionId = skimsVersionIdLatest.get().getVersionId();
+                        List<Skims> skims = skimsRepository.findAllByDebtModelIdAndVersionId(debtModelId, versionId);
+                        inputs.add(new DebtModelInputDto(DebtModelInput.SKIMS, modelMapper.map(skims, Skims[].class)));
+                    }
                     break;
                 default:
                     break;
