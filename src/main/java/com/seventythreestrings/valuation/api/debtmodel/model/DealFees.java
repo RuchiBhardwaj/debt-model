@@ -4,6 +4,7 @@ package com.seventythreestrings.valuation.api.debtmodel.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.seventythreestrings.valuation.api.common.entity.BaseEntity;
+import com.seventythreestrings.valuation.api.debtmodel.dto.FeeBase;
 import com.seventythreestrings.valuation.api.debtmodel.dto.PaymentFrequency;
 import com.seventythreestrings.valuation.api.debtmodel.util.DateUtil;
 import lombok.AllArgsConstructor;
@@ -33,7 +34,7 @@ public class DealFees extends BaseEntity {
     private Long id;
 
     @Column(name = "fee_base")
-    private int feeBase;
+    private FeeBase feeBase;
 
     @Column(name = "annual_fee_percentage")
     private double annualFeePercentage;

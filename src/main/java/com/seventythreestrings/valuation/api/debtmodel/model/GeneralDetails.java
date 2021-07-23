@@ -99,6 +99,9 @@ public class GeneralDetails extends BaseEntity {
     @Column(name = "portfolio_company_name")
     private String portfolioCompanyName;
 
+    @Column(name = "percentage_of_called_down")
+    private double percentageOfCalledDown;
+
     @Column(name = "discount_rate")
     private double discountRate = -1;
 

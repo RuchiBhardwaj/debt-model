@@ -86,10 +86,15 @@ public class CashflowServiceImpl implements CashflowService {
         Optional<GeneralDetails> generalDetailsInput = getGeneralDetailsFromInputs(inputs);
         List<InterestDetails> interestDetailsInput = getInterestDetailsFromInputs(inputs);
         Optional<PrepaymentDetails> prepaymentDetailsInput = getPrepaymentDetailsFromInputs(inputs);
+        List<DealFees> dealFees = getDealFeesFromInputs(inputs);
+        List<InterestUndrawnCapital> interestUndrawnCapitals = getInterestUndrawnCapitalFromInputs(inputs);
+        List<Skims> skims = getSkimsFromInputs(inputs);
         if (!generalDetailsInput.isPresent()) {
             return;
         }
         double principalAmount = generalDetailsInput.get().getPrincipalAmount();
+        double percentageOfCalledDown = generalDetailsInput.get().getPercentageOfCalledDown();
+        double calledDownCapital = principalAmount * percentageOfCalledDown / 100;
 
         DayCountConvention dayCountConvention = cashflow.getDayCountConvention();
         if (dayCountConvention == null) {
@@ -124,6 +129,18 @@ public class CashflowServiceImpl implements CashflowService {
             addInterestDetailsToCashflowSchedule(cashflowSchedule, interestDetailsInput, dayCountConvention, principalOutstanding);
             double interestOutflow = cashflowSchedule.getInterestOutflow();
 
+            // Set Deal Fees, Calculate Deal Fee Outflow
+            addDealFeesToCashflowSchedule(cashflowSchedule, dealFees, dayCountConvention, principalOutstanding, principalAmount);
+            double dealFeesOutflow = cashflowSchedule.getDealFeesOutflow();
+
+            // Set Interest Undrawn Capitals, Calculate Interest Undrawn Capitals Outflow
+            addInterestUndrawnCapitalToCashflowSchedule(cashflowSchedule, interestUndrawnCapitals, dayCountConvention, calledDownCapital);
+            double interestUndrwanCapitalOutflow = cashflowSchedule.getInterestUndrwanCapitalOutflow();
+
+            // Set Skims, Calculate Skims Outflow
+            addSkimsToCashflowSchedule(cashflowSchedule, skims, dayCountConvention, principalOutstanding, principalAmount);
+            double skimsOutflow = cashflowSchedule.getSkimsOutflow();
+
             // Calculate Principal Repayment and Cash Movement
             if (scheduleDate.getType() == DateType.ORIGINATION) {
                 cashflowSchedule.setPrincipalInflow(-principalAmount);
@@ -144,6 +161,12 @@ public class CashflowServiceImpl implements CashflowService {
                     cashMovement += interestOutflow + outstandingInterestOutflow;
                 }
                 outstandingInterestOutflow = 0;
+            } else if (scheduleDate.getType() == DateType.DEALFEES || scheduleDate.getType() == DateType.DEALFEES_AND_MATURITY) {
+                cashMovement = dealFeesOutflow + outstandingInterestOutflow;
+            } else if (scheduleDate.getType() == DateType.INTEREST_UNDRAWN_CAPITAL || scheduleDate.getType() == DateType.INTEREST_UNDRAWN_CAPITAL_AND_MATURITY) {
+                cashMovement = interestUndrwanCapitalOutflow + outstandingInterestOutflow;
+            } else if (scheduleDate.getType() == DateType.SKIMS || scheduleDate.getType() == DateType.SKIMS_AND_MATURITY) {
+                cashMovement = skimsOutflow + outstandingInterestOutflow;
             } else if (scheduleDate.getType() == DateType.MATURITY) {
 
             }
@@ -154,7 +177,7 @@ public class CashflowServiceImpl implements CashflowService {
                 principalAmount += interestOutflow;
             }
             cashflowSchedule.setTotalPrincipalOutstanding(principalAmount);
-            if (scheduleDate.getType() == DateType.MATURITY || scheduleDate.getType() == DateType.INTEREST_AND_MATURITY) {
+            if (scheduleDate.getType() == DateType.MATURITY || scheduleDate.getType() == DateType.INTEREST_AND_MATURITY || scheduleDate.getType() == DateType.DEALFEES_AND_MATURITY || scheduleDate.getType() == DateType.INTEREST_UNDRAWN_CAPITAL_AND_MATURITY || scheduleDate.getType() == DateType.SKIMS_AND_MATURITY) {
                 cashMovement += principalAmount;
             }
             cashflowSchedule.setTotalCashMovement(cashMovement);
@@ -252,6 +275,48 @@ public class CashflowServiceImpl implements CashflowService {
         cashflowSchedule.setYearFrac(CashflowUtil.getPartialPeriod(cashflowSchedule.getFromDate(), cashflowSchedule.getToDate(), dayCountConvention));
     }
 
+    private void addDealFeesToCashflowSchedule(CashflowSchedule cashflowSchedule, List<DealFees> dealFees, DayCountConvention dayCountConvention, double principalOutstanding, double principalAmount) {
+        Optional<DealFees> dealFee = getDealFeesByDate(dealFees, cashflowSchedule.getToDate());
+        double annualFeePercentage = getAnnualFeePercentage(dealFee, cashflowSchedule.getToDate());
+        double amount = 0.0;
+        if (dealFee.isPresent()) {
+            FeeBase feeBase = dealFee.get().getFeeBase();
+            if (feeBase == FeeBase.COMMITTED_CAPITAL) {
+                amount = principalAmount;
+            } else if (feeBase == FeeBase.CALLED_DOWN_CAPITAL) {
+                amount = principalOutstanding;
+            }
+        }
+        double dealFeesOutflow = CashflowUtil.getInterestOutflow(cashflowSchedule.getFromDate(), cashflowSchedule.getToDate(), dayCountConvention, amount, annualFeePercentage);
+        cashflowSchedule.setDealFeesOutflow(dealFeesOutflow);
+        cashflowSchedule.setAnnualFeePercentage(annualFeePercentage);
+    }
+
+    private void addInterestUndrawnCapitalToCashflowSchedule(CashflowSchedule cashflowSchedule, List<InterestUndrawnCapital> interestUndrawnCapitals, DayCountConvention dayCountConvention, double calledDownCapital) {
+        Optional<InterestUndrawnCapital> interestUndrawnCapital = getInterestUndrawnCapitalByDate(interestUndrawnCapitals, cashflowSchedule.getToDate());
+        double interestUndrawnPercentage = getInterestUndrawnPercentage(interestUndrawnCapital, cashflowSchedule.getToDate());
+        double interestUndrwanCapitalOutflow = CashflowUtil.getInterestOutflow(cashflowSchedule.getFromDate(), cashflowSchedule.getToDate(), dayCountConvention, calledDownCapital, interestUndrawnPercentage);
+        cashflowSchedule.setInterestUndrwanCapitalOutflow(interestUndrwanCapitalOutflow);
+        cashflowSchedule.setInterestUndrawnPercentage(interestUndrawnPercentage);
+    }
+
+    private void addSkimsToCashflowSchedule(CashflowSchedule cashflowSchedule, List<Skims> skims, DayCountConvention dayCountConvention, double principalOutstanding, double principalAmount) {
+        Optional<Skims> skim = getSkimsByDate(skims, cashflowSchedule.getToDate());
+        double skimPercentage = getSkimPercentage(skim, cashflowSchedule.getToDate());
+        double amount = 0.0;
+        if (skim.isPresent()) {
+            SkimBase skimBase = skim.get().getSkimBase();
+            if (skimBase == SkimBase.TERM_LOAN) {
+                amount = principalOutstanding;
+            } else if (skimBase == SkimBase.REVOLVER) {
+                amount = principalAmount;
+            }
+        }
+        double skimsOutflow = CashflowUtil.getInterestOutflow(cashflowSchedule.getFromDate(), cashflowSchedule.getToDate(), dayCountConvention, amount, skimPercentage);
+        cashflowSchedule.setSkimsOutflow(skimsOutflow);
+        cashflowSchedule.setSkimPercentage(skimPercentage);
+    }
+
     private void addPresentValueDetailsToCashflowSchedule(CashflowSchedule cashflowSchedule, DayCountConvention dayCountConvention, double cashMovement) {
         Cashflow cashflow = cashflowSchedule.getCashflow();
         LocalDate date = cashflowSchedule.getToDate();
@@ -274,16 +339,58 @@ public class CashflowServiceImpl implements CashflowService {
         return schedules.stream().filter(schedule -> schedule.getDate().isEqual(date)).findFirst().map(PaymentSchedule::getAmount).orElse(0.0);
     }
 
-    private Optional<InterestDetails> getInterestDetailsByDate(List<InterestDetails> input, LocalDate date) {
+    private Optional<InterestDetails> getInterestDetailsByDate(List<InterestDetails> inputs, LocalDate date) {
         // get single interest details
         // regime start date and end dates are inclusive
-        return input.stream().filter(interestDetail -> !interestDetail.getRegimeStartDate().isAfter(date)).
-                filter(interestDetail -> !interestDetail.getRegimeEndDate().isBefore(date)).findFirst();
+        return inputs.stream().filter(input -> !input.getRegimeStartDate().isAfter(date)).
+                filter(input -> !input.getRegimeEndDate().isBefore(date)).findFirst();
+    }
+
+    private Optional<DealFees> getDealFeesByDate(List<DealFees> inputs, LocalDate date) {
+        // get single deal fees
+        // regime start date and end dates are inclusive
+        return inputs.stream().filter(input -> !input.getRegimeStartDate().isAfter(date)).
+                filter(input -> !input.getRegimeEndDate().isBefore(date)).findFirst();
+    }
+
+    private Optional<InterestUndrawnCapital> getInterestUndrawnCapitalByDate(List<InterestUndrawnCapital> inputs, LocalDate date) {
+        // get single interest details
+        // regime start date and end dates are inclusive
+        return inputs.stream().filter(input -> !input.getRegimeStartDate().isAfter(date)).
+                filter(input -> !input.getRegimeEndDate().isBefore(date)).findFirst();
+    }
+
+    private Optional<Skims> getSkimsByDate(List<Skims> inputs, LocalDate date) {
+        // get single interest details
+        // regime start date and end dates are inclusive
+        return inputs.stream().filter(input -> !input.getRegimeStartDate().isAfter(date)).
+                filter(input -> !input.getRegimeEndDate().isBefore(date)).findFirst();
     }
 
     private boolean getIsInterestAccrued(List<InterestDetails> input, LocalDate date) {
         Optional<InterestDetails> interestDetail = getInterestDetailsByDate(input , date);
         return interestDetail.map(interestDetails -> interestDetails.getInterestPaidOrAccrued().equals(InterestType.ACCRUED)).orElse(false);
+    }
+
+    private double getAnnualFeePercentage(Optional<DealFees> input, LocalDate date) {
+        if (!input.isPresent()) {
+            return 0.0;
+        }
+        return input.map(DealFees::getAnnualFeePercentage).orElse(0.0);
+    }
+
+    private double getInterestUndrawnPercentage(Optional<InterestUndrawnCapital> input, LocalDate date) {
+        if (!input.isPresent()) {
+            return 0.0;
+        }
+        return input.map(InterestUndrawnCapital::getInterestUndrawnPercentage).orElse(0.0);
+    }
+
+    private double getSkimPercentage(Optional<Skims> input, LocalDate date) {
+        if (!input.isPresent()) {
+            return 0.0;
+        }
+        return input.map(Skims::getSkimPercentage).orElse(0.0);
     }
 
     private double getTotalInterestRate(Optional<InterestDetails> input, LocalDate date) {
@@ -331,6 +438,52 @@ public class CashflowServiceImpl implements CashflowService {
                                 })
                                 .collect(Collectors.toSet()));
         }
+
+        // Deal fees
+        List<DealFees> dealFees = getDealFeesFromInputs(inputs);
+        for (DealFees dealFee : dealFees) {
+            Set<LocalDate> couponDates = dealFee.getCouponDates();
+            scheduleDates.addAll(
+                    couponDates.stream()
+                            .map(couponDate -> {
+                                if (couponDate.isEqual(maturityDate)) {
+                                    hasMaturityDateCoupon.set(true);
+                                }
+                                return new CashflowScheduleDate(couponDate, couponDate.isEqual(maturityDate) ? DateType.DEALFEES_AND_MATURITY : DateType.DEALFEES);
+                            })
+                            .collect(Collectors.toSet()));
+        }
+
+        // Undrawn Capital
+        List<InterestUndrawnCapital> interestUndrawnCapitals = getInterestUndrawnCapitalFromInputs(inputs);
+        for (InterestUndrawnCapital interestUndrawnCapital : interestUndrawnCapitals) {
+            Set<LocalDate> couponDates = interestUndrawnCapital.getCouponDates();
+            scheduleDates.addAll(
+                    couponDates.stream()
+                            .map(couponDate -> {
+                                if (couponDate.isEqual(maturityDate)) {
+                                    hasMaturityDateCoupon.set(true);
+                                }
+                                return new CashflowScheduleDate(couponDate, couponDate.isEqual(maturityDate) ? DateType.INTEREST_UNDRAWN_CAPITAL_AND_MATURITY : DateType.INTEREST_UNDRAWN_CAPITAL);
+                            })
+                            .collect(Collectors.toSet()));
+        }
+
+        // Skims
+        List<Skims> skims = getSkimsFromInputs(inputs);
+        for (Skims skim : skims) {
+            Set<LocalDate> couponDates = skim.getCouponDates();
+            scheduleDates.addAll(
+                    couponDates.stream()
+                            .map(couponDate -> {
+                                if (couponDate.isEqual(maturityDate)) {
+                                    hasMaturityDateCoupon.set(true);
+                                }
+                                return new CashflowScheduleDate(couponDate, couponDate.isEqual(maturityDate) ? DateType.SKIMS_AND_MATURITY : DateType.SKIMS);
+                            })
+                            .collect(Collectors.toSet()));
+        }
+
         if (!hasMaturityDateCoupon.get()) {
             scheduleDates.add(new CashflowScheduleDate(maturityDate, DateType.MATURITY));
         }
@@ -369,5 +522,17 @@ public class CashflowServiceImpl implements CashflowService {
 
     private Optional<PrepaymentDetails> getPrepaymentDetailsFromInputs(List<DebtModelInputDto> inputs) {
         return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.PREPAYMENT_DETAILS).map(input -> modelMapper.map(input.getPayload(), PrepaymentDetails.class)).findFirst();
+    }
+
+    private List<DealFees> getDealFeesFromInputs(List<DebtModelInputDto> inputs) {
+        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.DEAL_FEES).map(input -> Arrays.asList(modelMapper.map(input.getPayload(), DealFees[].class))).findFirst().orElse(new ArrayList<DealFees>());
+    }
+
+    private List<InterestUndrawnCapital> getInterestUndrawnCapitalFromInputs(List<DebtModelInputDto> inputs) {
+        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.INTEREST_UNDRAWN_CAPITAL).map(input -> Arrays.asList(modelMapper.map(input.getPayload(), InterestUndrawnCapital[].class))).findFirst().orElse(new ArrayList<InterestUndrawnCapital>());
+    }
+
+    private List<Skims> getSkimsFromInputs(List<DebtModelInputDto> inputs) {
+        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.SKIMS).map(input -> Arrays.asList(modelMapper.map(input.getPayload(), Skims[].class))).findFirst().orElse(new ArrayList<Skims>());
     }
 }

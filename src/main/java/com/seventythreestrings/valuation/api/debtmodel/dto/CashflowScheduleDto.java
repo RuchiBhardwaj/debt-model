@@ -8,7 +8,6 @@ import java.time.LocalDate;
 
 @Data
 public class CashflowScheduleDto {
-
     private Long id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -38,6 +37,18 @@ public class CashflowScheduleDto {
     private double partialPeriod;
 
     private double discountingFactor;
+
+    private double annualFeePercentage;
+
+    private double dealFeesOutflow;
+
+    private double interestUndrawnPercentage;
+
+    private double interestUndrwanCapitalOutflow;
+
+    private double skimPercentage;
+
+    private double skimsOutflow;
 
     private double presentValue;
 
