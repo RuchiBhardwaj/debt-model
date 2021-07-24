@@ -59,7 +59,7 @@ public class DealFees extends BaseEntity {
     @Column(name = "version_id")
     private int versionId;
 
-    @OneToMany
+    @OneToOne
     @JoinColumn(name = "debt_model_id", nullable = false)
     private DebtModel debtModel;
 
