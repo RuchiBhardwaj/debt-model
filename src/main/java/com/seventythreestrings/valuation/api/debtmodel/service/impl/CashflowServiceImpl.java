@@ -135,7 +135,7 @@ public class CashflowServiceImpl implements CashflowService {
 
             // Set Interest Undrawn Capitals, Calculate Interest Undrawn Capitals Outflow
             addInterestUndrawnCapitalToCashflowSchedule(cashflowSchedule, interestUndrawnCapitals, dayCountConvention, calledDownCapital);
-            double interestUndrwanCapitalOutflow = cashflowSchedule.getInterestUndrwanCapitalOutflow();
+            double interestUndrawnCapitalOutflow = cashflowSchedule.getInterestUndrawnCapitalOutflow();
 
             // Set Skims, Calculate Skims Outflow
             addSkimsToCashflowSchedule(cashflowSchedule, skims, dayCountConvention, principalOutstanding, principalAmount);
@@ -164,7 +164,7 @@ public class CashflowServiceImpl implements CashflowService {
             } else if (scheduleDate.getType() == DateType.DEALFEES || scheduleDate.getType() == DateType.DEALFEES_AND_MATURITY) {
                 cashMovement = dealFeesOutflow + outstandingInterestOutflow;
             } else if (scheduleDate.getType() == DateType.INTEREST_UNDRAWN_CAPITAL || scheduleDate.getType() == DateType.INTEREST_UNDRAWN_CAPITAL_AND_MATURITY) {
-                cashMovement = interestUndrwanCapitalOutflow + outstandingInterestOutflow;
+                cashMovement = interestUndrawnCapitalOutflow + outstandingInterestOutflow;
             } else if (scheduleDate.getType() == DateType.SKIMS || scheduleDate.getType() == DateType.SKIMS_AND_MATURITY) {
                 cashMovement = skimsOutflow + outstandingInterestOutflow;
             } else if (scheduleDate.getType() == DateType.MATURITY) {
@@ -295,8 +295,8 @@ public class CashflowServiceImpl implements CashflowService {
     private void addInterestUndrawnCapitalToCashflowSchedule(CashflowSchedule cashflowSchedule, List<InterestUndrawnCapital> interestUndrawnCapitals, DayCountConvention dayCountConvention, double calledDownCapital) {
         Optional<InterestUndrawnCapital> interestUndrawnCapital = getInterestUndrawnCapitalByDate(interestUndrawnCapitals, cashflowSchedule.getToDate());
         double interestUndrawnPercentage = getInterestUndrawnPercentage(interestUndrawnCapital, cashflowSchedule.getToDate());
-        double interestUndrwanCapitalOutflow = CashflowUtil.getInterestOutflow(cashflowSchedule.getFromDate(), cashflowSchedule.getToDate(), dayCountConvention, calledDownCapital, interestUndrawnPercentage);
-        cashflowSchedule.setInterestUndrwanCapitalOutflow(interestUndrwanCapitalOutflow);
+        double interestUndrawnCapitalOutflow = CashflowUtil.getInterestOutflow(cashflowSchedule.getFromDate(), cashflowSchedule.getToDate(), dayCountConvention, calledDownCapital, interestUndrawnPercentage);
+        cashflowSchedule.setInterestUndrawnCapitalOutflow(interestUndrawnCapitalOutflow);
         cashflowSchedule.setInterestUndrawnPercentage(interestUndrawnPercentage);
     }
 

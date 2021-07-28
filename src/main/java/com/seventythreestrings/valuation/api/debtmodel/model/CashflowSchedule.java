@@ -72,11 +72,11 @@ public class CashflowSchedule extends BaseEntity {
     @Column(name = "deal_fees_outflow")
     private double dealFeesOutflow;
 
-    @Column(name = "interest_undrwan_percentage")
+    @Column(name = "interest_undrawn_percentage")
     private double interestUndrawnPercentage;
 
-    @Column(name = "interest_undrwan_capital_outflow")
-    private double interestUndrwanCapitalOutflow;
+    @Column(name = "interest_undrawn_capital_outflow")
+    private double interestUndrawnCapitalOutflow;
 
     @Column(name = "skim_percentage")
     private double skimPercentage;
