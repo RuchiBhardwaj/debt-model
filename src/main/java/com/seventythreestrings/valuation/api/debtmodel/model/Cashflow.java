@@ -51,7 +51,7 @@ public class Cashflow extends BaseEntity {
     @Column(name = "percentage_par")
     private double percentagePar;
 
-    @Column(name = "internal_rate_of_return", columnDefinition = "double default 0.0")
+    @Column(name = "internal_rate_of_return")
     private double internalRateOfReturn;
 
     @Column(name = "day_count_convention")

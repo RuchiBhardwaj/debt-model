@@ -22,7 +22,6 @@ import java.time.LocalDate;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "cashflow_schedule")
 public class CashflowSchedule extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -66,6 +65,24 @@ public class CashflowSchedule extends BaseEntity {
 
     @Column(name = "discounting_factor")
     private double discountingFactor;
+
+    @Column(name = "annual_fee_percentage")
+    private double annualFeePercentage;
+
+    @Column(name = "deal_fees_outflow")
+    private double dealFeesOutflow;
+
+    @Column(name = "interest_undrawn_percentage")
+    private double interestUndrawnPercentage;
+
+    @Column(name = "interest_undrawn_capital_outflow")
+    private double interestUndrawnCapitalOutflow;
+
+    @Column(name = "skim_percentage")
+    private double skimPercentage;
+
+    @Column(name = "skims_outflow")
+    private double skimsOutflow;
 
     @Column(name = "present_value")
     private double presentValue;

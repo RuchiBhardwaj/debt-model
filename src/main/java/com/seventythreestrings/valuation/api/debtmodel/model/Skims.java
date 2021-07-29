@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.seventythreestrings.valuation.api.common.entity.BaseEntity;
 import com.seventythreestrings.valuation.api.debtmodel.dto.PaymentFrequency;
+import com.seventythreestrings.valuation.api.debtmodel.dto.SkimBase;
 import com.seventythreestrings.valuation.api.debtmodel.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,7 +39,7 @@ public class Skims extends BaseEntity {
     private double outstandingBalance;
 
     @Column(name = "skim_base")
-    private int skimBase;
+    private SkimBase skimBase;
 
     @Column(name = "regime_start_date")
     private LocalDate regimeStartDate;

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class DealFeesDto {
     private Long id;
 
-    private int feeBase;
+    private FeeBase feeBase;
 
     private double annualFeePercentage;
 

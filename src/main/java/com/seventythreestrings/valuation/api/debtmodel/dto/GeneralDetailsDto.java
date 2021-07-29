@@ -50,6 +50,8 @@ public class GeneralDetailsDto {
 
 	private String portfolioCompanyName;
 
+	private double percentageOfCalledDown;
+
 	private double discountRate;
 
 	private int versionId;
