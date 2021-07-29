@@ -84,6 +84,18 @@ public class ModelMapperExplicitMappings {
         modelMapper.addMappings((mapAnnualHistoricalFinancialDtoTOModel()));
         modelMapper.addMappings((mapAnnualHistoricalFinancialModelToDto()));
 
+        //CustomizableCashflow
+        modelMapper.addMappings((mapCustomizableCashflowDtoToModel()));
+        modelMapper.addMappings((mapCustomizableCashflowModelToDto()));
+
+        //CustomizableCashflowExcel
+        modelMapper.addMappings((mapCustomizableCashflowExcelDtoToModel()));
+        modelMapper.addMappings((mapCustomizableCashflowExcelModelToDto()));
+
+        //InterimPaymentDetails
+        modelMapper.addMappings((mapInterimPaymentDetailsDtoToModel()));
+        modelMapper.addMappings((mapInterimPaymentDetailsModelToDto()));
+
 
         //DiscountRate
         modelMapper.addMappings((mapDiscountRateComputationModelToDto()));
@@ -92,6 +104,7 @@ public class ModelMapperExplicitMappings {
         //DiscountAdjustment
         modelMapper.addMappings((mapDiscountAdjustmentModelToDto()));
         modelMapper.addMappings((mapDiscountAdjustmentDtoToModel()));
+
 
 
         // LocalDate
@@ -418,6 +431,65 @@ public class ModelMapperExplicitMappings {
             }
         };
     }
+
+    //CustomizableCashflow
+    PropertyMap<CustomizableCashflowDto, CustomizableCashflow> mapCustomizableCashflowDtoToModel(){
+        return  new PropertyMap<CustomizableCashflowDto, CustomizableCashflow>() {
+            @Override
+            protected void configure() {
+                map().getDebtModel().setId(source.getDebtModelId());
+            }
+        };
+    }
+
+    PropertyMap< CustomizableCashflow,CustomizableCashflowDto> mapCustomizableCashflowModelToDto () {
+        return new PropertyMap<CustomizableCashflow,CustomizableCashflowDto>() {
+            @Override
+            protected void configure() {
+                map().setDebtModelId(source.getDebtModel().getId());
+            }
+        };
+    }
+
+    //CustomizableCashflowExcel
+    PropertyMap<CustomizableCashflowExcelDDto,CustomizableCashflowExcel> mapCustomizableCashflowExcelDtoToModel () {
+        return new PropertyMap<CustomizableCashflowExcelDDto,CustomizableCashflowExcel>() {
+            @Override
+            protected void configure() {
+                map().getDebtModel().setId(source.getDebtModelId());
+            }
+        };
+    }
+
+    PropertyMap<CustomizableCashflowExcel,CustomizableCashflowExcelDDto> mapCustomizableCashflowExcelModelToDto () {
+        return new PropertyMap<CustomizableCashflowExcel,CustomizableCashflowExcelDDto>() {
+            @Override
+            protected void configure() {
+                map().setDebtModelId(source.getDebtModel().getId());
+            }
+        };
+    }
+
+    //InterimPaymentDetails
+    PropertyMap<InterimPaymentDetailsDto,InterimPaymentDetails> mapInterimPaymentDetailsDtoToModel () {
+        return new PropertyMap<InterimPaymentDetailsDto,InterimPaymentDetails>() {
+            @Override
+            protected void configure() {
+                map().getCustomizableCashflowExcel().setId(source.getCustomizableCashflowExcelId());
+            }
+        };
+    }
+
+    PropertyMap<InterimPaymentDetails,InterimPaymentDetailsDto> mapInterimPaymentDetailsModelToDto () {
+        return new PropertyMap<InterimPaymentDetails,InterimPaymentDetailsDto>() {
+            @Override
+            protected void configure() {
+                map().setCustomizableCashflowExcelId(source.getCustomizableCashflowExcel().getId());
+            }
+        };
+    }
+
+
 
 
 

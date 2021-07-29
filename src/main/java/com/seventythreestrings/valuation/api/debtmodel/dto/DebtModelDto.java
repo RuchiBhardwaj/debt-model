@@ -13,6 +13,8 @@ public class DebtModelDto {
 
     private List<DebtModelInput> inputs;
 
+    private Long portfolioId;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "UTC")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime analysisDate;

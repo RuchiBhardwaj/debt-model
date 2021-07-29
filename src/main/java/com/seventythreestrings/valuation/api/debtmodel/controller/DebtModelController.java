@@ -85,6 +85,15 @@ public class DebtModelController {
 		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
 	}
 
+	@GetMapping("/{portfolioId}/value")
+	public ResponseEntity<ApiResponse<DebtModelDto>> getListOfDebt(@PathVariable(value = "portfolioId") @NotNull Long portfolioId) {
+		ApiResponse<DebtModelDto> apiResponse = new ApiResponse<>();
+		List<DebtModelDto> debtModel = debtModelService.getListOfDebtModels(portfolioId);
+		apiResponse.setSuccess(true);
+		apiResponse.setResponse(modelMapper.map(debtModel, DebtModelDto.class));
+		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+	}
+
 	@PutMapping("/{id}")
 	public ResponseEntity<ApiResponse<DebtModelDto>> update(@RequestBody DebtModelDto debtModelDto, @PathVariable(value = "id") @NotNull Long id) {
 		ApiResponse<DebtModelDto> apiResponse = new ApiResponse<>();

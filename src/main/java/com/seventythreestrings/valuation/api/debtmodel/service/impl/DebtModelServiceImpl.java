@@ -1,6 +1,6 @@
 package com.seventythreestrings.valuation.api.debtmodel.service.impl;
 
-import com.seventythreestrings.valuation.api.debtmodel.dto.SortOrder;
+import com.seventythreestrings.valuation.api.debtmodel.dto.*;
 import com.seventythreestrings.valuation.api.debtmodel.model.DebtModel;
 import com.seventythreestrings.valuation.api.debtmodel.repository.DebtModelRepository;
 import com.seventythreestrings.valuation.api.debtmodel.service.DebtModelService;
@@ -8,12 +8,14 @@ import com.seventythreestrings.valuation.api.exception.AppException;
 import com.seventythreestrings.valuation.api.exception.ErrorCodesAndMessages;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,6 +23,7 @@ import java.util.List;
 @Transactional
 public class DebtModelServiceImpl implements DebtModelService {
     private final DebtModelRepository repository;
+    private final ModelMapper modelMapper;
 
     @Override
     public List<DebtModel> getAll() {
@@ -39,6 +42,19 @@ public class DebtModelServiceImpl implements DebtModelService {
         return repository
                 .findById(id)
                 .orElseThrow(() -> new AppException(ErrorCodesAndMessages.NOT_FOUND_EXCEPTION));
+    }
+
+    @SneakyThrows
+    @Override
+    public List<DebtModelDto> getListOfDebtModels(Long portfolioId){
+        List<DebtModelDto> inp = new ArrayList<>();
+        List<DebtModel> debtModels = repository.findAllByPortfolioId(portfolioId);
+        modelMapper.map(debtModels,DebtModelDto[].class);
+        for(DebtModel d : debtModels){
+            DebtModelDto map = modelMapper.map(d, DebtModelDto.class);
+            inp.add(map);
+        }
+        return inp;
     }
 
     @Override

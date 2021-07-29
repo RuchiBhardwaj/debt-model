@@ -46,6 +46,9 @@ public class DebtModel extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "portfolio_id")
+    private Long portfolioId;
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<DebtModelInput> inputs = new ArrayList<>();
 

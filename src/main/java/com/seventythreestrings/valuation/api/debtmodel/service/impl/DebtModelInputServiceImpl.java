@@ -7,6 +7,7 @@ import com.seventythreestrings.valuation.api.debtmodel.service.DebtModelInputSer
 import com.seventythreestrings.valuation.api.debtmodel.service.DebtModelService;
 import com.seventythreestrings.valuation.api.exception.AppException;
 import com.seventythreestrings.valuation.api.exception.ErrorCodesAndMessages;
+import com.sun.org.apache.bcel.internal.generic.SWITCH;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
@@ -33,6 +34,9 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
     private final IssuerFinancialRepository issuerFinancialRepository;
     private final AnnualHistoricalFinancialRepository annualHistoricalFinancialRepository;
     private final AnnualProjectedFinancialRepository annualProjectedFinancialRepository;
+    private final CustomizableCashflowRepository customizableCashflowRepository;
+    private final CustomizableCashflowExcelRepository customizableCashflowExcelRepository;
+    private final InterimPaymentDetailsRepository interimPaymentDetailsRepository;
 
 
     private final DebtModelService debtModelService;
@@ -196,8 +200,31 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
         return null;
     }
 
+    public Object createCustomizableCashflow(CashflowDates cashflowDatesType,Object o,Long debtModelId){
+        DebtModel debtModel = debtModelService.get(debtModelId);
+        switch(cashflowDatesType) {
+            case Pre_existingDates:
+                List<CustomizableCashflow> customizableCashflows = Arrays.asList(modelMapper.map(o,CustomizableCashflow[].class));
+                for(CustomizableCashflow customizable: customizableCashflows) {
+                    customizable.setDebtModel(debtModel);
+                    customizable.setCashflowDates(cashflowDatesType);
+                }
+                return Arrays.asList(modelMapper.map(customizableCashflowRepository.saveAll(customizableCashflows),CustomizableCashflowDto[].class));
+            case Upload_excel_for_dates:
+                CustomizableCashflowExcel customizableCashflowExcel = modelMapper.map(o, CustomizableCashflowExcel.class);
+                customizableCashflowExcel.setDebtModel(debtModel);
+                customizableCashflowExcel.setCashflowDates(cashflowDatesType);
+                customizableCashflowExcel.getInterimPaymentDetails().forEach(interimPaymentDetails-> interimPaymentDetails.setCustomizableCashflowExcel(customizableCashflowExcel));
+                return modelMapper.map(customizableCashflowExcelRepository.save(customizableCashflowExcel),CustomizableCashflowExcel.class);
+            default:
+                break;
+        }
+        return null;
+
+    }
+
     @Override
-    public Object createDiscount(DiscountRateComputationDto discountRateComputationDto){
+    public DiscountRateComputationDto createDiscount(DiscountRateComputationDto discountRateComputationDto){
         DiscountRateComputaion discountRateComputaion = modelMapper.map(discountRateComputationDto, DiscountRateComputaion.class);
         discountRateComputaion.getDiscountAdjustments().forEach(discountAdjustment -> discountAdjustment.setDiscountRateComputation(discountRateComputaion));
         return modelMapper.map(discountRateComputationRepository.save(discountRateComputaion), DiscountRateComputationDto.class);

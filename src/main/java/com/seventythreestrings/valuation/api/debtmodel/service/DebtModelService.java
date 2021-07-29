@@ -1,5 +1,6 @@
 package com.seventythreestrings.valuation.api.debtmodel.service;
 
+import com.seventythreestrings.valuation.api.debtmodel.dto.DebtModelDto;
 import com.seventythreestrings.valuation.api.debtmodel.dto.SortOrder;
 import com.seventythreestrings.valuation.api.debtmodel.model.DebtModel;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,8 @@ public interface DebtModelService {
 	Page<DebtModel> getAllPaginatedWithGeneralDetailsAndCashflow(String sortField, SortOrder sortOrder, int pageNumber, int pageSize);
 
 	DebtModel get(Long id);
+
+	List<DebtModelDto> getListOfDebtModels(Long portfolioId);
 
 	DebtModel create(DebtModel model);
 

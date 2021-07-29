@@ -1,8 +1,6 @@
 package com.seventythreestrings.valuation.api.debtmodel.controller;
 
-import com.seventythreestrings.valuation.api.debtmodel.dto.DebtModelInput;
-import com.seventythreestrings.valuation.api.debtmodel.dto.DebtModelInputDto;
-import com.seventythreestrings.valuation.api.debtmodel.dto.DiscountRateComputationDto;
+import com.seventythreestrings.valuation.api.debtmodel.dto.*;
 import com.seventythreestrings.valuation.api.debtmodel.service.DebtModelInputService;
 import com.seventythreestrings.valuation.api.exception.ErrorCodesAndMessages;
 import com.seventythreestrings.valuation.api.util.ApiResponse;
@@ -11,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
@@ -59,11 +58,31 @@ public class DebtModelInputController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
+    @PostMapping("Customizable/{cashflowDateType}/")
+    public ResponseEntity<ApiResponse<CustomizableDto>> createCustomizableCashflow(
+            @PathVariable(value = "debtModelId") @NotNull Long debtModelId,
+            @PathVariable(value = "cashflowDateType") @NotNull CashflowDates cashflowDateType,
+            @RequestBody CustomizableDto customizableDto){
+        Object payload = customizableDto.getPayload();
+        Object model = debtModelInputService.createCustomizableCashflow(cashflowDateType,payload,debtModelId);
+        CustomizableDto input = new CustomizableDto(cashflowDateType,model);
+
+        ApiResponse<CustomizableDto> apiResponse = new ApiResponse<>();
+        apiResponse.setSuccess(true);
+        apiResponse.setResponse(input);
+        apiResponse.setMessage("Customizable cashflow is created");
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+
+    }
+
+
+
+
     @PostMapping("/discount")
     public ResponseEntity<ApiResponse<DiscountRateComputationDto>> createDiscount(@RequestBody DiscountRateComputationDto discountRateComputationDto){
         ApiResponse<DiscountRateComputationDto> apiResponse = new ApiResponse<>();
         try {
-            Object discount = debtModelInputService.createDiscount(discountRateComputationDto);
+            DiscountRateComputationDto discount = debtModelInputService.createDiscount(discountRateComputationDto);
             apiResponse.setSuccess(true);
             apiResponse.setResponse((modelMapper.map(discount,DiscountRateComputationDto.class)));
             apiResponse.setMessage("Debt Model Created Successfully");
