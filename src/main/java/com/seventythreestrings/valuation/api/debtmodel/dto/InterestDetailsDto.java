@@ -14,8 +14,6 @@ import java.time.LocalDate;
 public class InterestDetailsDto {
 	private Long id;
 
-	private Boolean hasInterestPayment;
-
 	private InterestType interestPaidOrAccrued;
 
 	private InterestPayment interestPaymentType;

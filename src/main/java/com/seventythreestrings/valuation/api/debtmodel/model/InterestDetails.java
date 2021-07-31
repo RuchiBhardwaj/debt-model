@@ -32,10 +32,6 @@ public class InterestDetails extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
-    @Column(name = "has_interest_payment")
-    private Boolean hasInterestPayment;
-
     @Column(name = "interest_paid_or_accrued")
     private InterestType interestPaidOrAccrued;
 
@@ -89,11 +85,6 @@ public class InterestDetails extends BaseEntity {
     @JsonIgnore
     public Set<LocalDate> getCouponDates() {
         Set<LocalDate> couponDates = new HashSet<>();
-
-        // Check if Debt model has interest payments
-        if (!this.getHasInterestPayment()) {
-            return couponDates;
-        }
 
         LocalDate firstInterestPaymentDate = this.getFirstInterestPaymentDate();
         LocalDate regimeEndDate = this.getRegimeEndDate();
