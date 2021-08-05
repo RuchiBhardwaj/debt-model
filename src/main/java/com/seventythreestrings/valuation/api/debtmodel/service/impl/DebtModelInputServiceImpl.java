@@ -7,7 +7,6 @@ import com.seventythreestrings.valuation.api.debtmodel.service.DebtModelInputSer
 import com.seventythreestrings.valuation.api.debtmodel.service.DebtModelService;
 import com.seventythreestrings.valuation.api.exception.AppException;
 import com.seventythreestrings.valuation.api.exception.ErrorCodesAndMessages;
-import com.sun.org.apache.bcel.internal.generic.SWITCH;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
@@ -100,6 +99,34 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
 
         return inputs;
     }
+
+    @SneakyThrows
+    @Override
+    public List<CustomizableDto> getCustomizationCashflowData(Long debtModelId, CashflowDates cashflowDates){
+        List<CustomizableDto> inputs = new ArrayList<>();
+        DebtModel debtModel = debtModelService.get(debtModelId);
+        // TODO:
+        if (debtModel == null || debtModel.getInputs().size() == 0) {
+            return inputs;
+        }
+        switch (cashflowDates){
+            case Pre_existingDates:
+                Optional<CustomizableCashflow> customizableCashflowVersionIdLatest = customizableCashflowRepository.findFirstByDebtModelIdOrderByVersionIdDesc(debtModelId);
+                if (customizableCashflowVersionIdLatest.isPresent()) {
+                    int versionId = customizableCashflowVersionIdLatest.get().getVersionId();
+                    List<CustomizableCashflow> customizableCashflows = customizableCashflowRepository.findAllByDebtModelIdAndVersionId(debtModelId, versionId);
+                    inputs.add(new CustomizableDto(CashflowDates.Pre_existingDates, modelMapper.map(customizableCashflows, CustomizableCashflowDto[].class)));
+                }
+            case Upload_excel_for_dates:
+                Optional<CustomizableCashflowExcel> customizableCashflowExcel = customizableCashflowExcelRepository.findFirstByDebtModelId(debtModelId);
+                customizableCashflowExcel.ifPresent(details -> inputs.add(new CustomizableDto(CashflowDates.Upload_excel_for_dates, modelMapper.map(details, CustomizableCashflowExcelDDto.class))));
+                break;
+            default:
+                break;
+        }
+        return inputs;
+    }
+
 
     @SneakyThrows
     @Override
@@ -200,6 +227,8 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
         return null;
     }
 
+    @Transactional
+    @Override
     public Object createCustomizableCashflow(CashflowDates cashflowDatesType,Object o,Long debtModelId){
         DebtModel debtModel = debtModelService.get(debtModelId);
         switch(cashflowDatesType) {
@@ -220,8 +249,8 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                 break;
         }
         return null;
-
     }
+
 
     @Override
     public DiscountRateComputationDto createDiscount(DiscountRateComputationDto discountRateComputationDto){
@@ -233,6 +262,11 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
     @Override
     public Object update(DebtModelInput inputType, Object o, Long debtModelId) {
         return create(inputType, o, debtModelId);
+    }
+
+    @Override
+    public Object updateCustomizableCashflow(CashflowDates cashflowDates, Object o, Long debtModelId) {
+        return createCustomizableCashflow(cashflowDates, o, debtModelId);
     }
 
     @Transactional

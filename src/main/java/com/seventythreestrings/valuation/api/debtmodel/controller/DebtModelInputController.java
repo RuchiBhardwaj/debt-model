@@ -41,6 +41,19 @@ public class DebtModelInputController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
+    @GetMapping("/{customizableDatesType}")
+    public ResponseEntity<ApiResponse<List<CustomizableDto>>> getCustomizationCashflow(@PathVariable(value = "debtModelId") @NotNull Long debtModelId
+            , @PathVariable(value = "customizableDatesType") @NotNull CashflowDates cashflowDates) {
+        List<CustomizableDto> inputs = debtModelInputService.getCustomizationCashflowData(debtModelId,cashflowDates);
+
+        ApiResponse<List<CustomizableDto>> apiResponse = new ApiResponse<>();
+        apiResponse.setSuccess(true);
+        apiResponse.setResponse(inputs);
+        apiResponse.setMessage("Customization Cashflow");
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+
     @PostMapping("/{inputType}")
     public ResponseEntity<ApiResponse<DebtModelInputDto>> create(
             @PathVariable(value = "debtModelId") @NotNull Long debtModelId,
@@ -74,9 +87,6 @@ public class DebtModelInputController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
 
     }
-
-
-
 
     @PostMapping("/discount")
     public ResponseEntity<ApiResponse<DiscountRateComputationDto>> createDiscount(@RequestBody DiscountRateComputationDto discountRateComputationDto){
@@ -125,6 +135,22 @@ public class DebtModelInputController {
         apiResponse.setSuccess(true);
         apiResponse.setResponse(input);
         apiResponse.setMessage("Debt Model Input updated successfully");
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+    @PutMapping("dataaa/{cashflowDatesTypeId}/{debtModelId}")
+    public ResponseEntity<ApiResponse<CustomizableDto>> updateCustomizableCashflow(
+            @PathVariable(value = "debtModelId") @NotNull Long debtModelId,
+            @PathVariable(value = "cashflowDatesTypeId") @NotNull CashflowDates cashflowDates,
+            @RequestBody CustomizableDto customizableDto) {
+        Object payload = customizableDto.getPayload();
+        Object model = debtModelInputService.updateCustomizableCashflow(cashflowDates, payload, debtModelId);
+        CustomizableDto input = new CustomizableDto(cashflowDates, model);
+
+        ApiResponse<CustomizableDto> apiResponse = new ApiResponse<>();
+        apiResponse.setSuccess(true);
+        apiResponse.setResponse(input);
+        apiResponse.setMessage("Customizable Cashflow Input updated successfully");
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 

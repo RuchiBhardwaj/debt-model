@@ -1,9 +1,6 @@
 package com.seventythreestrings.valuation.api.debtmodel.service;
 
-import com.seventythreestrings.valuation.api.debtmodel.dto.CashflowDates;
-import com.seventythreestrings.valuation.api.debtmodel.dto.DebtModelInput;
-import com.seventythreestrings.valuation.api.debtmodel.dto.DebtModelInputDto;
-import com.seventythreestrings.valuation.api.debtmodel.dto.DiscountRateComputationDto;
+import com.seventythreestrings.valuation.api.debtmodel.dto.*;
 
 import java.util.List;
 
@@ -23,5 +20,8 @@ public interface DebtModelInputService {
 
 	Object createCustomizableCashflow(CashflowDates cashflowDatesType, Object o, Long debtModelId);
 
+	List<CustomizableDto> getCustomizationCashflowData(Long debtModelId, CashflowDates cashflowDates);
 
-}
+	Object updateCustomizableCashflow(CashflowDates cashflowDates, Object o, Long debtModelId);
+
+	}
