@@ -43,7 +43,7 @@ public class DebtModel extends BaseEntity {
     public static final String WITH_GENERAL_DETAILS_AND_CASHFLOW = "debt-model-with-general-details-and-cashflow";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "portfolio_id")

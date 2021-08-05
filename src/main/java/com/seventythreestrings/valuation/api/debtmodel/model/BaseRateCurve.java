@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 @Table(name = "base_rate_curve")
 public class BaseRateCurve extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @NotNull()

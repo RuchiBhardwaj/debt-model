@@ -23,7 +23,7 @@ import java.time.LocalDate;
 @Table(name = "cashflow_schedule")
 public class CashflowSchedule extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
