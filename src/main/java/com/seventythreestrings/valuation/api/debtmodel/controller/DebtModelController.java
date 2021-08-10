@@ -178,7 +178,7 @@ public class DebtModelController {
 					interestDetails.setDebtModel(debtModel);
 					payload = modelMapper.map(interestDetails, InterestDetailsDto.class);
 					break;
-				case PREPAYMENT_DETAILS:
+				case REPAYMENT_DETAILS:
 					PrepaymentDetails prepaymentDetails = modelMapper.map(payload, PrepaymentDetails.class);
 					prepaymentDetails.setId(null);
 					prepaymentDetails.getPaymentSchedules().forEach(paymentSchedule -> paymentSchedule.setId(null));

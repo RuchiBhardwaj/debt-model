@@ -521,7 +521,7 @@ public class CashflowServiceImpl implements CashflowService {
     }
 
     private Optional<PrepaymentDetails> getPrepaymentDetailsFromInputs(List<DebtModelInputDto> inputs) {
-        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.PREPAYMENT_DETAILS).map(input -> modelMapper.map(input.getPayload(), PrepaymentDetails.class)).findFirst();
+        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.REPAYMENT_DETAILS).map(input -> modelMapper.map(input.getPayload(), PrepaymentDetails.class)).findFirst();
     }
 
     private List<DealFees> getDealFeesFromInputs(List<DebtModelInputDto> inputs) {
