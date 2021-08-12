@@ -8,7 +8,8 @@ public enum DebtModelInput {
     INTEREST_UNDRAWN_CAPITAL("interest_undrawn_capital"),
     SKIMS("skims"),
     CALL_PREMIUM("call_premium"),
-    ISSUER_FINANCIAL("issuer_financial")
+    ISSUER_FINANCIAL("issuer_financial"),
+    CUSTOMIZABLE_CASHFLOW("cutomizable_cashflow")
     ;
 
     private final String code;

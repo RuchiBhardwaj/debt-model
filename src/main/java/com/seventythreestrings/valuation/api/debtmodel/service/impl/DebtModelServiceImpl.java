@@ -46,9 +46,9 @@ public class DebtModelServiceImpl implements DebtModelService {
 
     @SneakyThrows
     @Override
-    public List<DebtModelDto> getListOfDebtModels(Long portfolioId){
+    public List<DebtModelDto> getListOfDebtModels(Long fundId){
         List<DebtModelDto> inp = new ArrayList<>();
-        List<DebtModel> debtModels = repository.findAllByPortfolioId(portfolioId);
+        List<DebtModel> debtModels = repository.findAllByFundId(fundId);
         modelMapper.map(debtModels,DebtModelDto[].class);
         for(DebtModel d : debtModels){
             DebtModelDto map = modelMapper.map(d, DebtModelDto.class);

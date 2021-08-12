@@ -85,10 +85,10 @@ public class DebtModelController {
 		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
 	}
 
-	@GetMapping("/{portfolioId}/value")
-	public ResponseEntity<ApiResponse<DebtModelDto>> getListOfDebt(@PathVariable(value = "portfolioId") @NotNull Long portfolioId) {
+	@GetMapping("/{fundId}/value")
+	public ResponseEntity<ApiResponse<DebtModelDto>> getListOfDebt(@PathVariable(value = "portfolioId") @NotNull Long fundId) {
 		ApiResponse<DebtModelDto> apiResponse = new ApiResponse<>();
-		List<DebtModelDto> debtModel = debtModelService.getListOfDebtModels(portfolioId);
+		List<DebtModelDto> debtModel = debtModelService.getListOfDebtModels(fundId);
 		apiResponse.setSuccess(true);
 		apiResponse.setResponse(modelMapper.map(debtModel, DebtModelDto.class));
 		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
