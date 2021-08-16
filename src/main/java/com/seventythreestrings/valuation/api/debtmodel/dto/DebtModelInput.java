@@ -4,12 +4,12 @@ public enum DebtModelInput {
     GENERAL_DETAILS("general_details"),
     INTEREST_DETAILS("interest_details"),
     REPAYMENT_DETAILS("prepayment_details"),
+    CALL_PREMIUM("call_premium"),
     DEAL_FEES("deal_fees"),
     INTEREST_UNDRAWN_CAPITAL("interest_undrawn_capital"),
-    SKIMS("skims"),
-    CALL_PREMIUM("call_premium"),
     ISSUER_FINANCIAL("issuer_financial"),
-    CUSTOMIZABLE_CASHFLOW("cutomizable_cashflow")
+    SKIMS("skims"),
+    CUSTOMIZABLE_CASHFLOW("customizable_cashflow")
     ;
 
     private final String code;
