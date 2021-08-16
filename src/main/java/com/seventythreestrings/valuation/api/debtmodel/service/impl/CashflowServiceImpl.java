@@ -243,14 +243,12 @@ public class CashflowServiceImpl implements CashflowService {
         double spv = getSumOfDiscountedPV(schedules, valuationDate, irr);
         if (spv > principalAmount) {
             while(spv > principalAmount) {
-                System.out.println("irr "+ irr + " spv " + spv);
                 irr += 0.001;
                 spv = getSumOfDiscountedPV(schedules, valuationDate, irr);
             }
             return irr;
         } else if (principalAmount > spv) {
             while(principalAmount > spv) {
-                System.out.println("irr "+ irr + " spv " + spv);
                 irr -= 0.001;
                 spv = getSumOfDiscountedPV(schedules, valuationDate, irr);
             }
