@@ -75,6 +75,7 @@ public class CashflowServiceImpl implements CashflowService {
             cashflow.setOriginationDate(generalDetails.get().getOriginationDate());
             cashflow.setMaturityDate(generalDetails.get().getMaturityDate());
             cashflow.setValuationDate(generalDetails.get().getValuationDate());
+            cashflow.setExitDate(generalDetails.get().getExitDate());
             cashflow.setDiscountRate(generalDetails.get().getDiscountRate());
             cashflow.setDayCountConvention(generalDetails.get().getDayCountConvention());
         }
@@ -211,6 +212,18 @@ public class CashflowServiceImpl implements CashflowService {
         double principalOutstanding = generalDetailsInput.get().getPrincipalAmount() * generalDetailsInput.get().getPrincipalOutstanding() / 100;
         if (principalOutstanding != 0) {
             cashflow.setPercentagePar(presentValueSum * 100 / principalOutstanding);
+        }
+
+        LocalDate exitDate = generalDetailsInput.get().getExitDate();
+        // Calculate Present value sum of Future cashflows after Exit Date
+        double presentValueSumExit = cashflow.getSchedules().stream()
+                .filter(cashflowSchedule -> cashflowSchedule.getToDate().isAfter(exitDate))
+                .mapToDouble(CashflowSchedule::getPresentValue).sum();
+        cashflow.setPresentValueSumExit(presentValueSumExit);
+
+        // Calculate % par after Exit Date
+        if (principalOutstanding != 0) {
+            cashflow.setPercentageParExit(presentValueSumExit * 100 / principalOutstanding);
         }
 
         // Add irr to Cashflow

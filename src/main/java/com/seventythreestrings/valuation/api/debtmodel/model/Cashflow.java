@@ -39,6 +39,11 @@ public class Cashflow extends BaseEntity {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "exit_date")
+    private LocalDate exitDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "maturity_date")
     private LocalDate maturityDate;
 
@@ -50,6 +55,12 @@ public class Cashflow extends BaseEntity {
 
     @Column(name = "percentage_par")
     private double percentagePar;
+
+    @Column(name = "present_value_sum_exit")
+    private double presentValueSumExit;
+
+    @Column(name = "percentage_par_exit")
+    private double percentageParExit;
 
     @Column(name = "internal_rate_of_return")
     private double internalRateOfReturn;
