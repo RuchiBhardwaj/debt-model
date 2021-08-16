@@ -73,7 +73,7 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                     if (dealFeesVersionIdLatest.isPresent()) {
                         int versionId = dealFeesVersionIdLatest.get().getVersionId();
                         List<DealFees> dealFees = dealFeesRepository.findAllByDebtModelIdAndVersionId(debtModelId, versionId);
-                        inputs.add(new DebtModelInputDto(DebtModelInput.DEAL_FEES, modelMapper.map(dealFees, DealFees[].class)));
+                        inputs.add(new DebtModelInputDto(DebtModelInput.DEAL_FEES, modelMapper.map(dealFees, DealFeesDto[].class)));
                     }
                     break;
                 case INTEREST_UNDRAWN_CAPITAL:
@@ -81,7 +81,7 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                     if (undrawnVersionIdLatest.isPresent()) {
                         int versionId = undrawnVersionIdLatest.get().getVersionId();
                         List<InterestUndrawnCapital> undrawnCapitals = interestUndrwanCapitalRepository.findAllByDebtModelIdAndVersionId(debtModelId, versionId);
-                        inputs.add(new DebtModelInputDto(DebtModelInput.INTEREST_UNDRAWN_CAPITAL, modelMapper.map(undrawnCapitals, InterestUndrawnCapital[].class)));
+                        inputs.add(new DebtModelInputDto(DebtModelInput.INTEREST_UNDRAWN_CAPITAL, modelMapper.map(undrawnCapitals, InterestUndrawnCapitalDto[].class)));
                     }
                     break;
                 case SKIMS:
@@ -89,7 +89,7 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                     if (skimsVersionIdLatest.isPresent()) {
                         int versionId = skimsVersionIdLatest.get().getVersionId();
                         List<Skims> skims = skimsRepository.findAllByDebtModelIdAndVersionId(debtModelId, versionId);
-                        inputs.add(new DebtModelInputDto(DebtModelInput.SKIMS, modelMapper.map(skims, Skims[].class)));
+                        inputs.add(new DebtModelInputDto(DebtModelInput.SKIMS, modelMapper.map(skims, SkimsDto[].class)));
                     }
                     break;
                 default:
