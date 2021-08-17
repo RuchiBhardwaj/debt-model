@@ -105,7 +105,12 @@ public class ModelMapperExplicitMappings {
         modelMapper.addMappings((mapDiscountAdjustmentModelToDto()));
         modelMapper.addMappings((mapDiscountAdjustmentDtoToModel()));
 
+        //LookUpDebtDetails
+        modelMapper.addMappings((mapLookUPDebtDetailsDtoToModel()));
 
+        //LookUPValuationDetails
+        modelMapper.addMappings((mapLookUpValuationDetailsDtoToModel()));
+        modelMapper.addMappings((mapLookUpValuationDetailsModelToDto()));
 
         // LocalDate
         modelMapper.createTypeMap(String.class, LocalDate.class);
@@ -489,7 +494,34 @@ public class ModelMapperExplicitMappings {
         };
     }
 
+    //LookupDebtDetails
+    PropertyMap<LookUpDebtDetailsDto,LookUpDebtDetails> mapLookUPDebtDetailsDtoToModel () {
+        return new PropertyMap<LookUpDebtDetailsDto,LookUpDebtDetails>() {
+            @Override
+            protected void configure() {
+                map().setCompanyId(source.getCompanyId());
+            }
+        };
+    }
 
+   //LookUpValuationDetails
+   PropertyMap<LookUpValuationDetailsDto, LookUpValuationDetails> mapLookUpValuationDetailsDtoToModel () {
+       return new PropertyMap<LookUpValuationDetailsDto, LookUpValuationDetails>() {
+           @Override
+           protected void configure() {
+               map().getLookUpDebtDetails().setCompanyId(source.getCompany_id());
+           }
+       };
+   }
+
+    PropertyMap< LookUpValuationDetails,LookUpValuationDetailsDto> mapLookUpValuationDetailsModelToDto () {
+        return new PropertyMap<LookUpValuationDetails,LookUpValuationDetailsDto>() {
+            @Override
+            protected void configure() {
+                map().setCompany_id(source.getLookUpDebtDetails().getCompanyId());
+            }
+        };
+    }
 
 
 

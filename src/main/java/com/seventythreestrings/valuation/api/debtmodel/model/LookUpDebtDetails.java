@@ -1,12 +1,16 @@
 package com.seventythreestrings.valuation.api.debtmodel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.seventythreestrings.valuation.api.common.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -15,22 +19,26 @@ import javax.persistence.*;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "lookUp_debt_details")
-public class LookUpDebtDetails {
+public class LookUpDebtDetails extends BaseEntity {
+
     @Id
-    private Long debtId;
+    @GeneratedValue
+    @Type(type="org.hibernate.type.UUIDCharType")
+    @Column(name = "company_id")
+    private UUID companyId;
 
     @Column(name = "company_name")
     private String companyName;
 
-    @Column(name = "company_id")
-    private Long companyId;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long debtId;
 
+    @GeneratedValue
+    @Type(type="org.hibernate.type.UUIDCharType")
     @Column(name = "fund_id")
-    private Long fundId;
+    private UUID fundId;
 
     @Column(name = "fund_name")
     private String fundName;
 
-    @Column(name = "valuation_date_id")
-    private Long valuationDateId;
 }

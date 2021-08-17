@@ -3,6 +3,8 @@ package com.seventythreestrings.valuation.api.debtmodel.service;
 import com.seventythreestrings.valuation.api.debtmodel.dto.DebtModelDto;
 import com.seventythreestrings.valuation.api.debtmodel.dto.SortOrder;
 import com.seventythreestrings.valuation.api.debtmodel.model.DebtModel;
+import com.seventythreestrings.valuation.api.debtmodel.model.LookUpDebtDetails;
+import com.seventythreestrings.valuation.api.debtmodel.model.LookUpValuationDetails;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -24,4 +26,9 @@ public interface DebtModelService {
 	void delete(Long id);
 
 	void save(DebtModel model);
+
+	//Lookup
+	LookUpDebtDetails saveLookUpDebtDetail(LookUpDebtDetails model);
+
+	LookUpValuationDetails saveLookUpValuationDetails(LookUpValuationDetails lookUpValuationDetails);
 }
