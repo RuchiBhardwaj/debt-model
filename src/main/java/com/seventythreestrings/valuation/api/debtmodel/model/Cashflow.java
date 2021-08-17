@@ -57,10 +57,10 @@ public class Cashflow extends BaseEntity {
     private double percentagePar;
 
     @Column(name = "present_value_sum_exit")
-    private double presentValueSumExit;
+    private Double presentValueSumExit;
 
     @Column(name = "percentage_par_exit")
-    private double percentageParExit;
+    private Double percentageParExit;
 
     @Column(name = "internal_rate_of_return")
     private double internalRateOfReturn;

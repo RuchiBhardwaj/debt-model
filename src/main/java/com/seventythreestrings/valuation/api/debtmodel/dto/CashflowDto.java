@@ -33,9 +33,9 @@ public class CashflowDto {
 
     private double percentagePar;
 
-    private double presentValueSumExit;
+    private Double presentValueSumExit;
 
-    private double percentageParExit;
+    private Double percentageParExit;
 
     private double internalRateOfReturn;
 
