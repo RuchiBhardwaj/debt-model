@@ -21,6 +21,10 @@ public class CashflowDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate exitDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate maturityDate;
 
     private double discountRate;
@@ -28,6 +32,10 @@ public class CashflowDto {
     private double presentValueSum;
 
     private double percentagePar;
+
+    private Double presentValueSumExit;
+
+    private Double percentageParExit;
 
     private double internalRateOfReturn;
 

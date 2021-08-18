@@ -7,7 +7,6 @@ import com.seventythreestrings.valuation.api.debtmodel.service.DebtModelInputSer
 import com.seventythreestrings.valuation.api.debtmodel.service.DebtModelService;
 import com.seventythreestrings.valuation.api.exception.AppException;
 import com.seventythreestrings.valuation.api.exception.ErrorCodesAndMessages;
-import com.sun.org.apache.bcel.internal.generic.SWITCH;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
@@ -65,16 +64,16 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                         inputs.add(new DebtModelInputDto(DebtModelInput.INTEREST_DETAILS, modelMapper.map(interestDetails, InterestDetailsDto[].class)));
                     }
                     break;
-                case PREPAYMENT_DETAILS:
+                case REPAYMENT_DETAILS:
                     Optional<PrepaymentDetails> prepaymentDetails = prepaymentDetailsRepository.findFirstByDebtModelId(debtModelId);
-                    prepaymentDetails.ifPresent(details -> inputs.add(new DebtModelInputDto(DebtModelInput.PREPAYMENT_DETAILS, modelMapper.map(details, PrepaymentDetailsDto.class))));
+                    prepaymentDetails.ifPresent(details -> inputs.add(new DebtModelInputDto(DebtModelInput.REPAYMENT_DETAILS, modelMapper.map(details, PrepaymentDetailsDto.class))));
                     break;
                 case DEAL_FEES:
                     Optional<DealFees> dealFeesVersionIdLatest = dealFeesRepository.findFirstByDebtModelIdOrderByVersionIdDesc(debtModelId);
                     if (dealFeesVersionIdLatest.isPresent()) {
                         int versionId = dealFeesVersionIdLatest.get().getVersionId();
                         List<DealFees> dealFees = dealFeesRepository.findAllByDebtModelIdAndVersionId(debtModelId, versionId);
-                        inputs.add(new DebtModelInputDto(DebtModelInput.DEAL_FEES, modelMapper.map(dealFees, DealFees[].class)));
+                        inputs.add(new DebtModelInputDto(DebtModelInput.DEAL_FEES, modelMapper.map(dealFees, DealFeesDto[].class)));
                     }
                     break;
                 case INTEREST_UNDRAWN_CAPITAL:
@@ -82,7 +81,7 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                     if (undrawnVersionIdLatest.isPresent()) {
                         int versionId = undrawnVersionIdLatest.get().getVersionId();
                         List<InterestUndrawnCapital> undrawnCapitals = interestUndrwanCapitalRepository.findAllByDebtModelIdAndVersionId(debtModelId, versionId);
-                        inputs.add(new DebtModelInputDto(DebtModelInput.INTEREST_UNDRAWN_CAPITAL, modelMapper.map(undrawnCapitals, InterestUndrawnCapital[].class)));
+                        inputs.add(new DebtModelInputDto(DebtModelInput.INTEREST_UNDRAWN_CAPITAL, modelMapper.map(undrawnCapitals, InterestUndrawnCapitalDto[].class)));
                     }
                     break;
                 case SKIMS:
@@ -90,7 +89,7 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                     if (skimsVersionIdLatest.isPresent()) {
                         int versionId = skimsVersionIdLatest.get().getVersionId();
                         List<Skims> skims = skimsRepository.findAllByDebtModelIdAndVersionId(debtModelId, versionId);
-                        inputs.add(new DebtModelInputDto(DebtModelInput.SKIMS, modelMapper.map(skims, Skims[].class)));
+                        inputs.add(new DebtModelInputDto(DebtModelInput.SKIMS, modelMapper.map(skims, SkimsDto[].class)));
                     }
                     break;
                 default:
@@ -100,6 +99,34 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
 
         return inputs;
     }
+
+    @SneakyThrows
+    @Override
+    public List<CustomizableDto> getCustomizationCashflowData(Long debtModelId, CashflowDates cashflowDates){
+        List<CustomizableDto> inputs = new ArrayList<>();
+        DebtModel debtModel = debtModelService.get(debtModelId);
+        // TODO:
+        if (debtModel == null || debtModel.getInputs().size() == 0) {
+            return inputs;
+        }
+        switch (cashflowDates){
+            case Pre_existingDates:
+                Optional<CustomizableCashflow> customizableCashflowVersionIdLatest = customizableCashflowRepository.findFirstByDebtModelIdOrderByVersionIdDesc(debtModelId);
+                if (customizableCashflowVersionIdLatest.isPresent()) {
+                    int versionId = customizableCashflowVersionIdLatest.get().getVersionId();
+                    List<CustomizableCashflow> customizableCashflows = customizableCashflowRepository.findAllByDebtModelIdAndVersionId(debtModelId, versionId);
+                    inputs.add(new CustomizableDto(CashflowDates.Pre_existingDates, modelMapper.map(customizableCashflows, CustomizableCashflowDto[].class)));
+                }
+            case Upload_excel_for_dates:
+                Optional<CustomizableCashflowExcel> customizableCashflowExcel = customizableCashflowExcelRepository.findFirstByDebtModelId(debtModelId);
+                customizableCashflowExcel.ifPresent(details -> inputs.add(new CustomizableDto(CashflowDates.Upload_excel_for_dates, modelMapper.map(details, CustomizableCashflowExcelDDto.class))));
+                break;
+            default:
+                break;
+        }
+        return inputs;
+    }
+
 
     @SneakyThrows
     @Override
@@ -113,7 +140,7 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                 InterestDetails interestDetails = interestDetailsRepository.findById(id)
                         .orElseThrow(() -> new AppException(ErrorCodesAndMessages.NOT_FOUND_EXCEPTION));
                 return modelMapper.map(interestDetails, InterestDetailsDto.class);
-            case PREPAYMENT_DETAILS:
+            case REPAYMENT_DETAILS:
                 PrepaymentDetails prepaymentDetails = prepaymentDetailsRepository.findById(id)
                         .orElseThrow(() -> new AppException(ErrorCodesAndMessages.NOT_FOUND_EXCEPTION));
                 return modelMapper.map(prepaymentDetails, PrepaymentDetailsDto.class);
@@ -155,7 +182,7 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                     interestDetail.setDebtModel(debtModel);
                 }
                 return Arrays.asList(modelMapper.map(interestDetailsRepository.saveAll(interestDetails), InterestDetailsDto[].class));
-            case PREPAYMENT_DETAILS:
+            case REPAYMENT_DETAILS:
                 PrepaymentDetails prepaymentDetails = modelMapper.map(o, PrepaymentDetails.class);
                 prepaymentDetails.setDebtModel(debtModel);
                 prepaymentDetails.getPaymentSchedules().forEach(paymentSchedule -> paymentSchedule.setPrepaymentDetails(prepaymentDetails));
@@ -200,6 +227,8 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
         return null;
     }
 
+    @Transactional
+    @Override
     public Object createCustomizableCashflow(CashflowDates cashflowDatesType,Object o,Long debtModelId){
         DebtModel debtModel = debtModelService.get(debtModelId);
         switch(cashflowDatesType) {
@@ -220,8 +249,8 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                 break;
         }
         return null;
-
     }
+
 
     @Override
     public DiscountRateComputationDto createDiscount(DiscountRateComputationDto discountRateComputationDto){
@@ -233,6 +262,11 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
     @Override
     public Object update(DebtModelInput inputType, Object o, Long debtModelId) {
         return create(inputType, o, debtModelId);
+    }
+
+    @Override
+    public Object updateCustomizableCashflow(CashflowDates cashflowDates, Object o, Long debtModelId) {
+        return createCustomizableCashflow(cashflowDates, o, debtModelId);
     }
 
     @Transactional
@@ -247,7 +281,7 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
             case INTEREST_DETAILS:
                 interestDetailsRepository.deleteById(id);
                 break;
-            case PREPAYMENT_DETAILS:
+            case REPAYMENT_DETAILS:
                 prepaymentDetailsRepository.deleteById(id);
                 break;
             default:

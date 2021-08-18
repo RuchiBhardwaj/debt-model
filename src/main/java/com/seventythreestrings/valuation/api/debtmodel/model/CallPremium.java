@@ -20,7 +20,7 @@ import java.time.LocalDate;
 @Table(name = "call_premium")
 public class CallPremium extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "date")

@@ -2,7 +2,11 @@ package com.seventythreestrings.valuation.api.debtmodel.service.impl;
 
 import com.seventythreestrings.valuation.api.debtmodel.dto.*;
 import com.seventythreestrings.valuation.api.debtmodel.model.DebtModel;
+import com.seventythreestrings.valuation.api.debtmodel.model.LookUpDebtDetails;
+import com.seventythreestrings.valuation.api.debtmodel.model.LookUpValuationDetails;
 import com.seventythreestrings.valuation.api.debtmodel.repository.DebtModelRepository;
+import com.seventythreestrings.valuation.api.debtmodel.repository.LookUpDebtDetailsRepository;
+import com.seventythreestrings.valuation.api.debtmodel.repository.LookUpValuationDetailsRepository;
 import com.seventythreestrings.valuation.api.debtmodel.service.DebtModelService;
 import com.seventythreestrings.valuation.api.exception.AppException;
 import com.seventythreestrings.valuation.api.exception.ErrorCodesAndMessages;
@@ -24,6 +28,8 @@ import java.util.List;
 public class DebtModelServiceImpl implements DebtModelService {
     private final DebtModelRepository repository;
     private final ModelMapper modelMapper;
+    private final LookUpDebtDetailsRepository lookUpDebtDetailsRepository;
+    private final LookUpValuationDetailsRepository lookUpValuationDetailsRepository;
 
     @Override
     public List<DebtModel> getAll() {
@@ -46,9 +52,9 @@ public class DebtModelServiceImpl implements DebtModelService {
 
     @SneakyThrows
     @Override
-    public List<DebtModelDto> getListOfDebtModels(Long portfolioId){
+    public List<DebtModelDto> getListOfDebtModels(Long fundId){
         List<DebtModelDto> inp = new ArrayList<>();
-        List<DebtModel> debtModels = repository.findAllByPortfolioId(portfolioId);
+        List<DebtModel> debtModels = repository.findAllByFundId(fundId);
         modelMapper.map(debtModels,DebtModelDto[].class);
         for(DebtModel d : debtModels){
             DebtModelDto map = modelMapper.map(d, DebtModelDto.class);
@@ -76,4 +82,11 @@ public class DebtModelServiceImpl implements DebtModelService {
     public void save(DebtModel model) {
         repository.save(model);
     }
+
+    //funds and company function
+
+    public LookUpDebtDetails saveLookUpDebtDetail(LookUpDebtDetails model) {return lookUpDebtDetailsRepository.save(model);}
+
+    public LookUpValuationDetails saveLookUpValuationDetails(LookUpValuationDetails lookUpValuationDetails){return lookUpValuationDetailsRepository.save(lookUpValuationDetails);}
+
 }

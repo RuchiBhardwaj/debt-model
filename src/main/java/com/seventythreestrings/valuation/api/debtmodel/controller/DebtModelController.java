@@ -76,6 +76,7 @@ public class DebtModelController {
 		}
 	}
 
+
 	@GetMapping("/{id}")
 	public ResponseEntity<ApiResponse<DebtModelDto>> get(@PathVariable(value = "id") @NotNull Long id) {
 		ApiResponse<DebtModelDto> apiResponse = new ApiResponse<>();
@@ -85,10 +86,10 @@ public class DebtModelController {
 		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
 	}
 
-	@GetMapping("/{portfolioId}/value")
-	public ResponseEntity<ApiResponse<DebtModelDto>> getListOfDebt(@PathVariable(value = "portfolioId") @NotNull Long portfolioId) {
+	@GetMapping("/{fundId}/value")
+	public ResponseEntity<ApiResponse<DebtModelDto>> getListOfDebt(@PathVariable(value = "portfolioId") @NotNull Long fundId) {
 		ApiResponse<DebtModelDto> apiResponse = new ApiResponse<>();
-		List<DebtModelDto> debtModel = debtModelService.getListOfDebtModels(portfolioId);
+		List<DebtModelDto> debtModel = debtModelService.getListOfDebtModels(fundId);
 		apiResponse.setSuccess(true);
 		apiResponse.setResponse(modelMapper.map(debtModel, DebtModelDto.class));
 		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
@@ -178,7 +179,7 @@ public class DebtModelController {
 					interestDetails.setDebtModel(debtModel);
 					payload = modelMapper.map(interestDetails, InterestDetailsDto.class);
 					break;
-				case PREPAYMENT_DETAILS:
+				case REPAYMENT_DETAILS:
 					PrepaymentDetails prepaymentDetails = modelMapper.map(payload, PrepaymentDetails.class);
 					prepaymentDetails.setId(null);
 					prepaymentDetails.getPaymentSchedules().forEach(paymentSchedule -> paymentSchedule.setId(null));
@@ -192,4 +193,45 @@ public class DebtModelController {
 		}
 		return get(debtModel.getId());
 	}
+
+	//Fund and Company Controller
+	@SneakyThrows
+	@PostMapping("fundDetails")
+	public ResponseEntity<ApiResponse<LookUpDebtDetailsDto>> createLookUpDebtDetails(@RequestBody LookUpDebtDetailsDto lookUpDebtDetailsDto) {
+		ApiResponse<LookUpDebtDetailsDto> apiResponse = new ApiResponse<>();
+		LookUpDebtDetails lookUpDebtDetails = modelMapper.map(lookUpDebtDetailsDto, LookUpDebtDetails.class);
+		try {
+			lookUpDebtDetails = debtModelService.saveLookUpDebtDetail(lookUpDebtDetails);
+			apiResponse.setSuccess(true);
+			apiResponse.setResponse(modelMapper.map(lookUpDebtDetails, LookUpDebtDetailsDto.class));
+			apiResponse.setMessage("Funds information Created Successfully");
+			return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+		} catch (Exception e) {
+			apiResponse.setSuccess(false);
+			apiResponse.setMessage(e.getMessage());
+			apiResponse.setErrorCode(ErrorCodesAndMessages.UNKNOWN_EXCEPTION.getCode());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
+		}
+	}
+
+	@SneakyThrows
+	@PostMapping("ValuationDetails")
+	public ResponseEntity<ApiResponse<LookUpValuationDetailsDto>> createLookUpDebtDetails(@RequestBody LookUpValuationDetailsDto lookUpValuationDetailsDto) {
+		ApiResponse<LookUpValuationDetailsDto> apiResponse = new ApiResponse<>();
+		LookUpValuationDetails lookUpValuationDetails = modelMapper.map(lookUpValuationDetailsDto, LookUpValuationDetails.class);
+		try {
+			lookUpValuationDetails = debtModelService.saveLookUpValuationDetails(lookUpValuationDetails);
+			apiResponse.setSuccess(true);
+			apiResponse.setResponse(modelMapper.map(lookUpValuationDetails, LookUpValuationDetailsDto.class));
+			apiResponse.setMessage("Funds information Created Successfully");
+			return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+		} catch (Exception e) {
+			apiResponse.setSuccess(false);
+			apiResponse.setMessage(e.getMessage());
+			apiResponse.setErrorCode(ErrorCodesAndMessages.UNKNOWN_EXCEPTION.getCode());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
+		}
+	}
+
+
 }

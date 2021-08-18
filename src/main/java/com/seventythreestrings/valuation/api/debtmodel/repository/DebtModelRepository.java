@@ -26,7 +26,7 @@ public interface DebtModelRepository extends JpaRepository<DebtModel, Long>, Jpa
     @EntityGraph(DebtModel.WITH_INPUTS)
     Optional<DebtModel> findById(Long id);
 
-    List<DebtModel> findAllByPortfolioId(Long portfolioId);
+    List<DebtModel> findAllByFundId(Long fundId);
 
     @Override
     @EntityGraph(DebtModel.WITH_INPUTS)

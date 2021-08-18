@@ -75,6 +75,7 @@ public class CashflowServiceImpl implements CashflowService {
             cashflow.setOriginationDate(generalDetails.get().getOriginationDate());
             cashflow.setMaturityDate(generalDetails.get().getMaturityDate());
             cashflow.setValuationDate(generalDetails.get().getValuationDate());
+            cashflow.setExitDate(generalDetails.get().getExitDate());
             cashflow.setDiscountRate(generalDetails.get().getDiscountRate());
             cashflow.setDayCountConvention(generalDetails.get().getDayCountConvention());
         }
@@ -213,6 +214,18 @@ public class CashflowServiceImpl implements CashflowService {
             cashflow.setPercentagePar(presentValueSum * 100 / principalOutstanding);
         }
 
+        LocalDate exitDate = generalDetailsInput.get().getExitDate();
+        // Calculate Present value sum of Future cashflows after Exit Date
+        double presentValueSumExit = cashflow.getSchedules().stream()
+                .filter(cashflowSchedule -> cashflowSchedule.getToDate().isAfter(exitDate))
+                .mapToDouble(CashflowSchedule::getPresentValue).sum();
+        cashflow.setPresentValueSumExit(presentValueSumExit);
+
+        // Calculate % par after Exit Date
+        if (principalOutstanding != 0) {
+            cashflow.setPercentageParExit(presentValueSumExit * 100 / principalOutstanding);
+        }
+
         // Add irr to Cashflow
         double irr = getInternalRateOfReturn(cashflow, generalDetailsInput.get().getPrincipalAmount());
         cashflow.setInternalRateOfReturn(irr);
@@ -243,14 +256,12 @@ public class CashflowServiceImpl implements CashflowService {
         double spv = getSumOfDiscountedPV(schedules, valuationDate, irr);
         if (spv > principalAmount) {
             while(spv > principalAmount) {
-                System.out.println("irr "+ irr + " spv " + spv);
                 irr += 0.001;
                 spv = getSumOfDiscountedPV(schedules, valuationDate, irr);
             }
             return irr;
         } else if (principalAmount > spv) {
             while(principalAmount > spv) {
-                System.out.println("irr "+ irr + " spv " + spv);
                 irr -= 0.001;
                 spv = getSumOfDiscountedPV(schedules, valuationDate, irr);
             }
@@ -521,7 +532,7 @@ public class CashflowServiceImpl implements CashflowService {
     }
 
     private Optional<PrepaymentDetails> getPrepaymentDetailsFromInputs(List<DebtModelInputDto> inputs) {
-        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.PREPAYMENT_DETAILS).map(input -> modelMapper.map(input.getPayload(), PrepaymentDetails.class)).findFirst();
+        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.REPAYMENT_DETAILS).map(input -> modelMapper.map(input.getPayload(), PrepaymentDetails.class)).findFirst();
     }
 
     private List<DealFees> getDealFeesFromInputs(List<DebtModelInputDto> inputs) {

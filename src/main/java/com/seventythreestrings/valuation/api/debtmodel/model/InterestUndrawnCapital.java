@@ -28,7 +28,7 @@ public class InterestUndrawnCapital extends BaseEntity {
     public static final int END_OF_MONTH = 0;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "interest_undrawn_payment_percentage")

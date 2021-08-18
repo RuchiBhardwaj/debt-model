@@ -43,11 +43,17 @@ public class DebtModel extends BaseEntity {
     public static final String WITH_GENERAL_DETAILS_AND_CASHFLOW = "debt-model-with-general-details-and-cashflow";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(name = "portfolio_id")
-    private Long portfolioId;
+    @Column(name = "company_name")
+    private String companyName;
+
+    @Column(name = "fund_id")
+    private Long fundId;
+
+    @Column(name = "fund_name")
+    private String fundName;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<DebtModelInput> inputs = new ArrayList<>();

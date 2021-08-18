@@ -29,7 +29,7 @@ public class InterestDetails extends BaseEntity {
     public static final int END_OF_MONTH = 0;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "interest_paid_or_accrued")

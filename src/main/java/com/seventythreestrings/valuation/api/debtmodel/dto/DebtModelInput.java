@@ -3,12 +3,13 @@ package com.seventythreestrings.valuation.api.debtmodel.dto;
 public enum DebtModelInput {
     GENERAL_DETAILS("general_details"),
     INTEREST_DETAILS("interest_details"),
-    PREPAYMENT_DETAILS("prepayment_details"),
+    REPAYMENT_DETAILS("prepayment_details"),
+    CALL_PREMIUM("call_premium"),
     DEAL_FEES("deal_fees"),
     INTEREST_UNDRAWN_CAPITAL("interest_undrawn_capital"),
+    ISSUER_FINANCIAL("issuer_financial"),
     SKIMS("skims"),
-    CALL_PREMIUM("call_premium"),
-    ISSUER_FINANCIAL("issuer_financial")
+    CUSTOMIZABLE_CASHFLOW("customizable_cashflow")
     ;
 
     private final String code;
