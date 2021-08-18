@@ -106,15 +106,16 @@ public class CashflowServiceImpl implements CashflowService {
         CashflowSchedule previousCashflowSchedule = null;
         double outstandingInterestOutflow = 0;
         for (CashflowScheduleDate scheduleDate: scheduleDates) {
+            CashflowSchedule cashflowSchedule = new CashflowSchedule();
+            cashflowSchedule.setCashflow(cashflow);
+
             double principalRepayment = 0;
             double cashMovement = 0;
             double principalOutstanding = 0;
             if (previousCashflowSchedule != null) {
                 principalOutstanding = previousCashflowSchedule.getTotalPrincipalOutstanding();
+                cashflowSchedule.setOpeningPrincipalOutstanding(principalOutstanding);
             }
-
-            CashflowSchedule cashflowSchedule = new CashflowSchedule();
-            cashflowSchedule.setCashflow(cashflow);
 
             // Set dates
             cashflowSchedule.setFromDate(scheduleDate.getDate());
@@ -304,6 +305,7 @@ public class CashflowServiceImpl implements CashflowService {
     }
 
     private void addInterestUndrawnCapitalToCashflowSchedule(CashflowSchedule cashflowSchedule, List<InterestUndrawnCapital> interestUndrawnCapitals, DayCountConvention dayCountConvention, double calledDownCapital) {
+        // TODO: set Committed Capital & Undrawn Capital
         Optional<InterestUndrawnCapital> interestUndrawnCapital = getInterestUndrawnCapitalByDate(interestUndrawnCapitals, cashflowSchedule.getToDate());
         double interestUndrawnPercentage = getInterestUndrawnPercentage(interestUndrawnCapital, cashflowSchedule.getToDate());
         double interestUndrawnCapitalOutflow = CashflowUtil.getInterestOutflow(cashflowSchedule.getFromDate(), cashflowSchedule.getToDate(), dayCountConvention, calledDownCapital, interestUndrawnPercentage);

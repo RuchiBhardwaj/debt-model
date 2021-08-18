@@ -18,6 +18,8 @@ public class CashflowScheduleDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate toDate;
 
+    private Double openingPrincipalOutstanding;
+
     private double principalInflow;
 
     private double principalRepayment;
@@ -41,6 +43,10 @@ public class CashflowScheduleDto {
     private double annualFeePercentage;
 
     private double dealFeesOutflow;
+
+    private Double committedCapital;
+
+    private Double undrawnCapital;
 
     private double interestUndrawnPercentage;
 
