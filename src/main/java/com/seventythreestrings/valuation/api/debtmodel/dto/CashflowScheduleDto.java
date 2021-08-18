@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Column;
 import java.time.LocalDate;
 
 @Data
@@ -23,6 +24,10 @@ public class CashflowScheduleDto {
     private double principalInflow;
 
     private double principalRepayment;
+
+    private Double callPremiumAmount;
+
+    private Double callPremiumRate;
 
     private double totalPrincipalOutstanding;
 
