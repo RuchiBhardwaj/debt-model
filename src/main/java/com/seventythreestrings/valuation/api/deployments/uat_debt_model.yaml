@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: debt-model
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: debt-model
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: debt-model
+    spec:
+      containers:
+      - name: debt-model
+        image: 73uatregistry.azurecr.io/debt-model:latest
+        ports:
+        - containerPort: 80	
+        
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: debt-model
+  namespace: default
+  labels:
+    app: debt-model
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8808
+  selector:
+    app: debt-model
+  type: LoadBalancer
+  loadBalancerIP: 40.115.20.211

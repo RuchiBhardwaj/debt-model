@@ -1,0 +1,2100 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Debt Model API Documentation",
+    "version": "1.0.0",
+    "title": "Debt Model API Documentation",
+    "contact": {},
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "40.118.100.67",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "base-rate-controller",
+      "description": "Base Rate Controller"
+    },
+    {
+      "name": "debt-model-build-controller",
+      "description": "Debt Model Build Controller"
+    },
+    {
+      "name": "debt-model-controller",
+      "description": "Debt Model Controller"
+    },
+    {
+      "name": "debt-model-input-controller",
+      "description": "Debt Model Input Controller"
+    }
+  ],
+  "paths": {
+    "/api/v1/build/environment": {
+      "get": {
+        "tags": [
+          "debt-model-build-controller"
+        ],
+        "summary": "getEnvironment",
+        "operationId": "getEnvironmentUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/valuation/base-rate/": {
+      "get": {
+        "tags": [
+          "base-rate-controller"
+        ],
+        "summary": "getAll",
+        "operationId": "getAllUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«List«BaseRateDto»»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/valuation/base-rate/{id}/curves": {
+      "get": {
+        "tags": [
+          "base-rate-controller"
+        ],
+        "summary": "getCurvesForBaseRate",
+        "operationId": "getCurvesForBaseRateUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«List«BaseRateCurveDto»»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/valuation/debt-model": {
+      "get": {
+        "tags": [
+          "debt-model-controller"
+        ],
+        "summary": "getAll",
+        "operationId": "getAllUsingGET_1",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "description": "pageNumber",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "pageSize",
+            "required": false,
+            "type": "integer",
+            "default": 10,
+            "format": "int32"
+          },
+          {
+            "name": "sortField",
+            "in": "query",
+            "description": "sortField",
+            "required": false,
+            "type": "string",
+            "default": "createdAt"
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "sortOrder",
+            "required": false,
+            "type": "string",
+            "default": "DESC",
+            "enum": [
+              "ASC",
+              "DESC"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«PaginatedResponse«DebtModelDto»»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "debt-model-controller"
+        ],
+        "summary": "create",
+        "operationId": "createUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "debtModelDto",
+            "description": "debtModelDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DebtModelDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«DebtModelDto»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/valuation/debt-model/{debtModelId}/input": {
+      "get": {
+        "tags": [
+          "debt-model-input-controller"
+        ],
+        "summary": "getInputsForDebtModel",
+        "operationId": "getInputsForDebtModelUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "debtModelId",
+            "in": "path",
+            "description": "debtModelId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«List«DebtModelInputDto»»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/valuation/debt-model/{debtModelId}/input/Customizable/{cashflowDateType}/": {
+      "post": {
+        "tags": [
+          "debt-model-input-controller"
+        ],
+        "summary": "createCustomizableCashflow",
+        "operationId": "createCustomizableCashflowUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "cashflowDateType",
+            "in": "path",
+            "description": "cashflowDateType",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "Pre_existingDates",
+              "Upload_excel_for_dates"
+            ]
+          },
+          {
+            "in": "body",
+            "name": "customizableDto",
+            "description": "customizableDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CustomizableDto"
+            }
+          },
+          {
+            "name": "debtModelId",
+            "in": "path",
+            "description": "debtModelId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«CustomizableDto»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/valuation/debt-model/{debtModelId}/input/discount": {
+      "post": {
+        "tags": [
+          "debt-model-input-controller"
+        ],
+        "summary": "createDiscount",
+        "operationId": "createDiscountUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "discountRateComputationDto",
+            "description": "discountRateComputationDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DiscountRateComputationDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«DiscountRateComputationDto»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/valuation/debt-model/{debtModelId}/input/{inputType}": {
+      "post": {
+        "tags": [
+          "debt-model-input-controller"
+        ],
+        "summary": "create",
+        "operationId": "createUsingPOST_1",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "debtModelId",
+            "in": "path",
+            "description": "debtModelId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "debtModelInputDto",
+            "description": "debtModelInputDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DebtModelInputDto"
+            }
+          },
+          {
+            "name": "inputType",
+            "in": "path",
+            "description": "inputType",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "CALL_PREMIUM",
+              "DEAL_FEES",
+              "GENERAL_DETAILS",
+              "INTEREST_DETAILS",
+              "INTEREST_UNDRAWN_CAPITAL",
+              "ISSUER_FINANCIAL",
+              "PREPAYMENT_DETAILS",
+              "SKIMS"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«DebtModelInputDto»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/valuation/debt-model/{debtModelId}/input/{inputType}/{id}": {
+      "get": {
+        "tags": [
+          "debt-model-input-controller"
+        ],
+        "summary": "get",
+        "operationId": "getUsingGET_1",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "debtModelId",
+            "in": "path",
+            "description": "debtModelId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "inputType",
+            "in": "path",
+            "description": "inputType",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "CALL_PREMIUM",
+              "DEAL_FEES",
+              "GENERAL_DETAILS",
+              "INTEREST_DETAILS",
+              "INTEREST_UNDRAWN_CAPITAL",
+              "ISSUER_FINANCIAL",
+              "PREPAYMENT_DETAILS",
+              "SKIMS"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«DebtModelInputDto»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "debt-model-input-controller"
+        ],
+        "summary": "update",
+        "operationId": "updateUsingPUT_1",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "debtModelId",
+            "in": "path",
+            "description": "debtModelId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "debtModelInputDto",
+            "description": "debtModelInputDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DebtModelInputDto"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "inputType",
+            "in": "path",
+            "description": "inputType",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "CALL_PREMIUM",
+              "DEAL_FEES",
+              "GENERAL_DETAILS",
+              "INTEREST_DETAILS",
+              "INTEREST_UNDRAWN_CAPITAL",
+              "ISSUER_FINANCIAL",
+              "PREPAYMENT_DETAILS",
+              "SKIMS"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«DebtModelInputDto»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "debt-model-input-controller"
+        ],
+        "summary": "delete",
+        "operationId": "deleteUsingDELETE_1",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "debtModelId",
+            "in": "path",
+            "description": "debtModelId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "inputType",
+            "in": "path",
+            "description": "inputType",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "CALL_PREMIUM",
+              "DEAL_FEES",
+              "GENERAL_DETAILS",
+              "INTEREST_DETAILS",
+              "INTEREST_UNDRAWN_CAPITAL",
+              "ISSUER_FINANCIAL",
+              "PREPAYMENT_DETAILS",
+              "SKIMS"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«boolean»"
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/valuation/debt-model/{id}": {
+      "get": {
+        "tags": [
+          "debt-model-controller"
+        ],
+        "summary": "get",
+        "operationId": "getUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«DebtModelDto»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "debt-model-controller"
+        ],
+        "summary": "update",
+        "operationId": "updateUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "debtModelDto",
+            "description": "debtModelDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DebtModelDto"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«DebtModelDto»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "debt-model-controller"
+        ],
+        "summary": "delete",
+        "operationId": "deleteUsingDELETE",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«boolean»"
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/valuation/debt-model/{id}/cashflow": {
+      "get": {
+        "tags": [
+          "debt-model-controller"
+        ],
+        "summary": "getCashflowForDebtModel",
+        "operationId": "getCashflowForDebtModelUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«CashflowDto»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "debt-model-controller"
+        ],
+        "summary": "generateCashflowForDebtModel",
+        "operationId": "generateCashflowForDebtModelUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«CashflowDto»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "debt-model-controller"
+        ],
+        "summary": "deleteCashflowForDebtModel",
+        "operationId": "deleteCashflowForDebtModelUsingDELETE",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«boolean»"
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/valuation/debt-model/{id}/clone": {
+      "post": {
+        "tags": [
+          "debt-model-controller"
+        ],
+        "summary": "clone",
+        "operationId": "cloneUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«DebtModelDto»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/valuation/debt-model/{portfolioId}/value": {
+      "get": {
+        "tags": [
+          "debt-model-controller"
+        ],
+        "summary": "getListOfDebt",
+        "operationId": "getListOfDebtUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "portfolioId",
+            "in": "path",
+            "description": "portfolioId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«DebtModelDto»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ApiResponse«CashflowDto»": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "response": {
+          "$ref": "#/definitions/CashflowDto"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "ApiResponse«CashflowDto»"
+    },
+    "ApiResponse«CustomizableDto»": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "response": {
+          "$ref": "#/definitions/CustomizableDto"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "ApiResponse«CustomizableDto»"
+    },
+    "ApiResponse«DebtModelDto»": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "response": {
+          "$ref": "#/definitions/DebtModelDto"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "ApiResponse«DebtModelDto»"
+    },
+    "ApiResponse«DebtModelInputDto»": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "response": {
+          "$ref": "#/definitions/DebtModelInputDto"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "ApiResponse«DebtModelInputDto»"
+    },
+    "ApiResponse«DiscountRateComputationDto»": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "response": {
+          "$ref": "#/definitions/DiscountRateComputationDto"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "ApiResponse«DiscountRateComputationDto»"
+    },
+    "ApiResponse«List«BaseRateCurveDto»»": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "response": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseRateCurveDto"
+          }
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "ApiResponse«List«BaseRateCurveDto»»"
+    },
+    "ApiResponse«List«BaseRateDto»»": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "response": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseRateDto"
+          }
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "ApiResponse«List«BaseRateDto»»"
+    },
+    "ApiResponse«List«DebtModelInputDto»»": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "response": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DebtModelInputDto"
+          }
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "ApiResponse«List«DebtModelInputDto»»"
+    },
+    "ApiResponse«PaginatedResponse«DebtModelDto»»": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "response": {
+          "$ref": "#/definitions/PaginatedResponse«DebtModelDto»"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "ApiResponse«PaginatedResponse«DebtModelDto»»"
+    },
+    "ApiResponse«boolean»": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "response": {
+          "type": "boolean"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "ApiResponse«boolean»"
+    },
+    "BaseRateCurveDto": {
+      "type": "object",
+      "properties": {
+        "baseRateId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "BaseRateCurveDto"
+    },
+    "BaseRateDto": {
+      "type": "object",
+      "properties": {
+        "fixed": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "BaseRateDto"
+    },
+    "Cashflow": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "example": "yyyy-MM-dd HH:mm:ss.SSS"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "dayCountConvention": {
+          "type": "string",
+          "enum": [
+            "ACTUAL_BY_360",
+            "ACTUAL_BY_365",
+            "ACTUAL_BY_ACTUAL",
+            "EUR_30_BY_360",
+            "US_30_BY_360"
+          ]
+        },
+        "debtModel": {
+          "$ref": "#/definitions/DebtModel"
+        },
+        "discountRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "internalRateOfReturn": {
+          "type": "number",
+          "format": "double"
+        },
+        "maturityDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd"
+        },
+        "originationDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd"
+        },
+        "percentagePar": {
+          "type": "number",
+          "format": "double"
+        },
+        "presentValueSum": {
+          "type": "number",
+          "format": "double"
+        },
+        "schedules": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/CashflowSchedule"
+          }
+        },
+        "updatedAt": {
+          "type": "string",
+          "example": "yyyy-MM-dd HH:mm:ss.SSS"
+        },
+        "updatedBy": {
+          "type": "string"
+        },
+        "valuationDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd"
+        }
+      },
+      "title": "Cashflow"
+    },
+    "CashflowDto": {
+      "type": "object",
+      "properties": {
+        "discountRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "internalRateOfReturn": {
+          "type": "number",
+          "format": "double"
+        },
+        "maturityDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd"
+        },
+        "originationDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd"
+        },
+        "percentagePar": {
+          "type": "number",
+          "format": "double"
+        },
+        "presentValueSum": {
+          "type": "number",
+          "format": "double"
+        },
+        "schedules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CashflowScheduleDto"
+          }
+        },
+        "valuationDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd"
+        }
+      },
+      "title": "CashflowDto"
+    },
+    "CashflowSchedule": {
+      "type": "object",
+      "properties": {
+        "annualFeePercentage": {
+          "type": "number",
+          "format": "double"
+        },
+        "baseRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "baseRateSpread": {
+          "type": "number",
+          "format": "double"
+        },
+        "createdAt": {
+          "type": "string",
+          "example": "yyyy-MM-dd HH:mm:ss.SSS"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "dateType": {
+          "type": "string",
+          "enum": [
+            "DEALFEES",
+            "DEALFEES_AND_MATURITY",
+            "INTEREST",
+            "INTEREST_AND_MATURITY",
+            "INTEREST_AND_PREPAYMENT",
+            "INTEREST_UNDRAWN_CAPITAL",
+            "INTEREST_UNDRAWN_CAPITAL_AND_MATURITY",
+            "MATURITY",
+            "ORIGINATION",
+            "PREPAYMENT",
+            "SKIMS",
+            "SKIMS_AND_MATURITY"
+          ]
+        },
+        "dealFeesOutflow": {
+          "type": "number",
+          "format": "double"
+        },
+        "discountingFactor": {
+          "type": "number",
+          "format": "double"
+        },
+        "fromDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "interestOutflow": {
+          "type": "number",
+          "format": "double"
+        },
+        "interestUndrawnCapitalOutflow": {
+          "type": "number",
+          "format": "double"
+        },
+        "interestUndrawnPercentage": {
+          "type": "number",
+          "format": "double"
+        },
+        "partialPeriod": {
+          "type": "number",
+          "format": "double"
+        },
+        "presentValue": {
+          "type": "number",
+          "format": "double"
+        },
+        "principalInflow": {
+          "type": "number",
+          "format": "double"
+        },
+        "principalRepayment": {
+          "type": "number",
+          "format": "double"
+        },
+        "skimPercentage": {
+          "type": "number",
+          "format": "double"
+        },
+        "skimsOutflow": {
+          "type": "number",
+          "format": "double"
+        },
+        "toDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd"
+        },
+        "totalCashMovement": {
+          "type": "number",
+          "format": "double"
+        },
+        "totalInterestRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "totalPrincipalOutstanding": {
+          "type": "number",
+          "format": "double"
+        },
+        "updatedAt": {
+          "type": "string",
+          "example": "yyyy-MM-dd HH:mm:ss.SSS"
+        },
+        "updatedBy": {
+          "type": "string"
+        },
+        "yearFrac": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "title": "CashflowSchedule"
+    },
+    "CashflowScheduleDto": {
+      "type": "object",
+      "properties": {
+        "annualFeePercentage": {
+          "type": "number",
+          "format": "double"
+        },
+        "baseRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "baseRateSpread": {
+          "type": "number",
+          "format": "double"
+        },
+        "dateType": {
+          "type": "string",
+          "enum": [
+            "DEALFEES",
+            "DEALFEES_AND_MATURITY",
+            "INTEREST",
+            "INTEREST_AND_MATURITY",
+            "INTEREST_AND_PREPAYMENT",
+            "INTEREST_UNDRAWN_CAPITAL",
+            "INTEREST_UNDRAWN_CAPITAL_AND_MATURITY",
+            "MATURITY",
+            "ORIGINATION",
+            "PREPAYMENT",
+            "SKIMS",
+            "SKIMS_AND_MATURITY"
+          ]
+        },
+        "dealFeesOutflow": {
+          "type": "number",
+          "format": "double"
+        },
+        "discountingFactor": {
+          "type": "number",
+          "format": "double"
+        },
+        "fromDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "interestOutflow": {
+          "type": "number",
+          "format": "double"
+        },
+        "interestUndrawnPercentage": {
+          "type": "number",
+          "format": "double"
+        },
+        "interestUndrwanCapitalOutflow": {
+          "type": "number",
+          "format": "double"
+        },
+        "partialPeriod": {
+          "type": "number",
+          "format": "double"
+        },
+        "presentValue": {
+          "type": "number",
+          "format": "double"
+        },
+        "principalInflow": {
+          "type": "number",
+          "format": "double"
+        },
+        "principalRepayment": {
+          "type": "number",
+          "format": "double"
+        },
+        "skimPercentage": {
+          "type": "number",
+          "format": "double"
+        },
+        "skimsOutflow": {
+          "type": "number",
+          "format": "double"
+        },
+        "toDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd"
+        },
+        "totalCashMovement": {
+          "type": "number",
+          "format": "double"
+        },
+        "totalInterestRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "totalPrincipalOutstanding": {
+          "type": "number",
+          "format": "double"
+        },
+        "yearFrac": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "title": "CashflowScheduleDto"
+    },
+    "CustomizableDto": {
+      "type": "object",
+      "properties": {
+        "cashflowDatesType": {
+          "type": "string",
+          "enum": [
+            "Pre_existingDates",
+            "Upload_excel_for_dates"
+          ]
+        },
+        "payload": {
+          "type": "object"
+        }
+      },
+      "title": "CustomizableDto"
+    },
+    "DebtModel": {
+      "type": "object",
+      "properties": {
+        "analysisDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd HH:mm:ss.SSS"
+        },
+        "cashflow": {
+          "$ref": "#/definitions/Cashflow"
+        },
+        "createdAt": {
+          "type": "string",
+          "example": "yyyy-MM-dd HH:mm:ss.SSS"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "generalDetails": {
+          "$ref": "#/definitions/GeneralDetails"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "CALL_PREMIUM",
+              "DEAL_FEES",
+              "GENERAL_DETAILS",
+              "INTEREST_DETAILS",
+              "INTEREST_UNDRAWN_CAPITAL",
+              "ISSUER_FINANCIAL",
+              "PREPAYMENT_DETAILS",
+              "SKIMS"
+            ]
+          }
+        },
+        "portfolioId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "updatedAt": {
+          "type": "string",
+          "example": "yyyy-MM-dd HH:mm:ss.SSS"
+        },
+        "updatedBy": {
+          "type": "string"
+        }
+      },
+      "title": "DebtModel"
+    },
+    "DebtModelDto": {
+      "type": "object",
+      "properties": {
+        "analysisDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd HH:mm:ss.SSS"
+        },
+        "cashflow": {
+          "$ref": "#/definitions/CashflowDto"
+        },
+        "generalDetails": {
+          "$ref": "#/definitions/GeneralDetailsDto"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "CALL_PREMIUM",
+              "DEAL_FEES",
+              "GENERAL_DETAILS",
+              "INTEREST_DETAILS",
+              "INTEREST_UNDRAWN_CAPITAL",
+              "ISSUER_FINANCIAL",
+              "PREPAYMENT_DETAILS",
+              "SKIMS"
+            ]
+          }
+        },
+        "portfolioId": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "DebtModelDto"
+    },
+    "DebtModelInputDto": {
+      "type": "object",
+      "properties": {
+        "inputType": {
+          "type": "string",
+          "enum": [
+            "CALL_PREMIUM",
+            "DEAL_FEES",
+            "GENERAL_DETAILS",
+            "INTEREST_DETAILS",
+            "INTEREST_UNDRAWN_CAPITAL",
+            "ISSUER_FINANCIAL",
+            "PREPAYMENT_DETAILS",
+            "SKIMS"
+          ]
+        },
+        "payload": {
+          "type": "object"
+        }
+      },
+      "title": "DebtModelInputDto"
+    },
+    "DiscountAdjustment": {
+      "type": "object",
+      "required": [
+        "adjustmentName"
+      ],
+      "properties": {
+        "adjustmentName": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "example": "yyyy-MM-dd HH:mm:ss.SSS"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "discountRateComputation": {
+          "$ref": "#/definitions/DiscountRateComputaion"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "medium": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "quarter1": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "quarter3": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "updatedAt": {
+          "type": "string",
+          "example": "yyyy-MM-dd HH:mm:ss.SSS"
+        },
+        "updatedBy": {
+          "type": "string"
+        }
+      },
+      "title": "DiscountAdjustment"
+    },
+    "DiscountRateComputaion": {
+      "type": "object",
+      "properties": {
+        "concludedCreditSpreadMedium": {
+          "type": "number",
+          "format": "double"
+        },
+        "concludedCreditSpreadQuarter1": {
+          "type": "number",
+          "format": "double"
+        },
+        "concludedCreditSpreadQuarter3": {
+          "type": "number",
+          "format": "double"
+        },
+        "createdAt": {
+          "type": "string",
+          "example": "yyyy-MM-dd HH:mm:ss.SSS"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "debtModel": {
+          "$ref": "#/definitions/DebtModel"
+        },
+        "discountAdjustments": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/DiscountAdjustment"
+          }
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "riskFreeRateMedium": {
+          "type": "number",
+          "format": "double"
+        },
+        "riskFreeRateQuarter1": {
+          "type": "number",
+          "format": "double"
+        },
+        "riskFreeRateQuarter3": {
+          "type": "number",
+          "format": "double"
+        },
+        "updatedAt": {
+          "type": "string",
+          "example": "yyyy-MM-dd HH:mm:ss.SSS"
+        },
+        "updatedBy": {
+          "type": "string"
+        },
+        "ytmMedium": {
+          "type": "number",
+          "format": "double"
+        },
+        "ytmQuarter1": {
+          "type": "number",
+          "format": "double"
+        },
+        "ytmQuarter3": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "title": "DiscountRateComputaion"
+    },
+    "DiscountRateComputationDto": {
+      "type": "object",
+      "properties": {
+        "concludedCreditSpreadMedium": {
+          "type": "number",
+          "format": "double"
+        },
+        "concludedCreditSpreadQuarter1": {
+          "type": "number",
+          "format": "double"
+        },
+        "concludedCreditSpreadQuarter3": {
+          "type": "number",
+          "format": "double"
+        },
+        "debtModelId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "discountAdjustments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DiscountAdjustment"
+          }
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "riskFreeRateMedium": {
+          "type": "number",
+          "format": "double"
+        },
+        "riskFreeRateQuarter1": {
+          "type": "number",
+          "format": "double"
+        },
+        "riskFreeRateQuarter3": {
+          "type": "number",
+          "format": "double"
+        },
+        "ytmMedium": {
+          "type": "number",
+          "format": "double"
+        },
+        "ytmQuarter1": {
+          "type": "number",
+          "format": "double"
+        },
+        "ytmQuarter3": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "title": "DiscountRateComputationDto"
+    },
+    "GeneralDetails": {
+      "type": "object",
+      "required": [
+        "currency",
+        "dayCountConvention",
+        "issuerName",
+        "portfolioCompanyName",
+        "principalAmount",
+        "principalOutstanding"
+      ],
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "example": "yyyy-MM-dd HH:mm:ss.SSS"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 255
+        },
+        "dayCountConvention": {
+          "type": "string",
+          "enum": [
+            "ACTUAL_BY_360",
+            "ACTUAL_BY_365",
+            "ACTUAL_BY_ACTUAL",
+            "EUR_30_BY_360",
+            "US_30_BY_360"
+          ]
+        },
+        "debtModel": {
+          "$ref": "#/definitions/DebtModel"
+        },
+        "description": {
+          "type": "string"
+        },
+        "discountRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "exitDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd"
+        },
+        "geography": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 255
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "issuerName": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 255
+        },
+        "maturityDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd"
+        },
+        "originationDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd"
+        },
+        "percentageOfCalledDown": {
+          "type": "number",
+          "format": "double"
+        },
+        "portfolioCompanyName": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 255
+        },
+        "principalAmount": {
+          "type": "number",
+          "format": "double"
+        },
+        "principalOutstanding": {
+          "type": "number",
+          "format": "double"
+        },
+        "sector": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 255
+        },
+        "securityName": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 255
+        },
+        "updatedAt": {
+          "type": "string",
+          "example": "yyyy-MM-dd HH:mm:ss.SSS"
+        },
+        "updatedBy": {
+          "type": "string"
+        },
+        "valuationDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd"
+        },
+        "versionId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "website": {
+          "type": "string"
+        }
+      },
+      "title": "GeneralDetails"
+    },
+    "GeneralDetailsDto": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string"
+        },
+        "dayCountConvention": {
+          "type": "string",
+          "enum": [
+            "ACTUAL_BY_360",
+            "ACTUAL_BY_365",
+            "ACTUAL_BY_ACTUAL",
+            "EUR_30_BY_360",
+            "US_30_BY_360"
+          ]
+        },
+        "debtModelId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "description": {
+          "type": "string"
+        },
+        "discountRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "exitDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd"
+        },
+        "geography": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "issuerName": {
+          "type": "string"
+        },
+        "maturityDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd"
+        },
+        "originationDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd"
+        },
+        "percentageOfCalledDown": {
+          "type": "number",
+          "format": "double"
+        },
+        "portfolioCompanyName": {
+          "type": "string"
+        },
+        "principalAmount": {
+          "type": "number",
+          "format": "double"
+        },
+        "principalOutstanding": {
+          "type": "number",
+          "format": "double"
+        },
+        "sector": {
+          "type": "string"
+        },
+        "securityName": {
+          "type": "string"
+        },
+        "valuationDate": {
+          "type": "string",
+          "example": "yyyy-MM-dd"
+        },
+        "versionId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "website": {
+          "type": "string"
+        }
+      },
+      "title": "GeneralDetailsDto"
+    },
+    "PaginatedResponse«DebtModelDto»": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DebtModelDto"
+          }
+        },
+        "pageNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "PaginatedResponse«DebtModelDto»"
+    }
+  }
+}
