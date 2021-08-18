@@ -116,5 +116,8 @@ public class AnnualProjectedFinancial extends BaseEntity {
     @Column(name = "year")
     private int year;
 
+    @ManyToOne
+    @JoinColumn(name = "issuer_financial", nullable = false)
+    private IssuerFinancial issuerFinancial;
 
 }

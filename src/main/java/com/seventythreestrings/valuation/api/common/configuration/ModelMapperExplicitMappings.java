@@ -381,6 +381,7 @@ public class ModelMapperExplicitMappings {
         return new PropertyMap<AnnualHistoricalFinancial, AnnualHistoricalFinancialDto>() {
             @Override
             protected void configure() {
+                map().setIssuerFinancialId(source.getIssuerFinancial().getId());
             }
         };
     }
@@ -390,6 +391,7 @@ public class ModelMapperExplicitMappings {
         return new PropertyMap<AnnualHistoricalFinancialDto,AnnualHistoricalFinancial>() {
             @Override
             protected void configure() {
+                map().getIssuerFinancial().setId(source.getIssuerFinancialId());
             }
         };
     }
@@ -400,6 +402,7 @@ public class ModelMapperExplicitMappings {
         return new PropertyMap<AnnualProjectedFinancialDto,AnnualProjectedFinancial>() {
             @Override
             protected void configure() {
+                map().getIssuerFinancial().setId(source.getIssuerFinancialId());
             }
         };
     }
@@ -409,6 +412,7 @@ public class ModelMapperExplicitMappings {
         return new PropertyMap<AnnualProjectedFinancial,AnnualProjectedFinancialDto>() {
             @Override
             protected void configure() {
+                map().setIssuerFinancialId(source.getIssuerFinancial().getId());
             }
         };
     }
@@ -419,8 +423,6 @@ public class ModelMapperExplicitMappings {
         return new PropertyMap<IssuerFinancial,IssuerFinancialDto>() {
             @Override
             protected void configure() {
-                map().setAnnualHistoricalFinancialId(source.getAnnualHistoricalFinancial().getId());
-                map().setAnnualProjectedFinancialId(source.getAnnualProjectedFinancial().getId());
                 map().setDebtModelId(source.getDebtModel().getId());
             }
         };
@@ -430,8 +432,6 @@ public class ModelMapperExplicitMappings {
         return new PropertyMap<IssuerFinancialDto,IssuerFinancial>() {
             @Override
             protected void configure() {
-                map().getAnnualHistoricalFinancial().setId(source.getAnnualHistoricalFinancialId());
-                map().getAnnualProjectedFinancial().setId(source.getAnnualProjectedFinancialId());
                 map().getDebtModel().setId(source.getDebtModelId());
             }
         };

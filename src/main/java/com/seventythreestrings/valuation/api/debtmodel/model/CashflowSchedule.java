@@ -36,6 +36,9 @@ public class CashflowSchedule extends BaseEntity {
     @Column(name = "to_date")
     private LocalDate toDate;
 
+    @Column(name = "opening_principal_outstanding")
+    private Double openingPrincipalOutstanding;
+
     @Column(name = "principal_inflow")
     private double principalInflow;
 
@@ -71,6 +74,12 @@ public class CashflowSchedule extends BaseEntity {
 
     @Column(name = "deal_fees_outflow")
     private double dealFeesOutflow;
+
+    @Column(name = "committed_capital")
+    private Double committedCapital;
+
+    @Column(name = "undrawn_capital")
+    private Double undrawnCapital;
 
     @Column(name = "interest_undrawn_percentage")
     private double interestUndrawnPercentage;
