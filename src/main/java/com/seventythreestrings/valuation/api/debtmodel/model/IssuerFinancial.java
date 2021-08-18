@@ -9,6 +9,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -30,13 +32,13 @@ public class IssuerFinancial extends BaseEntity {
     @Column(name = "enterprise_value")
     private double enterpriseValue;
 
-    @OneToOne
-    @JoinColumn(name = "annual_historical_id", nullable = false)
-    private AnnualHistoricalFinancial annualHistoricalFinancial;
+    @OneToMany(mappedBy="issuerFinancial", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("date ASC")
+    private Set<AnnualHistoricalFinancial> annualHistoricalFinancials = new HashSet<>();
 
-    @OneToOne
-    @JoinColumn(name = "annual_projected_id", nullable = false)
-    private AnnualProjectedFinancial annualProjectedFinancial;
+    @OneToMany(mappedBy="issuerFinancial", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("date ASC")
+    private Set<AnnualProjectedFinancial> annualProjectedFinancials = new HashSet<>();
 
     @Column(name = "version_id")
     private int versionId;

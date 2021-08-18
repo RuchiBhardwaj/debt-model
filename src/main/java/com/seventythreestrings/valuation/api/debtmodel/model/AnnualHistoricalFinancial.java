@@ -173,6 +173,10 @@ public class AnnualHistoricalFinancial extends BaseEntity {
     @Column(name = "year")
     private String year;
 
+    @ManyToOne
+    @JoinColumn(name = "issuer_financial", nullable = false)
+    private IssuerFinancial issuerFinancial;
+
 
 
 

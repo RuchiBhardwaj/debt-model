@@ -214,12 +214,8 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
             case ISSUER_FINANCIAL:
                 IssuerFinancial issuerFinancial = modelMapper.map(o,IssuerFinancial.class);
                 issuerFinancial.setDebtModel(debtModel);
-                AnnualHistoricalFinancial annualHistoricalFinancial =   issuerFinancial.getAnnualHistoricalFinancial();
-                issuerFinancial.setAnnualHistoricalFinancial(annualHistoricalFinancial);
-                AnnualProjectedFinancial annualProjectedFinancial = issuerFinancial.getAnnualProjectedFinancial();
-                issuerFinancial.setAnnualProjectedFinancial(annualProjectedFinancial);
-                modelMapper.map(annualHistoricalFinancialRepository.save(annualHistoricalFinancial),AnnualHistoricalFinancialDto.class);
-                modelMapper.map(annualProjectedFinancialRepository.save(annualProjectedFinancial),AnnualProjectedFinancialDto.class);
+                issuerFinancial.getAnnualHistoricalFinancials().forEach(annualHistoricalFinancial -> annualHistoricalFinancial.setIssuerFinancial(issuerFinancial));
+                issuerFinancial.getAnnualProjectedFinancials().forEach(annualProjectedFinancial -> annualProjectedFinancial.setIssuerFinancial(issuerFinancial));
                 return modelMapper.map(issuerFinancialRepository.save(issuerFinancial),IssuerFinancialDto.class);
             default:
                 break;

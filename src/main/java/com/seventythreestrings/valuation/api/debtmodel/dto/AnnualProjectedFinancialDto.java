@@ -56,4 +56,6 @@ public class AnnualProjectedFinancialDto {
     private double totalShareholdersEquity;
 
     private int year;
+
+    private Long issuerFinancialId;
 }

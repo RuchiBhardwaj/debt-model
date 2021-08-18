@@ -82,5 +82,7 @@ public class AnnualHistoricalFinancialDto {
 
     private String year;
 
+    private Long issuerFinancialId;
+
 
 }
