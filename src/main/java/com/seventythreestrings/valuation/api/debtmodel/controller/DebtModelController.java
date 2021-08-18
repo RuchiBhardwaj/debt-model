@@ -87,7 +87,7 @@ public class DebtModelController {
 	}
 
 	@GetMapping("/{fundId}/value")
-	public ResponseEntity<ApiResponse<DebtModelDto>> getListOfDebt(@PathVariable(value = "portfolioId") @NotNull Long fundId) {
+	public ResponseEntity<ApiResponse<DebtModelDto>> getListOfDebt(@PathVariable(value = "fundId") @NotNull Long fundId) {
 		ApiResponse<DebtModelDto> apiResponse = new ApiResponse<>();
 		List<DebtModelDto> debtModel = debtModelService.getListOfDebtModels(fundId);
 		apiResponse.setSuccess(true);

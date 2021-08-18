@@ -89,7 +89,8 @@ public class DebtModelInputController {
     }
 
     @PostMapping("/discount")
-    public ResponseEntity<ApiResponse<DiscountRateComputationDto>> createDiscount(@RequestBody DiscountRateComputationDto discountRateComputationDto){
+    public ResponseEntity<ApiResponse<DiscountRateComputationDto>> createDiscount(@RequestBody DiscountRateComputationDto discountRateComputationDto,
+                                                                                  @PathVariable(value = "debtModelId",required = false)  Long debtModelId){
         ApiResponse<DiscountRateComputationDto> apiResponse = new ApiResponse<>();
         try {
             DiscountRateComputationDto discount = debtModelInputService.createDiscount(discountRateComputationDto);
@@ -138,7 +139,7 @@ public class DebtModelInputController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
-    @PutMapping("dataaa/{cashflowDatesTypeId}/{debtModelId}")
+    @PutMapping("dataaa/{cashflowDatesTypeId}")
     public ResponseEntity<ApiResponse<CustomizableDto>> updateCustomizableCashflow(
             @PathVariable(value = "debtModelId") @NotNull Long debtModelId,
             @PathVariable(value = "cashflowDatesTypeId") @NotNull CashflowDates cashflowDates,
