@@ -1,5 +1,7 @@
 package com.seventythreestrings.valuation.api.debtmodel.service;
 
+import com.seventythreestrings.valuation.api.debtmodel.dto.CompanyDetailsDto;
+import com.seventythreestrings.valuation.api.debtmodel.dto.CompanyDetailsResponseDto;
 import com.seventythreestrings.valuation.api.debtmodel.dto.DebtModelDto;
 import com.seventythreestrings.valuation.api.debtmodel.dto.SortOrder;
 import com.seventythreestrings.valuation.api.debtmodel.model.DebtModel;
@@ -8,6 +10,7 @@ import com.seventythreestrings.valuation.api.debtmodel.model.LookUpValuationDeta
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface DebtModelService {
 
@@ -31,4 +34,6 @@ public interface DebtModelService {
 	LookUpDebtDetails saveLookUpDebtDetail(LookUpDebtDetails model);
 
 	LookUpValuationDetails saveLookUpValuationDetails(LookUpValuationDetails lookUpValuationDetails);
+
+	CompanyDetailsDto getCompany(UUID companyId);
 }

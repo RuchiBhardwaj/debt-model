@@ -10,6 +10,7 @@ import com.seventythreestrings.valuation.api.util.ApiResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -233,5 +235,17 @@ public class DebtModelController {
 		}
 	}
 
+	@SneakyThrows
+	@GetMapping("companyDetails/{companyId}")
+	public ResponseEntity<ApiResponse<Object>> getCompanyDetails(
+			@PathVariable(value = "companyId")@NotNull UUID  companyId){
+		Object input = debtModelService.getCompany((companyId));
+		ApiResponse<Object> apiResponse;
+		apiResponse = new ApiResponse<>();
+		apiResponse.setSuccess(true);
+		apiResponse.setResponse(input);
+		apiResponse.setMessage("Company Details retrieved successfully");
+		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
 
+	}
 }

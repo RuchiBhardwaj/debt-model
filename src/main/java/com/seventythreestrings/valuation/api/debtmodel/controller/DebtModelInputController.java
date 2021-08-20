@@ -112,7 +112,6 @@ public class DebtModelInputController {
             @PathVariable(value = "id") @NotNull Long id ) {
         Object input = debtModelInputService.get(inputType, id);
         DebtModelInputDto debtModelInputDto = new DebtModelInputDto(inputType, input);
-
         ApiResponse<DebtModelInputDto> apiResponse = new ApiResponse<>();
         apiResponse.setSuccess(true);
         apiResponse.setResponse(debtModelInputDto);

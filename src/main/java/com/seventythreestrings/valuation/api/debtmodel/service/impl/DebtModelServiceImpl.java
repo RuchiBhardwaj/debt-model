@@ -2,9 +2,11 @@ package com.seventythreestrings.valuation.api.debtmodel.service.impl;
 
 import com.seventythreestrings.valuation.api.debtmodel.dto.*;
 import com.seventythreestrings.valuation.api.debtmodel.model.DebtModel;
+import com.seventythreestrings.valuation.api.debtmodel.model.GeneralDetails;
 import com.seventythreestrings.valuation.api.debtmodel.model.LookUpDebtDetails;
 import com.seventythreestrings.valuation.api.debtmodel.model.LookUpValuationDetails;
 import com.seventythreestrings.valuation.api.debtmodel.repository.DebtModelRepository;
+import com.seventythreestrings.valuation.api.debtmodel.repository.GeneralDetailsRepository;
 import com.seventythreestrings.valuation.api.debtmodel.repository.LookUpDebtDetailsRepository;
 import com.seventythreestrings.valuation.api.debtmodel.repository.LookUpValuationDetailsRepository;
 import com.seventythreestrings.valuation.api.debtmodel.service.DebtModelService;
@@ -21,6 +23,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -30,6 +34,7 @@ public class DebtModelServiceImpl implements DebtModelService {
     private final ModelMapper modelMapper;
     private final LookUpDebtDetailsRepository lookUpDebtDetailsRepository;
     private final LookUpValuationDetailsRepository lookUpValuationDetailsRepository;
+    private final GeneralDetailsRepository generalDetailsRepository;
 
     @Override
     public List<DebtModel> getAll() {
@@ -88,5 +93,22 @@ public class DebtModelServiceImpl implements DebtModelService {
     public LookUpDebtDetails saveLookUpDebtDetail(LookUpDebtDetails model) {return lookUpDebtDetailsRepository.save(model);}
 
     public LookUpValuationDetails saveLookUpValuationDetails(LookUpValuationDetails lookUpValuationDetails){return lookUpValuationDetailsRepository.save(lookUpValuationDetails);}
+
+    @SneakyThrows
+    @Override
+    public CompanyDetailsDto getCompany(UUID companyId)  {
+        CompanyDetailsDto companyDetails = new CompanyDetailsDto();
+        Optional<LookUpDebtDetails> lookUpDebtDetails = lookUpDebtDetailsRepository.findDebtIdByCompanyId(companyId);
+        if(lookUpDebtDetails.isPresent()){
+            Long debtId = lookUpDebtDetails.get().getDebtId();
+            Optional<GeneralDetails> generalDetails = generalDetailsRepository.findFirstByDebtModelId(debtId);
+            companyDetails.setCompanyName(lookUpDebtDetails.get().getCompanyName());
+            companyDetails.setCompanyId(lookUpDebtDetails.get().getCompanyId());
+            companyDetails.setCompanyDetails(modelMapper.map(generalDetails,GeneralDetailsDto.class));
+        }
+        return companyDetails;
+    }
+
+
 
 }
