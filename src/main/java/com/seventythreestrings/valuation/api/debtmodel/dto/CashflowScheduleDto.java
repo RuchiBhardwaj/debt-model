@@ -24,6 +24,10 @@ public class CashflowScheduleDto {
 
     private double principalRepayment;
 
+    private Double callPremiumAmount;
+
+    private Double callPremiumRate;
+
     private double totalPrincipalOutstanding;
 
     private double baseRate;

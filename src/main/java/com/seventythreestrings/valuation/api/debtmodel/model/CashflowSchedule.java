@@ -45,6 +45,12 @@ public class CashflowSchedule extends BaseEntity {
     @Column(name = "principal_repayment")
     private double principalRepayment;
 
+    @Column(name = "call_premium_amount")
+    private Double callPremiumAmount;
+
+    @Column(name = "call_premium_rate")
+    private Double callPremiumRate;
+
     @Column(name = "total_principal_outstanding")
     private double totalPrincipalOutstanding;
 

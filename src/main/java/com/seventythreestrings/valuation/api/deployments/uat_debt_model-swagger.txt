@@ -10,7 +10,7 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-  "host": "20.71.114.17",
+  "host": "20.86.104.126",
   "basePath": "/",
   "tags": [
     {
@@ -437,7 +437,7 @@
         }
       }
     },
-    "/api/v1/valuation/debt-model/{debtModelId}/input/dataaa/{cashflowDatesTypeId}/{debtModelId}": {
+    "/api/v1/valuation/debt-model/{debtModelId}/input/dataaa/{cashflowDatesTypeId}": {
       "put": {
         "tags": [
           "debt-model-input-controller"
@@ -516,6 +516,14 @@
           "*/*"
         ],
         "parameters": [
+          {
+            "name": "debtModelId",
+            "in": "path",
+            "description": "debtModelId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
           {
             "in": "body",
             "name": "discountRateComputationDto",
@@ -888,9 +896,9 @@
         ],
         "parameters": [
           {
-            "name": "portfolioId",
+            "name": "fundId",
             "in": "path",
-            "description": "portfolioId",
+            "description": "fundId",
             "required": true,
             "type": "integer",
             "format": "int64"

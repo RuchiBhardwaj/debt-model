@@ -87,9 +87,11 @@ public class CashflowServiceImpl implements CashflowService {
         Optional<GeneralDetails> generalDetailsInput = getGeneralDetailsFromInputs(inputs);
         List<InterestDetails> interestDetailsInput = getInterestDetailsFromInputs(inputs);
         Optional<PrepaymentDetails> prepaymentDetailsInput = getPrepaymentDetailsFromInputs(inputs);
-        List<DealFees> dealFees = getDealFeesFromInputs(inputs);
-        List<InterestUndrawnCapital> interestUndrawnCapitals = getInterestUndrawnCapitalFromInputs(inputs);
-        List<Skims> skims = getSkimsFromInputs(inputs);
+        List<DealFees> dealFeesInput = getDealFeesFromInputs(inputs);
+        List<InterestUndrawnCapital> interestUndrawnCapitalsInput = getInterestUndrawnCapitalFromInputs(inputs);
+        List<Skims> skimsInput = getSkimsFromInputs(inputs);
+        List<CallPremium> callPremiumInput = getCallPremiumFromInputs(inputs);
+
         if (!generalDetailsInput.isPresent()) {
             return;
         }
@@ -132,15 +134,15 @@ public class CashflowServiceImpl implements CashflowService {
             double interestOutflow = cashflowSchedule.getInterestOutflow();
 
             // Set Deal Fees, Calculate Deal Fee Outflow
-            addDealFeesToCashflowSchedule(cashflowSchedule, dealFees, dayCountConvention, principalOutstanding, principalAmount);
+            addDealFeesToCashflowSchedule(cashflowSchedule, dealFeesInput, dayCountConvention, principalOutstanding, principalAmount);
             double dealFeesOutflow = cashflowSchedule.getDealFeesOutflow();
 
             // Set Interest Undrawn Capitals, Calculate Interest Undrawn Capitals Outflow
-            addInterestUndrawnCapitalToCashflowSchedule(cashflowSchedule, interestUndrawnCapitals, dayCountConvention, calledDownCapital);
+            addInterestUndrawnCapitalToCashflowSchedule(cashflowSchedule, interestUndrawnCapitalsInput, dayCountConvention, calledDownCapital);
             double interestUndrawnCapitalOutflow = cashflowSchedule.getInterestUndrawnCapitalOutflow();
 
             // Set Skims, Calculate Skims Outflow
-            addSkimsToCashflowSchedule(cashflowSchedule, skims, dayCountConvention, principalOutstanding, principalAmount);
+            addSkimsToCashflowSchedule(cashflowSchedule, skimsInput, dayCountConvention, principalOutstanding, principalAmount);
             double skimsOutflow = cashflowSchedule.getSkimsOutflow();
 
             // Calculate Principal Repayment and Cash Movement
@@ -149,8 +151,9 @@ public class CashflowServiceImpl implements CashflowService {
                 cashMovement = -principalAmount;
             } else if (scheduleDate.getType() == DateType.PREPAYMENT) {
                 principalRepayment = getPrepaymentAmountForDate(prepaymentDetailsInput, scheduleDate.getDate());
+                double callPremiumAmount = getCallPremiumAmountForDate(callPremiumInput, scheduleDate.getDate(), principalRepayment, cashflowSchedule);
                 outstandingInterestOutflow += interestOutflow;
-                cashMovement = principalRepayment;
+                cashMovement = principalRepayment + callPremiumAmount;
             } else if (scheduleDate.getType() == DateType.INTEREST || scheduleDate.getType() == DateType.INTEREST_AND_MATURITY) {
                 if (!isInterestAccrued) {
                     cashMovement = interestOutflow + outstandingInterestOutflow;
@@ -158,9 +161,10 @@ public class CashflowServiceImpl implements CashflowService {
                 outstandingInterestOutflow = 0;
             } else if (scheduleDate.getType() == DateType.INTEREST_AND_PREPAYMENT) {
                 principalRepayment = getPrepaymentAmountForDate(prepaymentDetailsInput, scheduleDate.getDate());
-                cashMovement = principalRepayment;
+                double callPremiumAmount = getCallPremiumAmountForDate(callPremiumInput, scheduleDate.getDate(), principalRepayment, cashflowSchedule);
+                cashMovement = principalRepayment + callPremiumAmount;
                 if (!isInterestAccrued) {
-                    cashMovement += interestOutflow + outstandingInterestOutflow;
+                    cashMovement += interestOutflow + outstandingInterestOutflow + callPremiumAmount;
                 }
                 outstandingInterestOutflow = 0;
             } else if (scheduleDate.getType() == DateType.DEALFEES || scheduleDate.getType() == DateType.DEALFEES_AND_MATURITY) {
@@ -352,6 +356,15 @@ public class CashflowServiceImpl implements CashflowService {
         return schedules.stream().filter(schedule -> schedule.getDate().isEqual(date)).findFirst().map(PaymentSchedule::getAmount).orElse(0.0);
     }
 
+    private double getCallPremiumAmountForDate(List<CallPremium> inputs, LocalDate date, double principalRepayment, CashflowSchedule cashflowSchedule) {
+        double callPremiumRate = inputs.stream().filter(input -> !input.getDate().isBefore(date))
+                .findFirst().map(CallPremium::getPercentage).orElse(0.0);
+        double callPremiumAmount = principalRepayment * (callPremiumRate - 100) / 100;
+        cashflowSchedule.setCallPremiumRate(callPremiumRate);
+        cashflowSchedule.setCallPremiumAmount(callPremiumAmount);
+        return callPremiumAmount;
+    }
+
     private Optional<InterestDetails> getInterestDetailsByDate(List<InterestDetails> inputs, LocalDate date) {
         // get single interest details
         // regime start date and end dates are inclusive
@@ -526,26 +539,42 @@ public class CashflowServiceImpl implements CashflowService {
     }
 
     private Optional<GeneralDetails> getGeneralDetailsFromInputs(List<DebtModelInputDto> inputs) {
-        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.GENERAL_DETAILS).map(input -> modelMapper.map(input.getPayload(), GeneralDetails.class)).findFirst();
+        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.GENERAL_DETAILS)
+                .map(input -> modelMapper.map(input.getPayload(), GeneralDetails.class)).findFirst();
     }
 
     private List<InterestDetails> getInterestDetailsFromInputs(List<DebtModelInputDto> inputs) {
-        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.INTEREST_DETAILS).map(input -> Arrays.asList(modelMapper.map(input.getPayload(), InterestDetails[].class))).findFirst().orElse(new ArrayList<InterestDetails>());
+        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.INTEREST_DETAILS)
+                .map(input -> Arrays.asList(modelMapper.map(input.getPayload(), InterestDetails[].class)))
+                .findFirst().orElse(new ArrayList<InterestDetails>());
     }
 
     private Optional<PrepaymentDetails> getPrepaymentDetailsFromInputs(List<DebtModelInputDto> inputs) {
-        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.REPAYMENT_DETAILS).map(input -> modelMapper.map(input.getPayload(), PrepaymentDetails.class)).findFirst();
+        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.REPAYMENT_DETAILS)
+                .map(input -> modelMapper.map(input.getPayload(), PrepaymentDetails.class)).findFirst();
     }
 
     private List<DealFees> getDealFeesFromInputs(List<DebtModelInputDto> inputs) {
-        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.DEAL_FEES).map(input -> Arrays.asList(modelMapper.map(input.getPayload(), DealFees[].class))).findFirst().orElse(new ArrayList<DealFees>());
+        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.DEAL_FEES)
+                .map(input -> Arrays.asList(modelMapper.map(input.getPayload(), DealFees[].class)))
+                .findFirst().orElse(new ArrayList<DealFees>());
     }
 
     private List<InterestUndrawnCapital> getInterestUndrawnCapitalFromInputs(List<DebtModelInputDto> inputs) {
-        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.INTEREST_UNDRAWN_CAPITAL).map(input -> Arrays.asList(modelMapper.map(input.getPayload(), InterestUndrawnCapital[].class))).findFirst().orElse(new ArrayList<InterestUndrawnCapital>());
+        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.INTEREST_UNDRAWN_CAPITAL)
+                .map(input -> Arrays.asList(modelMapper.map(input.getPayload(), InterestUndrawnCapital[].class)))
+                .findFirst().orElse(new ArrayList<InterestUndrawnCapital>());
     }
 
     private List<Skims> getSkimsFromInputs(List<DebtModelInputDto> inputs) {
-        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.SKIMS).map(input -> Arrays.asList(modelMapper.map(input.getPayload(), Skims[].class))).findFirst().orElse(new ArrayList<Skims>());
+        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.SKIMS)
+                .map(input -> Arrays.asList(modelMapper.map(input.getPayload(), Skims[].class)))
+                .findFirst().orElse(new ArrayList<Skims>());
+    }
+
+    private List<CallPremium> getCallPremiumFromInputs(List<DebtModelInputDto> inputs) {
+        return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.CALL_PREMIUM)
+                .map(input -> Arrays.asList(modelMapper.map(input.getPayload(), CallPremium[].class)))
+                .findFirst().orElse(new ArrayList<CallPremium>());
     }
 }

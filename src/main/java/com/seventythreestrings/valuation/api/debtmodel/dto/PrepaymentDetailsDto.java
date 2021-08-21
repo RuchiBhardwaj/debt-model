@@ -13,4 +13,6 @@ public class PrepaymentDetailsDto {
 	private List<PaymentScheduleDto> paymentSchedules;
 
 	private Long debtModelId;
+
+	private int versionId;
 }
