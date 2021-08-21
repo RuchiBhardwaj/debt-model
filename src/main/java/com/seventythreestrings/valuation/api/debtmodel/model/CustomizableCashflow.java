@@ -68,7 +68,7 @@ public class CustomizableCashflow extends BaseEntity {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "UTC")
     @Column(name = "date_selection")
-    private LocalDateTime dateSelection;
+    private LocalDate dateSelection;
 
     @Column(name = "cashflow_computation_base")
     private String cashflowComputationBase;
