@@ -33,11 +33,11 @@ public class IssuerFinancial extends BaseEntity {
     private double enterpriseValue;
 
     @OneToMany(mappedBy="issuerFinancial", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("date ASC")
+    @OrderBy("year ASC")
     private Set<AnnualHistoricalFinancial> annualHistoricalFinancials = new HashSet<>();
 
     @OneToMany(mappedBy="issuerFinancial", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("date ASC")
+    @OrderBy("year ASC")
     private Set<AnnualProjectedFinancial> annualProjectedFinancials = new HashSet<>();
 
     @Column(name = "version_id")
