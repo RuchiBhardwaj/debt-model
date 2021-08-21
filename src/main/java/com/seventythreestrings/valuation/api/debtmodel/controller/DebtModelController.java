@@ -248,4 +248,18 @@ public class DebtModelController {
 		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
 
 	}
+
+	@SneakyThrows
+	@PostMapping("fundDetailsOfCompanies")
+	public ResponseEntity<ApiResponse<FundDetailsResponseDto>> getFundDetails(
+			@RequestBody FundDetailsDto fundDetailsDto){
+		FundDetailsResponseDto fundDetailsResponseDto = debtModelService.getFundDetails(fundDetailsDto);
+		ApiResponse<FundDetailsResponseDto> apiResponse;
+		apiResponse = new ApiResponse<>();
+		apiResponse.setSuccess(true);
+		apiResponse.setResponse(fundDetailsResponseDto);
+		apiResponse.setMessage("Fund Details retrieved successfully");
+		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+	}
+
 }

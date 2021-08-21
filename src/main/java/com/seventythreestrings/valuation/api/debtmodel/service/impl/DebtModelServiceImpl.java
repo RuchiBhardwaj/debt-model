@@ -21,10 +21,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -109,6 +107,40 @@ public class DebtModelServiceImpl implements DebtModelService {
         return companyDetails;
     }
 
+    @SneakyThrows
+    @Override
+    public FundDetailsResponseDto getFundDetails(FundDetailsDto fundDetailsDto) {
+        FundDetailsResponseDto fundDetailsResponseDto = new FundDetailsResponseDto();
+        UUID fund = fundDetailsDto.getFundId();
+        List<CompanyResponse> companyResponse = new ArrayList<>();
 
+        for(Company f : fundDetailsDto.getCompanies()){
+            UUID companyId = f.getCompanyId();
+            Optional<LookUpDebtDetails> lookUpDebtDetails = lookUpDebtDetailsRepository.findDebtIdByCompanyId(companyId);
+            Long debtId = lookUpDebtDetails.get().getDebtId();
+            List<ValuationResponse> valuationResponses = new ArrayList<>();
+            for(ValuationDates v:f.getValuationDates()){
+                UUID valuationDateId = v.getValuationDateId();
+                Optional<LookUpValuationDetails> valuationDate = lookUpValuationDetailsRepository.findValuationDateByValuationDateId(valuationDateId);
+                LocalDate valDate = valuationDate.get().getValuationDate();
+                if(debtId !=null ){
+                    CompanyResponse companyResponse1 = new CompanyResponse();
+                    GeneralDetails generalDetails = generalDetailsRepository.findFirstByDebtModelIdAndValuationDate(debtId);
+                    fundDetailsResponseDto.setFundId(fund);
+                    ValuationResponse val = new ValuationResponse();
+                    val.setValuationDates(modelMapper.map(generalDetails,GeneralDetailsDto.class));
+                    valuationResponses.add(val);
+                    companyResponse1.setCompanyId(companyId);
+                    companyResponse1.setValuationDates(valuationResponses);
+                    companyResponse.add(companyResponse1);
+                }
+
+
+            }
+            fundDetailsResponseDto.setCompanies(companyResponse);
+        }
+        return fundDetailsResponseDto;
+
+    }
 
 }

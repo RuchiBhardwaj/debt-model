@@ -32,7 +32,7 @@ public class CustomizableCashflowDto {
 
     private double cashflowFixedAmount;
 
-    private LocalDateTime dateSelection;
+    private LocalDate dateSelection;
 
     private String cashflowComputationBase;
 

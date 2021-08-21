@@ -1,9 +1,6 @@
 package com.seventythreestrings.valuation.api.debtmodel.service;
 
-import com.seventythreestrings.valuation.api.debtmodel.dto.CompanyDetailsDto;
-import com.seventythreestrings.valuation.api.debtmodel.dto.CompanyDetailsResponseDto;
-import com.seventythreestrings.valuation.api.debtmodel.dto.DebtModelDto;
-import com.seventythreestrings.valuation.api.debtmodel.dto.SortOrder;
+import com.seventythreestrings.valuation.api.debtmodel.dto.*;
 import com.seventythreestrings.valuation.api.debtmodel.model.DebtModel;
 import com.seventythreestrings.valuation.api.debtmodel.model.LookUpDebtDetails;
 import com.seventythreestrings.valuation.api.debtmodel.model.LookUpValuationDetails;
@@ -36,4 +33,6 @@ public interface DebtModelService {
 	LookUpValuationDetails saveLookUpValuationDetails(LookUpValuationDetails lookUpValuationDetails);
 
 	CompanyDetailsDto getCompany(UUID companyId);
+
+	FundDetailsResponseDto getFundDetails(FundDetailsDto fundDetailsDto);
 }

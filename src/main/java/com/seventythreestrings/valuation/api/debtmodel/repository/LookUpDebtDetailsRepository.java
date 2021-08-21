@@ -14,5 +14,6 @@ public interface LookUpDebtDetailsRepository extends JpaRepository<LookUpDebtDet
     @Override
     <S extends LookUpDebtDetails> S save(S s);
 
+    
     Optional<LookUpDebtDetails> findDebtIdByCompanyId(UUID company_id);
 }

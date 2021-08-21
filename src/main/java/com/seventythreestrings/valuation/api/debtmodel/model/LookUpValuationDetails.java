@@ -32,7 +32,7 @@ public class LookUpValuationDetails extends BaseEntity {
     @JoinColumn(name = "company_id", nullable = false)
     private LookUpDebtDetails lookUpDebtDetails;
 
-    @GeneratedValue
+
     @Type(type="org.hibernate.type.UUIDCharType")
     @Column(name = "valuation_date_id")
     private UUID valuationDateId;

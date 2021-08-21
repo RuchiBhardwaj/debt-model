@@ -22,7 +22,6 @@ import java.util.UUID;
 public class LookUpDebtDetails extends BaseEntity {
 
     @Id
-    @GeneratedValue
     @Type(type="org.hibernate.type.UUIDCharType")
     @Column(name = "company_id")
     private UUID companyId;
@@ -33,7 +32,6 @@ public class LookUpDebtDetails extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long debtId;
 
-    @GeneratedValue
     @Type(type="org.hibernate.type.UUIDCharType")
     @Column(name = "fund_id")
     private UUID fundId;
