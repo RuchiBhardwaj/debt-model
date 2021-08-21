@@ -98,7 +98,9 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                          List<CallPremium> callPremiums = callPremiumRepository.findAllByDebtModelIdAndVersionId(debtModelId,versionId);
                          inputs.add(new DebtModelInputDto(DebtModelInput.CALL_PREMIUM,modelMapper.map(callPremiums,CallPremiumDto[].class)));
                      }
-
+                case ISSUER_FINANCIAL:
+                   Optional<IssuerFinancial> issuerFinancial = issuerFinancialRepository.findFirstByDebtModelId(debtModelId);
+                   issuerFinancial.ifPresent(detail -> inputs.add(new DebtModelInputDto(DebtModelInput.ISSUER_FINANCIAL,modelMapper.map(detail,IssuerFinancialDto[].class))));
                     break;
                 default:
                     break;

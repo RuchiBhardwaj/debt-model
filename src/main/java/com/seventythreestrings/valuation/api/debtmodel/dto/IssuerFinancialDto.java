@@ -19,5 +19,7 @@ public class IssuerFinancialDto {
 
     private List<AnnualProjectedFinancial> annualProjectedFinancials;
 
+    private int versionId;
+
     private Long debtModelId;
 }
