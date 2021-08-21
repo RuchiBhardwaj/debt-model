@@ -100,7 +100,7 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                      }
                 case ISSUER_FINANCIAL:
                    Optional<IssuerFinancial> issuerFinancial = issuerFinancialRepository.findFirstByDebtModelId(debtModelId);
-                   issuerFinancial.ifPresent(detail -> inputs.add(new DebtModelInputDto(DebtModelInput.ISSUER_FINANCIAL,modelMapper.map(detail,IssuerFinancialDto[].class))));
+                   issuerFinancial.ifPresent(detail -> inputs.add(new DebtModelInputDto(DebtModelInput.ISSUER_FINANCIAL, modelMapper.map(detail, IssuerFinancialDto.class))));
                     break;
                 default:
                     break;

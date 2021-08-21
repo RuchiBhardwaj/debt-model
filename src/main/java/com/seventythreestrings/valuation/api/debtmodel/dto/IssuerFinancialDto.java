@@ -1,7 +1,5 @@
 package com.seventythreestrings.valuation.api.debtmodel.dto;
 
-import com.seventythreestrings.valuation.api.debtmodel.model.AnnualHistoricalFinancial;
-import com.seventythreestrings.valuation.api.debtmodel.model.AnnualProjectedFinancial;
 import lombok.Data;
 
 import java.util.List;
@@ -15,9 +13,9 @@ public class IssuerFinancialDto {
 
     private double enterpriseValue;
 
-    private List<AnnualHistoricalFinancial> annualHistoricalFinancials;
+    private List<AnnualHistoricalFinancialDto> annualHistoricalFinancials;
 
-    private List<AnnualProjectedFinancial> annualProjectedFinancials;
+    private List<AnnualProjectedFinancialDto> annualProjectedFinancials;
 
     private int versionId;
 
