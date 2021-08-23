@@ -287,6 +287,45 @@
         }
       }
     },
+    "/api/v1/valuation/debt-model/companyDetails/{companyId}": {
+      "get": {
+        "tags": [
+          "debt-model-controller"
+        ],
+        "summary": "getCompanyDetails",
+        "operationId": "getCompanyDetailsUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "description": "companyId",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«object»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/v1/valuation/debt-model/fundDetails": {
       "post": {
         "tags": [
@@ -316,6 +355,52 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/ApiResponse«LookUpDebtDetailsDto»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/valuation/debt-model/fundDetailsOfCompanies": {
+      "post": {
+        "tags": [
+          "debt-model-controller"
+        ],
+        "summary": "getFundDetails",
+        "operationId": "getFundDetailsUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "fundDetailsDto",
+            "description": "fundDetailsDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FundDetailsDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse«FundDetailsResponseDto»"
             }
           },
           "201": {
@@ -1307,6 +1392,24 @@
       },
       "title": "ApiResponse«DiscountRateComputationDto»"
     },
+    "ApiResponse«FundDetailsResponseDto»": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "response": {
+          "$ref": "#/definitions/FundDetailsResponseDto"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "ApiResponse«FundDetailsResponseDto»"
+    },
     "ApiResponse«List«BaseRateCurveDto»»": {
       "type": "object",
       "properties": {
@@ -1462,6 +1565,24 @@
         }
       },
       "title": "ApiResponse«boolean»"
+    },
+    "ApiResponse«object»": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "response": {
+          "type": "object"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "ApiResponse«object»"
     },
     "BaseRateCurveDto": {
       "type": "object",
@@ -1651,6 +1772,18 @@
           "type": "number",
           "format": "double"
         },
+        "callPremiumAmount": {
+          "type": "number",
+          "format": "double"
+        },
+        "callPremiumRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "committedCapital": {
+          "type": "number",
+          "format": "double"
+        },
         "createdAt": {
           "type": "string",
           "example": "yyyy-MM-dd HH:mm:ss.SSS"
@@ -1663,16 +1796,52 @@
           "enum": [
             "DEALFEES",
             "DEALFEES_AND_MATURITY",
+            "DEALFEES_AND_SKIMS",
+            "DEALFEES_AND_SKIMS_AND_MATURITY",
+            "DEALFEES_AND_UNDRAWN_CAPITAL",
+            "DEALFEES_AND_UNDRAWN_CAPITAL_AND_MATURITY",
+            "DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_MATURITY",
             "INTEREST",
+            "INTEREST_AND_DEALFEES",
+            "INTEREST_AND_DEALFEES_AND_MATURITY",
+            "INTEREST_AND_DEALFEES_AND_SKIMS",
+            "INTEREST_AND_DEALFEES_AND_SKIMS_AND_MATURITY",
+            "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL",
+            "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_MATURITY",
+            "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_MATURITY",
             "INTEREST_AND_MATURITY",
             "INTEREST_AND_PREPAYMENT",
-            "INTEREST_UNDRAWN_CAPITAL",
-            "INTEREST_UNDRAWN_CAPITAL_AND_MATURITY",
+            "INTEREST_AND_PREPAYMENT_AND_DEALFEES",
+            "INTEREST_AND_PREPAYMENT_AND_DEALFEES_AND_SKIMS",
+            "INTEREST_AND_PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL",
+            "INTEREST_AND_PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "INTEREST_AND_PREPAYMENT_AND_SKIMS",
+            "INTEREST_AND_PREPAYMENT_AND_UNDRAWN_CAPITAL",
+            "INTEREST_AND_PREPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "INTEREST_AND_SKIMS",
+            "INTEREST_AND_SKIMS_AND_MATURITY",
+            "INTEREST_AND_UNDRAWN_CAPITAL",
+            "INTEREST_AND_UNDRAWN_CAPITAL_AND_MATURITY",
+            "INTEREST_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "INTEREST_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_MATURITY",
             "MATURITY",
             "ORIGINATION",
             "PREPAYMENT",
+            "PREPAYMENT_AND_DEALFEES",
+            "PREPAYMENT_AND_DEALFEES_AND_SKIMS",
+            "PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL",
+            "PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "PREPAYMENT_AND_SKIMS",
+            "PREPAYMENT_AND_UNDRAWN_CAPITAL",
+            "PREPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS",
             "SKIMS",
-            "SKIMS_AND_MATURITY"
+            "SKIMS_AND_MATURITY",
+            "UNDRAWN_CAPITAL",
+            "UNDRAWN_CAPITAL_AND_MATURITY",
+            "UNDRAWN_CAPITAL_AND_SKIMS",
+            "UNDRAWN_CAPITAL_AND_SKIMS_AND_MATURITY"
           ]
         },
         "dealFeesOutflow": {
@@ -1700,6 +1869,10 @@
           "format": "double"
         },
         "interestUndrawnPercentage": {
+          "type": "number",
+          "format": "double"
+        },
+        "openingPrincipalOutstanding": {
           "type": "number",
           "format": "double"
         },
@@ -1740,6 +1913,10 @@
           "format": "double"
         },
         "totalPrincipalOutstanding": {
+          "type": "number",
+          "format": "double"
+        },
+        "undrawnCapital": {
           "type": "number",
           "format": "double"
         },
@@ -1772,21 +1949,69 @@
           "type": "number",
           "format": "double"
         },
+        "callPremiumAmount": {
+          "type": "number",
+          "format": "double"
+        },
+        "callPremiumRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "committedCapital": {
+          "type": "number",
+          "format": "double"
+        },
         "dateType": {
           "type": "string",
           "enum": [
             "DEALFEES",
             "DEALFEES_AND_MATURITY",
+            "DEALFEES_AND_SKIMS",
+            "DEALFEES_AND_SKIMS_AND_MATURITY",
+            "DEALFEES_AND_UNDRAWN_CAPITAL",
+            "DEALFEES_AND_UNDRAWN_CAPITAL_AND_MATURITY",
+            "DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_MATURITY",
             "INTEREST",
+            "INTEREST_AND_DEALFEES",
+            "INTEREST_AND_DEALFEES_AND_MATURITY",
+            "INTEREST_AND_DEALFEES_AND_SKIMS",
+            "INTEREST_AND_DEALFEES_AND_SKIMS_AND_MATURITY",
+            "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL",
+            "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_MATURITY",
+            "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_MATURITY",
             "INTEREST_AND_MATURITY",
             "INTEREST_AND_PREPAYMENT",
-            "INTEREST_UNDRAWN_CAPITAL",
-            "INTEREST_UNDRAWN_CAPITAL_AND_MATURITY",
+            "INTEREST_AND_PREPAYMENT_AND_DEALFEES",
+            "INTEREST_AND_PREPAYMENT_AND_DEALFEES_AND_SKIMS",
+            "INTEREST_AND_PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL",
+            "INTEREST_AND_PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "INTEREST_AND_PREPAYMENT_AND_SKIMS",
+            "INTEREST_AND_PREPAYMENT_AND_UNDRAWN_CAPITAL",
+            "INTEREST_AND_PREPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "INTEREST_AND_SKIMS",
+            "INTEREST_AND_SKIMS_AND_MATURITY",
+            "INTEREST_AND_UNDRAWN_CAPITAL",
+            "INTEREST_AND_UNDRAWN_CAPITAL_AND_MATURITY",
+            "INTEREST_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "INTEREST_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_MATURITY",
             "MATURITY",
             "ORIGINATION",
             "PREPAYMENT",
+            "PREPAYMENT_AND_DEALFEES",
+            "PREPAYMENT_AND_DEALFEES_AND_SKIMS",
+            "PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL",
+            "PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "PREPAYMENT_AND_SKIMS",
+            "PREPAYMENT_AND_UNDRAWN_CAPITAL",
+            "PREPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS",
             "SKIMS",
-            "SKIMS_AND_MATURITY"
+            "SKIMS_AND_MATURITY",
+            "UNDRAWN_CAPITAL",
+            "UNDRAWN_CAPITAL_AND_MATURITY",
+            "UNDRAWN_CAPITAL_AND_SKIMS",
+            "UNDRAWN_CAPITAL_AND_SKIMS_AND_MATURITY"
           ]
         },
         "dealFeesOutflow": {
@@ -1814,6 +2039,10 @@
           "format": "double"
         },
         "interestUndrwanCapitalOutflow": {
+          "type": "number",
+          "format": "double"
+        },
+        "openingPrincipalOutstanding": {
           "type": "number",
           "format": "double"
         },
@@ -1857,12 +2086,48 @@
           "type": "number",
           "format": "double"
         },
+        "undrawnCapital": {
+          "type": "number",
+          "format": "double"
+        },
         "yearFrac": {
           "type": "number",
           "format": "double"
         }
       },
       "title": "CashflowScheduleDto"
+    },
+    "Company": {
+      "type": "object",
+      "properties": {
+        "companyId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "valuationDates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValuationDates"
+          }
+        }
+      },
+      "title": "Company"
+    },
+    "CompanyResponse": {
+      "type": "object",
+      "properties": {
+        "companyId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "valuationDates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValuationResponse"
+          }
+        }
+      },
+      "title": "CompanyResponse"
     },
     "CustomizableDto": {
       "type": "object",
@@ -2182,6 +2447,38 @@
       },
       "title": "DiscountRateComputationDto"
     },
+    "FundDetailsDto": {
+      "type": "object",
+      "properties": {
+        "companies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Company"
+          }
+        },
+        "fundId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "title": "FundDetailsDto"
+    },
+    "FundDetailsResponseDto": {
+      "type": "object",
+      "properties": {
+        "companies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CompanyResponse"
+          }
+        },
+        "fundId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "title": "FundDetailsResponseDto"
+    },
     "GeneralDetails": {
       "type": "object",
       "required": [
@@ -2460,6 +2757,25 @@
         }
       },
       "title": "PaginatedResponse«DebtModelDto»"
+    },
+    "ValuationDates": {
+      "type": "object",
+      "properties": {
+        "valuationDateId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "title": "ValuationDates"
+    },
+    "ValuationResponse": {
+      "type": "object",
+      "properties": {
+        "valuationDates": {
+          "type": "object"
+        }
+      },
+      "title": "ValuationResponse"
     }
   }
 }
