@@ -69,7 +69,7 @@ CREATE TABLE `annual_historical_financial` (
   PRIMARY KEY (`id`),
   KEY `FKd7ag5sme3533ag7ies0ohbt12` (`issuer_financial`),
   CONSTRAINT `FKd7ag5sme3533ag7ies0ohbt12` FOREIGN KEY (`issuer_financial`) REFERENCES `issuer_financial` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -113,7 +113,7 @@ CREATE TABLE `annual_projected_financial` (
   PRIMARY KEY (`id`),
   KEY `FKc1c5t5de0ipxowmuhggd68p3w` (`issuer_financial`),
   CONSTRAINT `FKc1c5t5de0ipxowmuhggd68p3w` FOREIGN KEY (`issuer_financial`) REFERENCES `issuer_financial` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -132,7 +132,7 @@ CREATE TABLE `base_rate` (
   `is_fixed` bit(1) DEFAULT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -153,7 +153,7 @@ CREATE TABLE `base_rate_curve` (
   PRIMARY KEY (`id`),
   KEY `FK2ynwu33i8d3aaw6976urmjx2i` (`base_rate`),
   CONSTRAINT `FK2ynwu33i8d3aaw6976urmjx2i` FOREIGN KEY (`base_rate`) REFERENCES `base_rate` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -176,7 +176,7 @@ CREATE TABLE `call_premium` (
   PRIMARY KEY (`id`),
   KEY `FKq15h469hjpmebrl04k43otoly` (`debt_model_id`),
   CONSTRAINT `FKq15h469hjpmebrl04k43otoly` FOREIGN KEY (`debt_model_id`) REFERENCES `debt_model` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -207,7 +207,7 @@ CREATE TABLE `cashflow` (
   PRIMARY KEY (`id`),
   KEY `FKij2y9aj46cpwht5criq82rbyd` (`debt_model_id`),
   CONSTRAINT `FKij2y9aj46cpwht5criq82rbyd` FOREIGN KEY (`debt_model_id`) REFERENCES `debt_model` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -252,7 +252,7 @@ CREATE TABLE `cashflow_schedule` (
   PRIMARY KEY (`id`),
   KEY `FKimtu92611o3t162dj64fkucw3` (`cashflow_id`),
   CONSTRAINT `FKimtu92611o3t162dj64fkucw3` FOREIGN KEY (`cashflow_id`) REFERENCES `cashflow` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -288,7 +288,7 @@ CREATE TABLE `cutomizable_cashflow` (
   PRIMARY KEY (`id`),
   KEY `FKrrmui8tqqmywvkpndqli4psqo` (`debt_model_id`),
   CONSTRAINT `FKrrmui8tqqmywvkpndqli4psqo` FOREIGN KEY (`debt_model_id`) REFERENCES `debt_model` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -312,7 +312,7 @@ CREATE TABLE `cutomizable_cashflow_excel` (
   PRIMARY KEY (`id`),
   KEY `FKmwcefouv31o4482x0kkk6wx2h` (`debt_model_id`),
   CONSTRAINT `FKmwcefouv31o4482x0kkk6wx2h` FOREIGN KEY (`debt_model_id`) REFERENCES `debt_model` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -340,7 +340,7 @@ CREATE TABLE `deal_fees` (
   PRIMARY KEY (`id`),
   KEY `FKq7r3ccmyqjbx5yvtc7rff8gdq` (`debt_model_id`),
   CONSTRAINT `FKq7r3ccmyqjbx5yvtc7rff8gdq` FOREIGN KEY (`debt_model_id`) REFERENCES `debt_model` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -361,7 +361,7 @@ CREATE TABLE `debt_model` (
   `fund_id` bigint DEFAULT NULL,
   `fund_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -376,7 +376,7 @@ CREATE TABLE `debt_model_inputs` (
   `inputs` int DEFAULT NULL,
   KEY `FKmx0mrh9e5lck29fldahfolbhg` (`debt_model_id`),
   CONSTRAINT `FKmx0mrh9e5lck29fldahfolbhg` FOREIGN KEY (`debt_model_id`) REFERENCES `debt_model` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -400,7 +400,7 @@ CREATE TABLE `discount_adjustment` (
   PRIMARY KEY (`id`),
   KEY `FKgcdvbpgnqt2qvrwpoj0gf68qb` (`discount_adjustment`),
   CONSTRAINT `FKgcdvbpgnqt2qvrwpoj0gf68qb` FOREIGN KEY (`discount_adjustment`) REFERENCES `discount_rate_computation` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -429,7 +429,7 @@ CREATE TABLE `discount_rate_computation` (
   PRIMARY KEY (`id`),
   KEY `FK1rcbbrcajhhwgcfipahe693y6` (`debt_model_id`),
   CONSTRAINT `FK1rcbbrcajhhwgcfipahe693y6` FOREIGN KEY (`debt_model_id`) REFERENCES `debt_model` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -467,7 +467,7 @@ CREATE TABLE `general_details` (
   PRIMARY KEY (`id`),
   KEY `FKcqp0f6n4jn0lhl08k2wqpj3ig` (`debt_model_id`),
   CONSTRAINT `FKcqp0f6n4jn0lhl08k2wqpj3ig` FOREIGN KEY (`debt_model_id`) REFERENCES `debt_model` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -479,7 +479,7 @@ DROP TABLE IF EXISTS `hibernate_sequence`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `hibernate_sequence` (
   `next_val` bigint DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -517,7 +517,7 @@ CREATE TABLE `interest_details` (
   CONSTRAINT `FKih4k0aqkccrlsn8fq8mvyvupw` FOREIGN KEY (`base_rate`) REFERENCES `base_rate` (`id`),
   CONSTRAINT `FKn7aqj2d70qvec8o5e9ycyvkga` FOREIGN KEY (`debt_model_id`) REFERENCES `debt_model` (`id`),
   CONSTRAINT `FKpsprlk4u51u03sekwfnmvjwvs` FOREIGN KEY (`base_rate_curve`) REFERENCES `base_rate_curve` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -544,7 +544,7 @@ CREATE TABLE `interest_undrawn_capital` (
   PRIMARY KEY (`id`),
   KEY `FK136es5el24rg2np6i1h0427q0` (`debt_model_id`),
   CONSTRAINT `FK136es5el24rg2np6i1h0427q0` FOREIGN KEY (`debt_model_id`) REFERENCES `debt_model` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -566,7 +566,7 @@ CREATE TABLE `interim_payment_details` (
   PRIMARY KEY (`id`),
   KEY `FKajnpec21hi8aab6sm35c74ldq` (`cutomizable_cashflow_excel`),
   CONSTRAINT `FKajnpec21hi8aab6sm35c74ldq` FOREIGN KEY (`cutomizable_cashflow_excel`) REFERENCES `cutomizable_cashflow_excel` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -589,7 +589,7 @@ CREATE TABLE `issuer_financial` (
   PRIMARY KEY (`id`),
   KEY `FK1crtrs326nkqyncl3je77427h` (`debt_model_id`),
   CONSTRAINT `FK1crtrs326nkqyncl3je77427h` FOREIGN KEY (`debt_model_id`) REFERENCES `debt_model` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -610,7 +610,7 @@ CREATE TABLE `look_up_debt_details` (
   `fund_id` varchar(255) DEFAULT NULL,
   `fund_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`company_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -633,7 +633,7 @@ CREATE TABLE `look_up_valuation_details` (
   PRIMARY KEY (`id`),
   KEY `FKq7l8bs6p5s5c1jcxhf4277jh4` (`company_id`),
   CONSTRAINT `FKq7l8bs6p5s5c1jcxhf4277jh4` FOREIGN KEY (`company_id`) REFERENCES `look_up_debt_details` (`company_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -651,7 +651,7 @@ CREATE TABLE `payment_schedule` (
   PRIMARY KEY (`id`),
   KEY `FKa93m7bd3gvbr0rvdovdbf0hgh` (`prepayment_details`),
   CONSTRAINT `FKa93m7bd3gvbr0rvdovdbf0hgh` FOREIGN KEY (`prepayment_details`) REFERENCES `prepayment_details` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -673,7 +673,7 @@ CREATE TABLE `prepayment_details` (
   PRIMARY KEY (`id`),
   KEY `FKqag710v35pk2yk82amvfym92q` (`debt_model_id`),
   CONSTRAINT `FKqag710v35pk2yk82amvfym92q` FOREIGN KEY (`debt_model_id`) REFERENCES `debt_model` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -702,7 +702,7 @@ CREATE TABLE `skims` (
   PRIMARY KEY (`id`),
   KEY `FK3bn7ry0eheey69si36o19x8u8` (`debt_model_id`),
   CONSTRAINT `FK3bn7ry0eheey69si36o19x8u8` FOREIGN KEY (`debt_model_id`) REFERENCES `debt_model` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
