@@ -714,4 +714,7 @@ CREATE TABLE `skims` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+-- Add a default Hibernate sequence
+INSERT INTO `hibernate_sequence` (`next_val`) VALUES ('1');
+
 -- Dump completed on 2021-08-23 13:23:20
