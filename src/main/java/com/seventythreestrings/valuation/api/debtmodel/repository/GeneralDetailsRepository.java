@@ -16,7 +16,10 @@ public interface GeneralDetailsRepository extends JpaRepository<GeneralDetails, 
 
     Optional<GeneralDetails> findFirstByDebtModelId(Long debtModelId);
 
-    @Query(value = "select gd.* from general_details gd where gd.debt_model_id=:debtModelId"
-            ,nativeQuery = true)
-    GeneralDetails findFirstByDebtModelIdAndValuationDate(@Param("debtModelId")Long debtModelId );
+    @Query(value = "select gd.* from general_details gd where gd.debt_model_id=:debtModelId",nativeQuery = true)
+    GeneralDetails findFirstByDebtModelIdCompanyDetails(Long debtModelId);
+
+    @Query(value = "select gd.* from general_details gd where gd.debt_model_id=:debtModelId",nativeQuery = true)
+//    @Query(value = "select gd from GeneralDetails gd where gd.debtModelId=:debtModelId")
+    GeneralDetails findFirstByDebtModelIdAndValuationDate(@Param("debtModelId")Long debtModelId);
 }

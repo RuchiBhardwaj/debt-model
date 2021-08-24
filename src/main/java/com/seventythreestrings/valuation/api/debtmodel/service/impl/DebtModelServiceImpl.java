@@ -95,16 +95,16 @@ public class DebtModelServiceImpl implements DebtModelService {
     @SneakyThrows
     @Override
     public CompanyDetailsDto getCompany(UUID companyId)  {
-        CompanyDetailsDto companyDetails = new CompanyDetailsDto();
+        CompanyDetailsDto companyDetailsData = new CompanyDetailsDto();
         Optional<LookUpDebtDetails> lookUpDebtDetails = lookUpDebtDetailsRepository.findDebtIdByCompanyId(companyId);
         if(lookUpDebtDetails.isPresent()){
             Long debtId = lookUpDebtDetails.get().getDebtId();
-            Optional<GeneralDetails> generalDetails = generalDetailsRepository.findFirstByDebtModelId(debtId);
-            companyDetails.setCompanyName(lookUpDebtDetails.get().getCompanyName());
-            companyDetails.setCompanyId(lookUpDebtDetails.get().getCompanyId());
-            companyDetails.setCompanyDetails(modelMapper.map(generalDetails,GeneralDetailsDto.class));
+            GeneralDetails generalDetails = generalDetailsRepository.findFirstByDebtModelIdCompanyDetails(debtId);
+            companyDetailsData.setCompanyName(lookUpDebtDetails.get().getCompanyName());
+            companyDetailsData.setCompanyId(lookUpDebtDetails.get().getCompanyId());
+            companyDetailsData.setCompanyDetails(modelMapper.map(generalDetails,GeneralDetailsDto.class));
         }
-        return companyDetails;
+        return companyDetailsData;
     }
 
     @SneakyThrows
@@ -142,5 +142,9 @@ public class DebtModelServiceImpl implements DebtModelService {
         return fundDetailsResponseDto;
 
     }
+
+    @SneakyThrows
+    @Override
+    public LookUpValuationDetails updateLookUpValuationDetails(LookUpValuationDetails lookUpValuationDetails){return lookUpValuationDetailsRepository.save(lookUpValuationDetails);}
 
 }

@@ -18,9 +18,4 @@ public class CompanyDetailsDto {
     
     private Object companyDetails;
 
-
-    public CompanyDetailsDto(UUID companyId, Object companyDetails) {
-        this.companyId = companyId;
-        this.companyDetails = companyDetails;
-    }
 }

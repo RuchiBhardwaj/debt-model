@@ -237,13 +237,13 @@ public class DebtModelController {
 
 	@SneakyThrows
 	@GetMapping("companyDetails/{companyId}")
-	public ResponseEntity<ApiResponse<Object>> getCompanyDetails(
+	public ResponseEntity<ApiResponse<CompanyDetailsDto>> getCompanyDetails(
 			@PathVariable(value = "companyId")@NotNull UUID  companyId){
-		Object input = debtModelService.getCompany((companyId));
-		ApiResponse<Object> apiResponse;
+		CompanyDetailsDto companyDetailsDto = debtModelService.getCompany((companyId));
+		ApiResponse<CompanyDetailsDto> apiResponse;
 		apiResponse = new ApiResponse<>();
 		apiResponse.setSuccess(true);
-		apiResponse.setResponse(input);
+		apiResponse.setResponse(companyDetailsDto);
 		apiResponse.setMessage("Company Details retrieved successfully");
 		return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
 

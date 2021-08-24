@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 public class CompanyDetailsResponseDto {
 
-    private GeneralDetails generalDetails;
+    private Object details;
     private String companyName;
     private UUID companyId;
 }
