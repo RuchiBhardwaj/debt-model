@@ -417,10 +417,17 @@ public class CashflowServiceImpl implements CashflowService {
     private void addPresentValueDetailsToCashflowSchedule(CashflowSchedule cashflowSchedule, DayCountConvention dayCountConvention, double cashMovement) {
         Cashflow cashflow = cashflowSchedule.getCashflow();
         LocalDate date = cashflowSchedule.getToDate();
+        LocalDate valuationDate = cashflow.getValuationDate();
 
-        double partialPeriod = CashflowUtil.getPartialPeriod(cashflow.getValuationDate(), date, dayCountConvention);
+        double partialPeriod = CashflowUtil.getPartialPeriod(valuationDate, date, dayCountConvention);
         double discountingFactor = CashflowUtil.getDiscountingFactor(cashflow.getDiscountRate(), partialPeriod);
-        double presentValue = CashflowUtil.getPresentValue(cashMovement, discountingFactor, date, cashflow.getValuationDate());
+        double presentValue = CashflowUtil.getPresentValue(cashMovement, discountingFactor, date, valuationDate);
+
+        // Set 0 for all dates before Valuation Date
+        if (date.isBefore(valuationDate)) {
+            partialPeriod = 0;
+            discountingFactor = 0;
+        }
 
         cashflowSchedule.setPartialPeriod(partialPeriod);
         cashflowSchedule.setDiscountingFactor(discountingFactor);
