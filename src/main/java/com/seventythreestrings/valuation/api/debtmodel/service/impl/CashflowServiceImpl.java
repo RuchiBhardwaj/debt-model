@@ -97,8 +97,7 @@ public class CashflowServiceImpl implements CashflowService {
             return;
         }
         double principalAmount = generalDetailsInput.get().getPrincipalAmount();
-        double percentageOfCalledDown = generalDetailsInput.get().getPercentageOfCalledDown();
-        double calledDownCapital = principalAmount * percentageOfCalledDown / 100;
+        double percentageOutstanding = generalDetailsInput.get().getPrincipalOutstanding();
 
         DayCountConvention dayCountConvention = cashflow.getDayCountConvention();
         if (dayCountConvention == null) {
@@ -135,6 +134,12 @@ public class CashflowServiceImpl implements CashflowService {
             double interestUndrawnCapitalOutflow = 0;
             double skimsOutflow = 0;
 
+            double calledDownCapital = principalAmount * percentageOutstanding / 100;
+            double undrawnCapital = principalAmount * (1 - (percentageOutstanding / 100));
+            cashflowSchedule.setCommittedCapital(principalAmount);
+            cashflowSchedule.setCalledDownCapital(calledDownCapital);
+            cashflowSchedule.setUndrawnCapital(undrawnCapital);
+
             // For Interest Details
             if (dateTypeString.contains("INTEREST")) {
                 isInterestAccrued = getIsInterestAccrued(interestDetailsInput, cashflowSchedule.getToDate());
@@ -146,21 +151,21 @@ public class CashflowServiceImpl implements CashflowService {
             // For Deal Fees
             if (dateTypeString.contains("DEALFEES")) {
                 // Set Deal Fees, Calculate Deal Fee Outflow
-                addDealFeesToCashflowSchedule(cashflowSchedule, dealFeesInput, dayCountConvention, principalOutstanding, principalAmount);
+                addDealFeesToCashflowSchedule(cashflowSchedule, dealFeesInput, dayCountConvention);
                 dealFeesOutflow = cashflowSchedule.getDealFeesOutflow();
             }
 
             // For Undrawn Capitals
             if (dateTypeString.contains("UNDRAWN_CAPITAL")) {
                 // Set Interest Undrawn Capitals, Calculate Interest Undrawn Capitals Outflow
-                addInterestUndrawnCapitalToCashflowSchedule(cashflowSchedule, interestUndrawnCapitalsInput, dayCountConvention, calledDownCapital);
+                addInterestUndrawnCapitalToCashflowSchedule(cashflowSchedule, interestUndrawnCapitalsInput, dayCountConvention);
                 interestUndrawnCapitalOutflow = cashflowSchedule.getInterestUndrawnCapitalOutflow();
             }
 
             // For Skims
             if (dateTypeString.contains("SKIMS")) {
                 // Set Skims, Calculate Skims Outflow
-                addSkimsToCashflowSchedule(cashflowSchedule, skimsInput, dayCountConvention, principalOutstanding, principalAmount);
+                addSkimsToCashflowSchedule(cashflowSchedule, skimsInput, dayCountConvention);
                 skimsOutflow = cashflowSchedule.getSkimsOutflow();
             }
 
@@ -358,45 +363,53 @@ public class CashflowServiceImpl implements CashflowService {
         cashflowSchedule.setYearFrac(CashflowUtil.getPartialPeriod(cashflowSchedule.getFromDate(), cashflowSchedule.getToDate(), dayCountConvention));
     }
 
-    private void addDealFeesToCashflowSchedule(CashflowSchedule cashflowSchedule, List<DealFees> dealFees, DayCountConvention dayCountConvention, double principalOutstanding, double principalAmount) {
+    private void addDealFeesToCashflowSchedule(CashflowSchedule cashflowSchedule,
+                                               List<DealFees> dealFees, DayCountConvention dayCountConvention) {
+
         Optional<DealFees> dealFee = getDealFeesByDate(dealFees, cashflowSchedule.getToDate());
         double annualFeePercentage = getAnnualFeePercentage(dealFee, cashflowSchedule.getToDate());
         double amount = 0.0;
         if (dealFee.isPresent()) {
             FeeBase feeBase = dealFee.get().getFeeBase();
             if (feeBase == FeeBase.COMMITTED_CAPITAL) {
-                amount = principalAmount;
+                amount = cashflowSchedule.getCommittedCapital();
             } else if (feeBase == FeeBase.CALLED_DOWN_CAPITAL) {
-                amount = principalOutstanding;
+                amount = cashflowSchedule.getCalledDownCapital();
             }
         }
-        double dealFeesOutflow = CashflowUtil.getInterestOutflow(cashflowSchedule.getFromDate(), cashflowSchedule.getToDate(), dayCountConvention, amount, annualFeePercentage);
+        double dealFeesOutflow = CashflowUtil.getInterestOutflow(
+                cashflowSchedule.getFromDate(), cashflowSchedule.getToDate(), dayCountConvention,
+                amount, annualFeePercentage);
         cashflowSchedule.setDealFeesOutflow(dealFeesOutflow);
         cashflowSchedule.setAnnualFeePercentage(annualFeePercentage);
     }
 
-    private void addInterestUndrawnCapitalToCashflowSchedule(CashflowSchedule cashflowSchedule, List<InterestUndrawnCapital> interestUndrawnCapitals, DayCountConvention dayCountConvention, double calledDownCapital) {
-        // TODO: set Committed Capital & Undrawn Capital
-        Optional<InterestUndrawnCapital> interestUndrawnCapital = getInterestUndrawnCapitalByDate(interestUndrawnCapitals, cashflowSchedule.getToDate());
-        double interestUndrawnPercentage = getInterestUndrawnPercentage(interestUndrawnCapital, cashflowSchedule.getToDate());
-        double interestUndrawnCapitalOutflow = CashflowUtil.getInterestOutflow(cashflowSchedule.getFromDate(), cashflowSchedule.getToDate(), dayCountConvention, calledDownCapital, interestUndrawnPercentage);
+    private void addInterestUndrawnCapitalToCashflowSchedule(CashflowSchedule cashflowSchedule,
+                                                             List<InterestUndrawnCapital> interestUndrawnCapitals,
+                                                             DayCountConvention dayCountConvention) {
+
+        Optional<InterestUndrawnCapital> interestUndrawnCapital = getInterestUndrawnCapitalByDate(
+                interestUndrawnCapitals, cashflowSchedule.getToDate());
+        double undrawnCapitalPercentage = getInterestUndrawnPercentage(
+                interestUndrawnCapital, cashflowSchedule.getToDate());
+        double undrawnCapital = cashflowSchedule.getUndrawnCapital();
+        double interestUndrawnCapitalOutflow = CashflowUtil.getInterestOutflow(
+                cashflowSchedule.getFromDate(), cashflowSchedule.getToDate(), dayCountConvention, undrawnCapital,
+                undrawnCapitalPercentage);
         cashflowSchedule.setInterestUndrawnCapitalOutflow(interestUndrawnCapitalOutflow);
-        cashflowSchedule.setInterestUndrawnPercentage(interestUndrawnPercentage);
+        cashflowSchedule.setInterestUndrawnPercentage(undrawnCapitalPercentage);
     }
 
-    private void addSkimsToCashflowSchedule(CashflowSchedule cashflowSchedule, List<Skims> skims, DayCountConvention dayCountConvention, double principalOutstanding, double principalAmount) {
+    private void addSkimsToCashflowSchedule(CashflowSchedule cashflowSchedule, List<Skims> skims,
+                                            DayCountConvention dayCountConvention) {
         Optional<Skims> skim = getSkimsByDate(skims, cashflowSchedule.getToDate());
         double skimPercentage = getSkimPercentage(skim, cashflowSchedule.getToDate());
         double amount = 0.0;
         if (skim.isPresent()) {
-            SkimBase skimBase = skim.get().getSkimBase();
-            if (skimBase == SkimBase.TERM_LOAN) {
-                amount = principalOutstanding;
-            } else if (skimBase == SkimBase.REVOLVER) {
-                amount = principalAmount;
-            }
+            amount = skim.get().getOutstandingBalance();
         }
-        double skimsOutflow = CashflowUtil.getInterestOutflow(cashflowSchedule.getFromDate(), cashflowSchedule.getToDate(), dayCountConvention, amount, skimPercentage);
+        double skimsOutflow = CashflowUtil.getInterestOutflow(
+                cashflowSchedule.getFromDate(), cashflowSchedule.getToDate(), dayCountConvention, amount, skimPercentage);
         cashflowSchedule.setSkimsOutflow(skimsOutflow);
         cashflowSchedule.setSkimPercentage(skimPercentage);
     }

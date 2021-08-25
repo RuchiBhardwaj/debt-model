@@ -50,6 +50,8 @@ public class CashflowScheduleDto {
 
     private Double committedCapital;
 
+    private Double calledDownCapital;
+
     private Double undrawnCapital;
 
     private double interestUndrawnPercentage;

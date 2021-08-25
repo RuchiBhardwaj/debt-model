@@ -84,6 +84,9 @@ public class CashflowSchedule extends BaseEntity {
     @Column(name = "committed_capital")
     private Double committedCapital;
 
+    @Column(name = "called_down_capital")
+    private Double calledDownCapital;
+
     @Column(name = "undrawn_capital")
     private Double undrawnCapital;
 

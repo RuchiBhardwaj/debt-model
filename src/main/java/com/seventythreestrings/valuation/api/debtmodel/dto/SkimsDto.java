@@ -14,7 +14,7 @@ public class SkimsDto {
 
     private double outstandingBalance;
 
-    private SkimBase skimBase;
+    private String skimBase;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
