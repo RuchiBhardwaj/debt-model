@@ -311,7 +311,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ApiResponse«object»"
+              "$ref": "#/definitions/ApiResponse«CompanyDetailsDto»"
             }
           },
           "401": {
@@ -478,8 +478,9 @@
             "required": true,
             "type": "string",
             "enum": [
-              "Pre_existingDates",
-              "Upload_excel_for_dates"
+              "EXCEL_DATES",
+              "PRE_EXISTING_DATES",
+              "SPECIFIC_DATES"
             ]
           },
           {
@@ -519,7 +520,8 @@
           "404": {
             "description": "Not Found"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/api/v1/valuation/debt-model/{debtModelId}/input/dataaa/{cashflowDatesTypeId}": {
@@ -543,8 +545,9 @@
             "required": true,
             "type": "string",
             "enum": [
-              "Pre_existingDates",
-              "Upload_excel_for_dates"
+              "EXCEL_DATES",
+              "PRE_EXISTING_DATES",
+              "SPECIFIC_DATES"
             ]
           },
           {
@@ -584,7 +587,8 @@
           "404": {
             "description": "Not Found"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/api/v1/valuation/debt-model/{debtModelId}/input/discount": {
@@ -659,8 +663,9 @@
             "required": true,
             "type": "string",
             "enum": [
-              "Pre_existingDates",
-              "Upload_excel_for_dates"
+              "EXCEL_DATES",
+              "PRE_EXISTING_DATES",
+              "SPECIFIC_DATES"
             ]
           },
           {
@@ -688,7 +693,8 @@
           "404": {
             "description": "Not Found"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/api/v1/valuation/debt-model/{debtModelId}/input/{inputType}": {
@@ -1320,6 +1326,24 @@
       },
       "title": "ApiResponse«CashflowDto»"
     },
+    "ApiResponse«CompanyDetailsDto»": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "response": {
+          "$ref": "#/definitions/CompanyDetailsDto"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "ApiResponse«CompanyDetailsDto»"
+    },
     "ApiResponse«CustomizableDto»": {
       "type": "object",
       "properties": {
@@ -1566,24 +1590,6 @@
       },
       "title": "ApiResponse«boolean»"
     },
-    "ApiResponse«object»": {
-      "type": "object",
-      "properties": {
-        "errorCode": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
-        },
-        "response": {
-          "type": "object"
-        },
-        "success": {
-          "type": "boolean"
-        }
-      },
-      "title": "ApiResponse«object»"
-    },
     "BaseRateCurveDto": {
       "type": "object",
       "properties": {
@@ -1780,6 +1786,10 @@
           "type": "number",
           "format": "double"
         },
+        "calledDownCapital": {
+          "type": "number",
+          "format": "double"
+        },
         "committedCapital": {
           "type": "number",
           "format": "double"
@@ -1957,6 +1967,10 @@
           "type": "number",
           "format": "double"
         },
+        "calledDownCapital": {
+          "type": "number",
+          "format": "double"
+        },
         "committedCapital": {
           "type": "number",
           "format": "double"
@@ -2113,6 +2127,22 @@
       },
       "title": "Company"
     },
+    "CompanyDetailsDto": {
+      "type": "object",
+      "properties": {
+        "companyDetails": {
+          "type": "object"
+        },
+        "companyId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "companyName": {
+          "type": "string"
+        }
+      },
+      "title": "CompanyDetailsDto"
+    },
     "CompanyResponse": {
       "type": "object",
       "properties": {
@@ -2135,8 +2165,9 @@
         "cashflowDatesType": {
           "type": "string",
           "enum": [
-            "Pre_existingDates",
-            "Upload_excel_for_dates"
+            "EXCEL_DATES",
+            "PRE_EXISTING_DATES",
+            "SPECIFIC_DATES"
           ]
         },
         "payload": {
