@@ -35,6 +35,7 @@ public class CustomizableCashflow extends BaseEntity {
     private CustomizableCashflowType cashflowType;
 
     @Column(name = "cashflow_payment_mode")
+    @Enumerated(EnumType.STRING)
     private InterestType cashflowPaymentMode;
 
     @Column(name = "cashflow_dates")
@@ -67,6 +68,7 @@ public class CustomizableCashflow extends BaseEntity {
     private LocalDate dateSelection;
 
     @Column(name = "cashflow_computation_base")
+    @Enumerated(EnumType.STRING)
     private FeeBase cashflowComputationBase;
 
     @Column(name = "cashflow_percentage")

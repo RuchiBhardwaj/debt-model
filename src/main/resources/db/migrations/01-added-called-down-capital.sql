@@ -1,0 +1,1 @@
+ALTER TABLE `cashflow_schedule` ADD `called_down_capital` double NULL;

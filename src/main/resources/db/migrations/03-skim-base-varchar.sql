@@ -1,0 +1,1 @@
+ALTER TABLE `skims` CHANGE `skim_base` `skim_base` VARCHAR(255) NULL DEFAULT NULL;
