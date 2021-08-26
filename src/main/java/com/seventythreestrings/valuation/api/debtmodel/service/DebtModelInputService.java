@@ -8,7 +8,7 @@ public interface DebtModelInputService {
 
 	List<DebtModelInputDto> getInputsForDebtModel(Long debtModelId);
 
-	Object get(DebtModelInput inputType, Long id);
+	Object get(Long debtModelId, DebtModelInput inputType, Long id);
 
 	Object create(DebtModelInput inputType, Object o, Long debtModelId);
 

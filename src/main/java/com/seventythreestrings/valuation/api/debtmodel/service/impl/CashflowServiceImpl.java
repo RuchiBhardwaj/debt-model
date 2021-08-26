@@ -96,7 +96,7 @@ public class CashflowServiceImpl implements CashflowService {
         if (!generalDetailsInput.isPresent()) {
             return;
         }
-        double principalAmount = generalDetailsInput.get().getPrincipalAmount();
+        double principalAmount = generalDetailsInput.get().getPrincipalAmount(); // Committed Capital
         double percentageOfCalledDown = generalDetailsInput.get().getPercentageOfCalledDown();
         double calledDownCapital = principalAmount * percentageOfCalledDown / 100;
 
@@ -366,7 +366,7 @@ public class CashflowServiceImpl implements CashflowService {
             FeeBase feeBase = dealFee.get().getFeeBase();
             if (feeBase == FeeBase.COMMITTED_CAPITAL) {
                 amount = principalAmount;
-            } else if (feeBase == FeeBase.CALLED_DOWN_CAPITAL) {
+            } else if (feeBase == FeeBase.CALL_DOWN_CAPITAL) {
                 amount = principalOutstanding;
             }
         }

@@ -39,7 +39,7 @@ public class Skims extends BaseEntity {
     private double outstandingBalance;
 
     @Column(name = "skim_base")
-    private SkimBase skimBase;
+    private String skimBase;
 
     @Column(name = "regime_start_date")
     private LocalDate regimeStartDate;

@@ -1,7 +1,17 @@
 package com.seventythreestrings.valuation.api.debtmodel.dto;
 
 public enum CashflowDates {
+    SPECIFIC_DATES("Specific Dates"),
+    PRE_EXISTING_DATES("Pre-existing Dates"),
+    EXCEL_DATES("Upload Excel for Dates");
 
-    Pre_existingDates,
-    Upload_excel_for_dates
+    private String code;
+
+    CashflowDates(String code) {
+        this.code = code;
+    }
+
+    public String getCode() {
+        return code;
+    }
 }

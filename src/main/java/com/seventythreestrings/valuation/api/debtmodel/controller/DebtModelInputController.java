@@ -41,6 +41,7 @@ public class DebtModelInputController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
+    @Deprecated
     @GetMapping("/{customizableDatesType}")
     public ResponseEntity<ApiResponse<List<CustomizableDto>>> getCustomizationCashflow(@PathVariable(value = "debtModelId") @NotNull Long debtModelId
             , @PathVariable(value = "customizableDatesType") @NotNull CashflowDates cashflowDates) {
@@ -71,6 +72,7 @@ public class DebtModelInputController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
+    @Deprecated
     @PostMapping("Customizable/{cashflowDateType}/")
     public ResponseEntity<ApiResponse<CustomizableDto>> createCustomizableCashflow(
             @PathVariable(value = "debtModelId") @NotNull Long debtModelId,
@@ -111,7 +113,7 @@ public class DebtModelInputController {
             @PathVariable(value = "debtModelId") @NotNull Long debtModelId,
             @PathVariable(value = "inputType") @NotNull DebtModelInput inputType,
             @PathVariable(value = "id") @NotNull Long id ) {
-        Object input = debtModelInputService.get(inputType, id);
+        Object input = debtModelInputService.get(debtModelId, inputType, id);
         DebtModelInputDto debtModelInputDto = new DebtModelInputDto(inputType, input);
         ApiResponse<DebtModelInputDto> apiResponse = new ApiResponse<>();
         apiResponse.setSuccess(true);
@@ -138,6 +140,7 @@ public class DebtModelInputController {
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
+    @Deprecated
     @PutMapping("dataaa/{cashflowDatesTypeId}")
     public ResponseEntity<ApiResponse<CustomizableDto>> updateCustomizableCashflow(
             @PathVariable(value = "debtModelId") @NotNull Long debtModelId,

@@ -1,6 +1,7 @@
 package com.seventythreestrings.valuation.api.debtmodel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.seventythreestrings.valuation.api.common.converter.LocalDateAttributeConverter;
 import com.seventythreestrings.valuation.api.common.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class InterimPaymentDetails extends BaseEntity {
     private Long id;
 
     @NotNull
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate date;
 
     @NotNull

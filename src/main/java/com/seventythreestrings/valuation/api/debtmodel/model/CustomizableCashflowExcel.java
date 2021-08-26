@@ -44,6 +44,9 @@ public class CustomizableCashflowExcel extends BaseEntity {
     @Column(name = "version_id")
     private int versionId;
 
+    @Column(name = "sort_order")
+    private Integer sortOrder;
+
     @OneToMany(mappedBy="customizableCashflowExcel", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("date ASC")
     private Set<InterimPaymentDetails> interimPaymentDetails = new HashSet<>();

@@ -3,10 +3,7 @@ package com.seventythreestrings.valuation.api.debtmodel.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.seventythreestrings.valuation.api.common.entity.BaseEntity;
-import com.seventythreestrings.valuation.api.debtmodel.dto.CashflowAmount;
-import com.seventythreestrings.valuation.api.debtmodel.dto.CashflowDates;
-import com.seventythreestrings.valuation.api.debtmodel.dto.CustomizableCashflowType;
-import com.seventythreestrings.valuation.api.debtmodel.dto.PaymentFrequency;
+import com.seventythreestrings.valuation.api.debtmodel.dto.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,7 +35,7 @@ public class CustomizableCashflow extends BaseEntity {
     private CustomizableCashflowType cashflowType;
 
     @Column(name = "cashflow_payment_mode")
-    private String cashflowPaymentMode;
+    private InterestType cashflowPaymentMode;
 
     @Column(name = "cashflow_dates")
     private CashflowDates cashflowDates;
@@ -66,12 +63,11 @@ public class CustomizableCashflow extends BaseEntity {
     @Column(name = "cashflow_fixed_amount")
     private double cashflowFixedAmount;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "UTC")
-    @Column(name = "date_selection")
+    @Column(name = "date_selection", columnDefinition = "DATE")
     private LocalDate dateSelection;
 
     @Column(name = "cashflow_computation_base")
-    private String cashflowComputationBase;
+    private FeeBase cashflowComputationBase;
 
     @Column(name = "cashflow_percentage")
     private double cashflowPercentage;
@@ -86,5 +82,6 @@ public class CustomizableCashflow extends BaseEntity {
     @Column(name = "version_id")
     private int versionId;
 
-
+    @Column(name = "sort_order")
+    private Integer sortOrder;
 }

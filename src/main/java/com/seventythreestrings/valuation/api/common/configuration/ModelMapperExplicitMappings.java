@@ -457,8 +457,8 @@ public class ModelMapperExplicitMappings {
     }
 
     //CustomizableCashflowExcel
-    PropertyMap<CustomizableCashflowExcelDDto,CustomizableCashflowExcel> mapCustomizableCashflowExcelDtoToModel () {
-        return new PropertyMap<CustomizableCashflowExcelDDto,CustomizableCashflowExcel>() {
+    PropertyMap<CustomizableCashflowExcelDto,CustomizableCashflowExcel> mapCustomizableCashflowExcelDtoToModel () {
+        return new PropertyMap<CustomizableCashflowExcelDto,CustomizableCashflowExcel>() {
             @Override
             protected void configure() {
                 map().getDebtModel().setId(source.getDebtModelId());
@@ -466,8 +466,8 @@ public class ModelMapperExplicitMappings {
         };
     }
 
-    PropertyMap<CustomizableCashflowExcel,CustomizableCashflowExcelDDto> mapCustomizableCashflowExcelModelToDto () {
-        return new PropertyMap<CustomizableCashflowExcel,CustomizableCashflowExcelDDto>() {
+    PropertyMap<CustomizableCashflowExcel, CustomizableCashflowExcelDto> mapCustomizableCashflowExcelModelToDto () {
+        return new PropertyMap<CustomizableCashflowExcel, CustomizableCashflowExcelDto>() {
             @Override
             protected void configure() {
                 map().setDebtModelId(source.getDebtModel().getId());

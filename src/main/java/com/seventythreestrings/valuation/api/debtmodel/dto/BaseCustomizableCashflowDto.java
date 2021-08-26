@@ -2,11 +2,8 @@ package com.seventythreestrings.valuation.api.debtmodel.dto;
 
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class CustomizableCashflowExcelDDto {
-
+public class BaseCustomizableCashflowDto {
     private Long id;
 
     private String nameOfTheProperty;
@@ -19,5 +16,5 @@ public class CustomizableCashflowExcelDDto {
 
     private int versionId;
 
-    private List<InterimPaymentDetailsDto> interimPaymentDetails;
+    private Integer sortOrder;
 }
