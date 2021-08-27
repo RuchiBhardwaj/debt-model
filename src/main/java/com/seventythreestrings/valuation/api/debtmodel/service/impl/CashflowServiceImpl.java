@@ -102,6 +102,8 @@ public class CashflowServiceImpl implements CashflowService {
         double calledDownCapital = principalAmount * percentageOutstanding / 100;
         double undrawnCapital = principalAmount * ((100 - percentageOutstanding) / 100);
 
+        double principalAmountVarying = calledDownCapital;
+
         DayCountConvention dayCountConvention = cashflow.getDayCountConvention();
         if (dayCountConvention == null) {
             dayCountConvention = DayCountConvention.ACTUAL_BY_ACTUAL;
@@ -173,8 +175,8 @@ public class CashflowServiceImpl implements CashflowService {
             // Calculate Principal Repayment and Cash Movement
             switch (scheduleDate.getType()) {
                 case ORIGINATION:
-                    cashflowSchedule.setPrincipalInflow(-principalAmount);
-                    cashMovement = -principalAmount;
+                    cashflowSchedule.setPrincipalInflow(-principalAmountVarying);
+                    cashMovement = -principalAmountVarying;
                     break;
                 case REPAYMENT:
                     principalRepayment = getPrepaymentAmountForDate(prepaymentDetailsInput, scheduleDate.getDate());
@@ -251,16 +253,13 @@ public class CashflowServiceImpl implements CashflowService {
             }
 
             // Set Principal outstanding and Cash Movement, and Repayment
-            principalAmount -= principalRepayment;
+            principalAmountVarying -= principalRepayment;
             if (isInterestAccrued) {
-                principalAmount += interestOutflow;
+                principalAmountVarying += interestOutflow;
             }
-            cashflowSchedule.setTotalPrincipalOutstanding(principalAmount);
-            if (scheduleDate.getType() == DateType.ORIGINATION) {
-                cashflowSchedule.setTotalPrincipalOutstanding(calledDownCapital);
-            }
+            cashflowSchedule.setTotalPrincipalOutstanding(principalAmountVarying);
             if (dateTypeString.contains("MATURITY")) {
-                cashMovement += principalAmount;
+                cashMovement += principalAmountVarying;
             }
             cashflowSchedule.setTotalCashMovement(cashMovement);
             cashflowSchedule.setPrincipalRepayment(principalRepayment);
@@ -308,7 +307,7 @@ public class CashflowServiceImpl implements CashflowService {
         }
 
         // Add irr to Cashflow
-        double irr = getInternalRateOfReturn(cashflow, generalDetailsInput.get().getPrincipalAmount());
+        double irr = getInternalRateOfReturn(cashflow, principalOutstanding);
         cashflow.setInternalRateOfReturn(irr);
     }
 
