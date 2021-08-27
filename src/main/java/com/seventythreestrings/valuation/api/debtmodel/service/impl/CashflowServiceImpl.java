@@ -98,6 +98,9 @@ public class CashflowServiceImpl implements CashflowService {
         }
         double principalAmount = generalDetailsInput.get().getPrincipalAmount();
         double percentageOutstanding = generalDetailsInput.get().getPrincipalOutstanding();
+        double committedCapital = principalAmount;
+        double calledDownCapital = principalAmount * percentageOutstanding / 100;
+        double undrawnCapital = principalAmount * ((100 - percentageOutstanding) / 100);
 
         DayCountConvention dayCountConvention = cashflow.getDayCountConvention();
         if (dayCountConvention == null) {
@@ -134,9 +137,7 @@ public class CashflowServiceImpl implements CashflowService {
             double interestUndrawnCapitalOutflow = 0;
             double skimsOutflow = 0;
 
-            double calledDownCapital = principalAmount * percentageOutstanding / 100;
-            double undrawnCapital = principalAmount * (1 - (percentageOutstanding / 100));
-            cashflowSchedule.setCommittedCapital(principalAmount);
+            cashflowSchedule.setCommittedCapital(committedCapital);
             cashflowSchedule.setCalledDownCapital(calledDownCapital);
             cashflowSchedule.setUndrawnCapital(undrawnCapital);
 
@@ -175,7 +176,7 @@ public class CashflowServiceImpl implements CashflowService {
                     cashflowSchedule.setPrincipalInflow(-principalAmount);
                     cashMovement = -principalAmount;
                     break;
-                case PREPAYMENT:
+                case REPAYMENT:
                     principalRepayment = getPrepaymentAmountForDate(prepaymentDetailsInput, scheduleDate.getDate());
                     double callPremiumAmount = getCallPremiumAmountForDate(callPremiumInput, scheduleDate.getDate(), principalRepayment, cashflowSchedule);
                     outstandingInterestOutflow += interestOutflow;
@@ -188,21 +189,21 @@ public class CashflowServiceImpl implements CashflowService {
                     }
                     outstandingInterestOutflow = 0;
                     break;
-                case INTEREST_AND_PREPAYMENT:
-                case PREPAYMENT_AND_DEALFEES:
-                case PREPAYMENT_AND_UNDRAWN_CAPITAL:
-                case PREPAYMENT_AND_SKIMS:
-                case INTEREST_AND_PREPAYMENT_AND_DEALFEES:
-                case INTEREST_AND_PREPAYMENT_AND_UNDRAWN_CAPITAL:
-                case INTEREST_AND_PREPAYMENT_AND_SKIMS:
-                case PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL:
-                case PREPAYMENT_AND_DEALFEES_AND_SKIMS:
-                case PREPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS:
-                case INTEREST_AND_PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL:
-                case INTEREST_AND_PREPAYMENT_AND_DEALFEES_AND_SKIMS:
-                case INTEREST_AND_PREPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS:
-                case PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS:
-                case INTEREST_AND_PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS:
+                case INTEREST_AND_REPAYMENT:
+                case REPAYMENT_AND_DEALFEES:
+                case REPAYMENT_AND_UNDRAWN_CAPITAL:
+                case REPAYMENT_AND_SKIMS:
+                case INTEREST_AND_REPAYMENT_AND_DEALFEES:
+                case INTEREST_AND_REPAYMENT_AND_UNDRAWN_CAPITAL:
+                case INTEREST_AND_REPAYMENT_AND_SKIMS:
+                case REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL:
+                case REPAYMENT_AND_DEALFEES_AND_SKIMS:
+                case REPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS:
+                case INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL:
+                case INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_SKIMS:
+                case INTEREST_AND_REPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS:
+                case REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS:
+                case INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS:
                     principalRepayment = getPrepaymentAmountForDate(prepaymentDetailsInput, scheduleDate.getDate());
                     callPremiumAmount = getCallPremiumAmountForDate(callPremiumInput, scheduleDate.getDate(), principalRepayment, cashflowSchedule);
                     cashMovement = principalRepayment + callPremiumAmount + dealFeesOutflow + interestUndrawnCapitalOutflow + skimsOutflow;
@@ -255,6 +256,9 @@ public class CashflowServiceImpl implements CashflowService {
                 principalAmount += interestOutflow;
             }
             cashflowSchedule.setTotalPrincipalOutstanding(principalAmount);
+            if (scheduleDate.getType() == DateType.ORIGINATION) {
+                cashflowSchedule.setTotalPrincipalOutstanding(calledDownCapital);
+            }
             if (dateTypeString.contains("MATURITY")) {
                 cashMovement += principalAmount;
             }
@@ -718,7 +722,7 @@ public class CashflowServiceImpl implements CashflowService {
             Set<PaymentSchedule> schedules = prepaymentDetails.get().getPaymentSchedules();
             schedules.forEach(schedule -> {
                 LocalDate couponDate = schedule.getDate();
-                AtomicReference<DateType> type = new AtomicReference<>(DateType.PREPAYMENT);
+                AtomicReference<DateType> type = new AtomicReference<>(DateType.REPAYMENT);
                 // check if this date is already in the schedule
                 Set<CashflowScheduleDate> existingScheduleDates = scheduleDates.stream()
                         .filter(scheduleDate -> scheduleDate.getDate().isEqual(couponDate)).collect(Collectors.toSet());
@@ -726,63 +730,63 @@ public class CashflowServiceImpl implements CashflowService {
                     switch (existingScheduleDate.getType()) {
                         case INTEREST:
                             scheduleDates.remove(existingScheduleDate);
-                            type.set(DateType.INTEREST_AND_PREPAYMENT);
+                            type.set(DateType.INTEREST_AND_REPAYMENT);
                             break;
                         case DEALFEES:
                             scheduleDates.remove(existingScheduleDate);
-                            type.set(DateType.PREPAYMENT_AND_DEALFEES);
+                            type.set(DateType.REPAYMENT_AND_DEALFEES);
                             break;
                         case UNDRAWN_CAPITAL:
                             scheduleDates.remove(existingScheduleDate);
-                            type.set(DateType.PREPAYMENT_AND_UNDRAWN_CAPITAL);
+                            type.set(DateType.REPAYMENT_AND_UNDRAWN_CAPITAL);
                             break;
                         case SKIMS:
                             scheduleDates.remove(existingScheduleDate);
-                            type.set(DateType.PREPAYMENT_AND_SKIMS);
+                            type.set(DateType.REPAYMENT_AND_SKIMS);
                             break;
                         case INTEREST_AND_DEALFEES:
                             scheduleDates.remove(existingScheduleDate);
-                            type.set(DateType.INTEREST_AND_PREPAYMENT_AND_DEALFEES);
+                            type.set(DateType.INTEREST_AND_REPAYMENT_AND_DEALFEES);
                             break;
                         case INTEREST_AND_UNDRAWN_CAPITAL:
                             scheduleDates.remove(existingScheduleDate);
-                            type.set(DateType.INTEREST_AND_PREPAYMENT_AND_UNDRAWN_CAPITAL);
+                            type.set(DateType.INTEREST_AND_REPAYMENT_AND_UNDRAWN_CAPITAL);
                             break;
                         case INTEREST_AND_SKIMS:
                             scheduleDates.remove(existingScheduleDate);
-                            type.set(DateType.INTEREST_AND_PREPAYMENT_AND_SKIMS);
+                            type.set(DateType.INTEREST_AND_REPAYMENT_AND_SKIMS);
                             break;
                         case DEALFEES_AND_UNDRAWN_CAPITAL:
                             scheduleDates.remove(existingScheduleDate);
-                            type.set(DateType.PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL);
+                            type.set(DateType.REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL);
                             break;
                         case DEALFEES_AND_SKIMS:
                             scheduleDates.remove(existingScheduleDate);
-                            type.set(DateType.PREPAYMENT_AND_DEALFEES_AND_SKIMS);
+                            type.set(DateType.REPAYMENT_AND_DEALFEES_AND_SKIMS);
                             break;
                         case UNDRAWN_CAPITAL_AND_SKIMS:
                             scheduleDates.remove(existingScheduleDate);
-                            type.set(DateType.PREPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS);
+                            type.set(DateType.REPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS);
                             break;
                         case INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL:
                             scheduleDates.remove(existingScheduleDate);
-                            type.set(DateType.INTEREST_AND_PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL);
+                            type.set(DateType.INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL);
                             break;
                         case INTEREST_AND_DEALFEES_AND_SKIMS:
                             scheduleDates.remove(existingScheduleDate);
-                            type.set(DateType.INTEREST_AND_PREPAYMENT_AND_DEALFEES_AND_SKIMS);
+                            type.set(DateType.INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_SKIMS);
                             break;
                         case INTEREST_AND_UNDRAWN_CAPITAL_AND_SKIMS:
                             scheduleDates.remove(existingScheduleDate);
-                            type.set(DateType.INTEREST_AND_PREPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS);
+                            type.set(DateType.INTEREST_AND_REPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS);
                             break;
                         case DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS:
                             scheduleDates.remove(existingScheduleDate);
-                            type.set(DateType.PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS);
+                            type.set(DateType.REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS);
                             break;
                         case INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS:
                             scheduleDates.remove(existingScheduleDate);
-                            type.set(DateType.INTEREST_AND_PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS);
+                            type.set(DateType.INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS);
                             break;
                         default:
                             break;

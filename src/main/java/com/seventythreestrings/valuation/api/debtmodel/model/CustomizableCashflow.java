@@ -1,6 +1,5 @@
 package com.seventythreestrings.valuation.api.debtmodel.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.seventythreestrings.valuation.api.common.entity.BaseEntity;
 import com.seventythreestrings.valuation.api.debtmodel.dto.*;
@@ -13,7 +12,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
