@@ -61,7 +61,6 @@ public class Cashflow extends BaseEntity {
     private double internalRateOfReturn;
 
     @Column(name = "day_count_convention")
-    @Enumerated(EnumType.STRING)
     private DayCountConvention dayCountConvention;
 
     @OneToMany(mappedBy = "cashflow", cascade = CascadeType.ALL, orphanRemoval = true)

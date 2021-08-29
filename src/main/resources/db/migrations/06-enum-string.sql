@@ -1,6 +1,3 @@
--- Cashflow
-ALTER TABLE `cashflow` MODIFY COLUMN `day_count_convention` VARCHAR(255) NULL DEFAULT NULL;
-
 -- Cashflow Schedule
 ALTER TABLE `cashflow_schedule` MODIFY COLUMN `date_type` VARCHAR(255) NULL DEFAULT NULL;
 
