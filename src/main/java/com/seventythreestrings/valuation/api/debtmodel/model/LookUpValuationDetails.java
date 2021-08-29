@@ -19,7 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Table(name = "lookup_valuation_details")
+@Table(name = "look_up_valuation_details")
 public class LookUpValuationDetails extends BaseEntity {
 
     @Id
