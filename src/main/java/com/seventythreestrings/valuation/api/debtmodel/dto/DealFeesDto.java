@@ -1,6 +1,8 @@
 package com.seventythreestrings.valuation.api.debtmodel.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.seventythreestrings.valuation.api.debtmodel.enums.FeeBase;
+import com.seventythreestrings.valuation.api.debtmodel.enums.PaymentFrequency;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 

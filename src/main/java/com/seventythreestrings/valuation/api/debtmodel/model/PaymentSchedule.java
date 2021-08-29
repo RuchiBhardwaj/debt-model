@@ -1,6 +1,7 @@
 package com.seventythreestrings.valuation.api.debtmodel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.seventythreestrings.valuation.api.common.converter.LocalDateAttributeConverter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class PaymentSchedule {
     private Long id;
 
     @NotNull
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate date;
 
     @NotNull

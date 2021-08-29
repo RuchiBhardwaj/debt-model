@@ -1,8 +1,9 @@
 package com.seventythreestrings.valuation.api.debtmodel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.seventythreestrings.valuation.api.common.converter.LocalDateAttributeConverter;
 import com.seventythreestrings.valuation.api.common.entity.BaseEntity;
-import com.seventythreestrings.valuation.api.debtmodel.dto.*;
+import com.seventythreestrings.valuation.api.debtmodel.enums.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Table(name = "cutomizable_cashflow")
+@Table(name = "customizable_cashflow")
 public class CustomizableCashflow extends BaseEntity {
 
     @Id
@@ -30,6 +31,7 @@ public class CustomizableCashflow extends BaseEntity {
     private String nameOfTheProperty;
 
     @Column(name = "cashflow_type")
+    @Enumerated(EnumType.STRING)
     private CustomizableCashflowType cashflowType;
 
     @Column(name = "cashflow_payment_mode")
@@ -37,15 +39,19 @@ public class CustomizableCashflow extends BaseEntity {
     private InterestType cashflowPaymentMode;
 
     @Column(name = "cashflow_dates")
+    @Enumerated(EnumType.STRING)
     private CashflowDates cashflowDates;
 
     @Column(name = "regime_start_date")
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate regimeStartDate;
 
     @Column(name = "regime_end_date")
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate regimeEndDate;
 
     @Column(name = "first_payment_date")
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate firstPaymentDate;
 
     @Min(0)
@@ -54,15 +60,18 @@ public class CustomizableCashflow extends BaseEntity {
     private int dayOfPayment;
 
     @Column(name = "frequency")
+    @Enumerated(EnumType.STRING)
     private PaymentFrequency frequency;
 
     @Column(name = "cashflow_amount")
+    @Enumerated(EnumType.STRING)
     private CashflowAmount cashflowAmount;
 
     @Column(name = "cashflow_fixed_amount")
     private double cashflowFixedAmount;
 
     @Column(name = "date_selection", columnDefinition = "DATE")
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate dateSelection;
 
     @Column(name = "cashflow_computation_base")

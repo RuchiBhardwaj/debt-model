@@ -1,6 +1,8 @@
 package com.seventythreestrings.valuation.api.debtmodel.controller;
 
 import com.seventythreestrings.valuation.api.debtmodel.dto.*;
+import com.seventythreestrings.valuation.api.debtmodel.enums.DebtModelInput;
+import com.seventythreestrings.valuation.api.debtmodel.enums.SortOrder;
 import com.seventythreestrings.valuation.api.debtmodel.model.*;
 import com.seventythreestrings.valuation.api.debtmodel.service.CashflowService;
 import com.seventythreestrings.valuation.api.debtmodel.service.DebtModelInputService;
@@ -40,7 +42,7 @@ public class DebtModelController {
 	}
 
 	@GetMapping
-	public ResponseEntity<ApiResponse<PaginatedResponse<DebtModelDto>>> getAll(
+	public ResponseEntity<ApiResponse<PaginatedResponseDto<DebtModelDto>>> getAll(
 			@RequestParam(value = "sortField", defaultValue = "createdAt", required = false) String sortField,
 			@RequestParam(value = "sortOrder", defaultValue = "DESC", required = false) SortOrder sortOrder,
 			@RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
@@ -50,9 +52,9 @@ public class DebtModelController {
 		List<DebtModelDto> debtModelDtos = debtModelPage.getContent().stream()
 				.map(debtModel -> modelMapper.map(debtModel, DebtModelDto.class))
 				.collect(Collectors.toList());
-		PaginatedResponse<DebtModelDto> response = new PaginatedResponse<>(debtModelDtos, pageNumber, pageSize, debtModelPage.getTotalPages(), debtModelPage.getTotalElements());
+		PaginatedResponseDto<DebtModelDto> response = new PaginatedResponseDto<>(debtModelDtos, pageNumber, pageSize, debtModelPage.getTotalPages(), debtModelPage.getTotalElements());
 
-		ApiResponse<PaginatedResponse<DebtModelDto>> apiResponse = new ApiResponse<>();
+		ApiResponse<PaginatedResponseDto<DebtModelDto>> apiResponse = new ApiResponse<>();
 		apiResponse.setSuccess(true);
 		apiResponse.setResponse(response);
 		apiResponse.setMessage("Debt Model list");

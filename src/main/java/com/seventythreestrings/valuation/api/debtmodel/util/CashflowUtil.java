@@ -1,6 +1,6 @@
 package com.seventythreestrings.valuation.api.debtmodel.util;
 
-import com.seventythreestrings.valuation.api.debtmodel.dto.DayCountConvention;
+import com.seventythreestrings.valuation.api.debtmodel.enums.DayCountConvention;
 
 import java.time.LocalDate;
 

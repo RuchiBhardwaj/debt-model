@@ -4,12 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.util.UUID;
 
 @AllArgsConstructor
-@Data
 @NoArgsConstructor
-public class CashflowScheduleDate {
-    private LocalDate date;
-    private DateType type;
+@Data
+public class ValuationDatesDto {
+
+    private UUID valuationDateId;
 }

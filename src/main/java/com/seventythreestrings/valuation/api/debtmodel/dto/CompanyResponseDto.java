@@ -7,13 +7,12 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.UUID;
 
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class CompanyResponse {
+public class CompanyResponseDto {
 
     private UUID companyId;
 
-    private List<ValuationResponse> valuationDates;
+    private List<ValuationResponseDto> valuationDates;
 }

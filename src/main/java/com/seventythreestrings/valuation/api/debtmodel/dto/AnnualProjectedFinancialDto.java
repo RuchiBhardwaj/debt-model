@@ -5,9 +5,7 @@ import lombok.Data;
 @Data
 public class AnnualProjectedFinancialDto {
 
-
     private Long id;
-
 
     private double Revenue;
 

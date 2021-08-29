@@ -1,5 +1,6 @@
 package com.seventythreestrings.valuation.api.debtmodel.dto;
 
+import com.seventythreestrings.valuation.api.debtmodel.enums.PrincipalRepaymentPattern;
 import lombok.Data;
 
 import java.util.List;

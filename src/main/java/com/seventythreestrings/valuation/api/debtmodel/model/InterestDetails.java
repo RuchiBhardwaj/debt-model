@@ -2,10 +2,11 @@ package com.seventythreestrings.valuation.api.debtmodel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.seventythreestrings.valuation.api.common.converter.LocalDateAttributeConverter;
 import com.seventythreestrings.valuation.api.common.entity.BaseEntity;
-import com.seventythreestrings.valuation.api.debtmodel.dto.InterestPayment;
-import com.seventythreestrings.valuation.api.debtmodel.dto.InterestType;
-import com.seventythreestrings.valuation.api.debtmodel.dto.PaymentFrequency;
+import com.seventythreestrings.valuation.api.debtmodel.enums.InterestPayment;
+import com.seventythreestrings.valuation.api.debtmodel.enums.InterestType;
+import com.seventythreestrings.valuation.api.debtmodel.enums.PaymentFrequency;
 import com.seventythreestrings.valuation.api.debtmodel.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,24 +34,30 @@ public class InterestDetails extends BaseEntity {
     private Long id;
 
     @Column(name = "interest_paid_or_accrued")
+    @Enumerated(EnumType.STRING)
     private InterestType interestPaidOrAccrued;
 
     @Column(name = "interest_payment_type")
+    @Enumerated(EnumType.STRING)
     private InterestPayment interestPaymentType;
 
     @Column(name = "first_interest_payment_date")
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate firstInterestPaymentDate;
 
     @Column(name = "regime_start_date")
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate regimeStartDate;
 
     @Column(name = "regime_end_date")
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate regimeEndDate;
 
     @Column(name = "version_id")
     private int versionId;
 
     @Column(name = "interest_payment_frequency")
+    @Enumerated(EnumType.STRING)
     private PaymentFrequency interestPaymentFrequency;
 
     @Min(0)

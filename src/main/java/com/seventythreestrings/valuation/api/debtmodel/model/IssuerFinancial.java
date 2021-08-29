@@ -24,10 +24,8 @@ public class IssuerFinancial extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-
     @Column(name = "debt_senior_issue")
     private double debtSeniorIssue;
-
 
     @Column(name = "enterprise_value")
     private double enterpriseValue;

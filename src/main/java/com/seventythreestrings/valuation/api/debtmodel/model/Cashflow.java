@@ -1,14 +1,13 @@
 package com.seventythreestrings.valuation.api.debtmodel.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.seventythreestrings.valuation.api.common.converter.LocalDateAttributeConverter;
 import com.seventythreestrings.valuation.api.common.entity.BaseEntity;
-import com.seventythreestrings.valuation.api.debtmodel.dto.DayCountConvention;
+import com.seventythreestrings.valuation.api.debtmodel.enums.DayCountConvention;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -27,24 +26,20 @@ public class Cashflow extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "origination_date")
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate originationDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "valuation_date")
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate valuationDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "exit_date")
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate exitDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "maturity_date")
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate maturityDate;
 
     @Column(name = "discount_rate")
@@ -66,9 +61,10 @@ public class Cashflow extends BaseEntity {
     private double internalRateOfReturn;
 
     @Column(name = "day_count_convention")
+    @Enumerated(EnumType.STRING)
     private DayCountConvention dayCountConvention;
 
-    @OneToMany(mappedBy="cashflow", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cashflow", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("fromDate ASC")
     private Set<CashflowSchedule> schedules = new LinkedHashSet<>();
 

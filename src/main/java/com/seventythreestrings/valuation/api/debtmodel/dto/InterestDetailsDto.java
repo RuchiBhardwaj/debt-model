@@ -1,6 +1,9 @@
 package com.seventythreestrings.valuation.api.debtmodel.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.seventythreestrings.valuation.api.debtmodel.enums.InterestPayment;
+import com.seventythreestrings.valuation.api.debtmodel.enums.InterestType;
+import com.seventythreestrings.valuation.api.debtmodel.enums.PaymentFrequency;
 import com.seventythreestrings.valuation.api.debtmodel.model.BaseRate;
 import com.seventythreestrings.valuation.api.debtmodel.model.BaseRateCurve;
 import lombok.Data;

@@ -1,6 +1,7 @@
 package com.seventythreestrings.valuation.api.debtmodel.service.impl;
 
 import com.seventythreestrings.valuation.api.debtmodel.dto.*;
+import com.seventythreestrings.valuation.api.debtmodel.enums.*;
 import com.seventythreestrings.valuation.api.debtmodel.model.*;
 import com.seventythreestrings.valuation.api.debtmodel.repository.CashflowRepository;
 import com.seventythreestrings.valuation.api.debtmodel.service.CashflowService;
@@ -84,7 +85,7 @@ public class CashflowServiceImpl implements CashflowService {
 
     private void addCashflowSchedulesToCashflow(Cashflow cashflow, List<DebtModelInputDto> inputs) {
         Set<CashflowSchedule> schedules = new LinkedHashSet<>();
-        Set<CashflowScheduleDate> scheduleDates = getCashflowScheduleDates(inputs);
+        Set<CashflowScheduleDateDto> scheduleDates = getCashflowScheduleDates(inputs);
         Optional<GeneralDetails> generalDetailsInput = getGeneralDetailsFromInputs(inputs);
         List<InterestDetails> interestDetailsInput = getInterestDetailsFromInputs(inputs);
         Optional<PrepaymentDetails> prepaymentDetailsInput = getPrepaymentDetailsFromInputs(inputs);
@@ -112,7 +113,7 @@ public class CashflowServiceImpl implements CashflowService {
 
         CashflowSchedule previousCashflowSchedule = null;
         double outstandingInterestOutflow = 0;
-        for (CashflowScheduleDate scheduleDate: scheduleDates) {
+        for (CashflowScheduleDateDto scheduleDate: scheduleDates) {
             CashflowSchedule cashflowSchedule = new CashflowSchedule();
             cashflowSchedule.setCashflow(cashflow);
 
@@ -526,8 +527,8 @@ public class CashflowServiceImpl implements CashflowService {
         return input.map(InterestDetails::getBaseRateSpread).orElse(0.0);
     }
 
-    private Set<CashflowScheduleDate> getCashflowScheduleDates(List<DebtModelInputDto> inputs) {
-        Set<CashflowScheduleDate> scheduleDates = new HashSet<>();
+    private Set<CashflowScheduleDateDto> getCashflowScheduleDates(List<DebtModelInputDto> inputs) {
+        Set<CashflowScheduleDateDto> scheduleDates = new HashSet<>();
 
         // Origination & Maturity dates
         Optional<GeneralDetails> generalDetails = getGeneralDetailsFromInputs(inputs);
@@ -535,7 +536,7 @@ public class CashflowServiceImpl implements CashflowService {
             return scheduleDates;
         }
         LocalDate originationDate = generalDetails.get().getOriginationDate();
-        scheduleDates.add(new CashflowScheduleDate(originationDate, DateType.ORIGINATION));
+        scheduleDates.add(new CashflowScheduleDateDto(originationDate, DateType.ORIGINATION));
 
         LocalDate maturityDate = generalDetails.get().getMaturityDate();
 
@@ -551,7 +552,7 @@ public class CashflowServiceImpl implements CashflowService {
                                 if (couponDate.isEqual(maturityDate)) {
                                     hasMaturityDateCoupon.set(true);
                                 }
-                                return new CashflowScheduleDate(couponDate, couponDate.isEqual(maturityDate) ? DateType.INTEREST_AND_MATURITY : DateType.INTEREST);
+                                return new CashflowScheduleDateDto(couponDate, couponDate.isEqual(maturityDate) ? DateType.INTEREST_AND_MATURITY : DateType.INTEREST);
                             })
                             .collect(Collectors.toSet()));
         });
@@ -567,7 +568,7 @@ public class CashflowServiceImpl implements CashflowService {
                     type.set(DateType.DEALFEES_AND_MATURITY);
                 }
                 // check if this date is already in the schedule
-                Set<CashflowScheduleDate> existingScheduleDates = scheduleDates.stream()
+                Set<CashflowScheduleDateDto> existingScheduleDates = scheduleDates.stream()
                         .filter(scheduleDate -> scheduleDate.getDate().isEqual(couponDate)).collect(Collectors.toSet());
                 existingScheduleDates.forEach(existingScheduleDate -> {
                     switch (existingScheduleDate.getType()) {
@@ -583,7 +584,7 @@ public class CashflowServiceImpl implements CashflowService {
                             break;
                     }
                 });
-                scheduleDates.add(new CashflowScheduleDate(couponDate, type.get()));
+                scheduleDates.add(new CashflowScheduleDateDto(couponDate, type.get()));
             });
         });
 
@@ -598,7 +599,7 @@ public class CashflowServiceImpl implements CashflowService {
                     type.set(DateType.UNDRAWN_CAPITAL_AND_MATURITY);
                 }
                 // check if this date is already in the schedule
-                Set<CashflowScheduleDate> existingScheduleDates = scheduleDates.stream()
+                Set<CashflowScheduleDateDto> existingScheduleDates = scheduleDates.stream()
                         .filter(scheduleDate -> scheduleDate.getDate().isEqual(couponDate)).collect(Collectors.toSet());
                 existingScheduleDates.forEach(existingScheduleDate -> {
                     switch (existingScheduleDate.getType()) {
@@ -630,7 +631,7 @@ public class CashflowServiceImpl implements CashflowService {
                             break;
                     }
                 });
-                scheduleDates.add(new CashflowScheduleDate(couponDate, type.get()));
+                scheduleDates.add(new CashflowScheduleDateDto(couponDate, type.get()));
             });
         });
 
@@ -645,7 +646,7 @@ public class CashflowServiceImpl implements CashflowService {
                     type.set(DateType.SKIMS_AND_MATURITY);
                 }
                 // check if this date is already in the schedule
-                Set<CashflowScheduleDate> existingScheduleDates = scheduleDates.stream()
+                Set<CashflowScheduleDateDto> existingScheduleDates = scheduleDates.stream()
                         .filter(scheduleDate -> scheduleDate.getDate().isEqual(couponDate)).collect(Collectors.toSet());
                 existingScheduleDates.forEach(existingScheduleDate -> {
                     switch (existingScheduleDate.getType()) {
@@ -707,12 +708,12 @@ public class CashflowServiceImpl implements CashflowService {
                             break;
                     }
                 });
-                scheduleDates.add(new CashflowScheduleDate(couponDate, type.get()));
+                scheduleDates.add(new CashflowScheduleDateDto(couponDate, type.get()));
             });
         });
 
         if (!hasMaturityDateCoupon.get()) {
-            scheduleDates.add(new CashflowScheduleDate(maturityDate, DateType.MATURITY));
+            scheduleDates.add(new CashflowScheduleDateDto(maturityDate, DateType.MATURITY));
         }
 
         // Prepayment dates
@@ -723,7 +724,7 @@ public class CashflowServiceImpl implements CashflowService {
                 LocalDate couponDate = schedule.getDate();
                 AtomicReference<DateType> type = new AtomicReference<>(DateType.REPAYMENT);
                 // check if this date is already in the schedule
-                Set<CashflowScheduleDate> existingScheduleDates = scheduleDates.stream()
+                Set<CashflowScheduleDateDto> existingScheduleDates = scheduleDates.stream()
                         .filter(scheduleDate -> scheduleDate.getDate().isEqual(couponDate)).collect(Collectors.toSet());
                 existingScheduleDates.forEach(existingScheduleDate -> {
                     switch (existingScheduleDate.getType()) {
@@ -791,14 +792,14 @@ public class CashflowServiceImpl implements CashflowService {
                             break;
                     }
                 });
-                scheduleDates.add(new CashflowScheduleDate(couponDate, type.get()));
+                scheduleDates.add(new CashflowScheduleDateDto(couponDate, type.get()));
             });
         }
 
         // Sort the set chronologically
         return scheduleDates
                 .stream()
-                .sorted(Comparator.comparing(CashflowScheduleDate::getDate))
+                .sorted(Comparator.comparing(CashflowScheduleDateDto::getDate))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 

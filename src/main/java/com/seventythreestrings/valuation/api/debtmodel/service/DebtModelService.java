@@ -1,6 +1,7 @@
 package com.seventythreestrings.valuation.api.debtmodel.service;
 
 import com.seventythreestrings.valuation.api.debtmodel.dto.*;
+import com.seventythreestrings.valuation.api.debtmodel.enums.SortOrder;
 import com.seventythreestrings.valuation.api.debtmodel.model.DebtModel;
 import com.seventythreestrings.valuation.api.debtmodel.model.LookUpDebtDetails;
 import com.seventythreestrings.valuation.api.debtmodel.model.LookUpValuationDetails;

@@ -3,8 +3,9 @@ package com.seventythreestrings.valuation.api.debtmodel.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.seventythreestrings.valuation.api.common.converter.LocalDateAttributeConverter;
 import com.seventythreestrings.valuation.api.common.entity.BaseEntity;
-import com.seventythreestrings.valuation.api.debtmodel.dto.DateType;
+import com.seventythreestrings.valuation.api.debtmodel.enums.DateType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,14 +27,12 @@ public class CashflowSchedule extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "from_date")
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate fromDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "to_date")
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate toDate;
 
     @Column(name = "opening_principal_outstanding")
@@ -106,6 +105,7 @@ public class CashflowSchedule extends BaseEntity {
     private double presentValue;
 
     @Column(name = "date_type")
+    @Enumerated(EnumType.STRING)
     private DateType dateType;
 
     @Transient

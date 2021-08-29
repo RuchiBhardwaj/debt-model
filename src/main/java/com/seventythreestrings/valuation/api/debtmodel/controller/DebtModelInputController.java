@@ -1,6 +1,8 @@
 package com.seventythreestrings.valuation.api.debtmodel.controller;
 
 import com.seventythreestrings.valuation.api.debtmodel.dto.*;
+import com.seventythreestrings.valuation.api.debtmodel.enums.CashflowDates;
+import com.seventythreestrings.valuation.api.debtmodel.enums.DebtModelInput;
 import com.seventythreestrings.valuation.api.debtmodel.service.DebtModelInputService;
 import com.seventythreestrings.valuation.api.exception.ErrorCodesAndMessages;
 import com.seventythreestrings.valuation.api.util.ApiResponse;
@@ -9,7 +11,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;

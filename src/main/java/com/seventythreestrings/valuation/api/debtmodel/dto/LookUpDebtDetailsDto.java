@@ -16,6 +16,4 @@ public class LookUpDebtDetailsDto {
     private UUID fundId;
 
     private String fundName;
-
-
 }

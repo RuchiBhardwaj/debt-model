@@ -1,5 +1,7 @@
 package com.seventythreestrings.valuation.api.debtmodel.dto;
 
+import com.seventythreestrings.valuation.api.debtmodel.enums.CashflowDates;
+import com.seventythreestrings.valuation.api.debtmodel.enums.CustomizableCashflowType;
 import lombok.Data;
 
 @Data

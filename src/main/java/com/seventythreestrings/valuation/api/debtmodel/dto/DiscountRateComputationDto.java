@@ -1,6 +1,5 @@
 package com.seventythreestrings.valuation.api.debtmodel.dto;
 
-
 import com.seventythreestrings.valuation.api.debtmodel.model.DiscountAdjustment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,26 +14,25 @@ public class DiscountRateComputationDto {
 
     private Long id;
 
-    private double concludedCreditSpreadQuarter1;
+    private double concludedCreditSpreadQuartile1;
 
-    private double concludedCreditSpreadMedium;
+    private double concludedCreditSpreadMedian;
 
-    private double concludedCreditSpreadQuarter3;
+    private double concludedCreditSpreadQuartile3;
 
-    private double riskFreeRateQuarter1;
+    private double riskFreeRateQuartile1;
 
-    private double riskFreeRateMedium;
+    private double riskFreeRateMedian;
 
-    private double riskFreeRateQuarter3;
+    private double riskFreeRateQuartile3;
 
-    private double ytmQuarter1;
+    private double ytmQuartile1;
 
-    private double ytmMedium;
+    private double ytmMedian;
 
-    private double ytmQuarter3;
+    private double ytmQuartile3;
 
     private Long debtModelId;
 
     private List<DiscountAdjustment> discountAdjustments;
-
 }

@@ -1,4 +1,4 @@
-package com.seventythreestrings.valuation.api.debtmodel.dto;
+package com.seventythreestrings.valuation.api.debtmodel.enums;
 
 public enum CashflowDates {
     SPECIFIC_DATES("Specific Dates"),

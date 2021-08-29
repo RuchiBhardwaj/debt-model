@@ -1,11 +1,12 @@
 package com.seventythreestrings.valuation.api.debtmodel.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.seventythreestrings.valuation.api.debtmodel.enums.CashflowAmount;
+import com.seventythreestrings.valuation.api.debtmodel.enums.PaymentFrequency;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 public class CustomizableCashflowDto extends BaseCustomizableCashflowDto {

@@ -1,6 +1,7 @@
 package com.seventythreestrings.valuation.api.debtmodel.service.impl;
 
 import com.seventythreestrings.valuation.api.debtmodel.dto.*;
+import com.seventythreestrings.valuation.api.debtmodel.enums.SortOrder;
 import com.seventythreestrings.valuation.api.debtmodel.model.DebtModel;
 import com.seventythreestrings.valuation.api.debtmodel.model.GeneralDetails;
 import com.seventythreestrings.valuation.api.debtmodel.model.LookUpDebtDetails;
@@ -112,22 +113,22 @@ public class DebtModelServiceImpl implements DebtModelService {
     public FundDetailsResponseDto getFundDetails(FundDetailsDto fundDetailsDto) {
         FundDetailsResponseDto fundDetailsResponseDto = new FundDetailsResponseDto();
         UUID fund = fundDetailsDto.getFundId();
-        List<CompanyResponse> companyResponse = new ArrayList<>();
+        List<CompanyResponseDto> companyResponse = new ArrayList<>();
 
-        for(Company f : fundDetailsDto.getCompanies()){
+        for(CompanyDto f : fundDetailsDto.getCompanies()){
             UUID companyId = f.getCompanyId();
             Optional<LookUpDebtDetails> lookUpDebtDetails = lookUpDebtDetailsRepository.findDebtIdByCompanyId(companyId);
             Long debtId = lookUpDebtDetails.get().getDebtId();
-            List<ValuationResponse> valuationResponses = new ArrayList<>();
-            for(ValuationDates v:f.getValuationDates()){
+            List<ValuationResponseDto> valuationResponses = new ArrayList<>();
+            for(ValuationDatesDto v:f.getValuationDates()){
                 UUID valuationDateId = v.getValuationDateId();
                 Optional<LookUpValuationDetails> valuationDate = lookUpValuationDetailsRepository.findValuationDateByValuationDateId(valuationDateId);
                 LocalDate valDate = valuationDate.get().getValuationDate();
                 if(debtId !=null ){
-                    CompanyResponse companyResponse1 = new CompanyResponse();
+                    CompanyResponseDto companyResponse1 = new CompanyResponseDto();
                     GeneralDetails generalDetails = generalDetailsRepository.findFirstByDebtModelIdAndValuationDate(debtId);
                     fundDetailsResponseDto.setFundId(fund);
-                    ValuationResponse val = new ValuationResponse();
+                    ValuationResponseDto val = new ValuationResponseDto();
                     val.setValuationDates(modelMapper.map(generalDetails,GeneralDetailsDto.class));
                     valuationResponses.add(val);
                     companyResponse1.setCompanyId(companyId);

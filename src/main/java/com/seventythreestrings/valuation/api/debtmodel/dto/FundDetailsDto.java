@@ -14,6 +14,6 @@ public class FundDetailsDto {
 
     private UUID fundId;
 
-    private List<Company> companies;
+    private List<CompanyDto> companies;
 
 }

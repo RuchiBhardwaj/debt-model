@@ -3,7 +3,7 @@ package com.seventythreestrings.valuation.api.debtmodel.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.seventythreestrings.valuation.api.common.entity.BaseEntity;
-import com.seventythreestrings.valuation.api.debtmodel.dto.PaymentFrequency;
+import com.seventythreestrings.valuation.api.debtmodel.enums.PaymentFrequency;
 import com.seventythreestrings.valuation.api.debtmodel.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,7 +31,7 @@ public class InterestUndrawnCapital extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(name = "interest_undrawn_payment_percentage")
+    @Column(name = "interest_undrawn_percentage")
     private double interestUndrawnPercentage;
 
     @Column(name = "regime_start_date")
@@ -49,6 +49,7 @@ public class InterestUndrawnCapital extends BaseEntity {
     private int dayOfPayment;
 
     @Column(name = "interest_payment_frequency")
+    @Enumerated(EnumType.STRING)
     private PaymentFrequency interestPaymentFrequency;
 
     @Column(name = "version_id")

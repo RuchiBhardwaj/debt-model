@@ -27,18 +27,16 @@ public class DiscountAdjustment extends BaseEntity {
     @Column(name = "adjustment_name")
     private String adjustmentName;
 
-    @Column(name = "quarter1")
-    private int quarter1;
+    @Column(name = "quartile1")
+    private double quartile1;
 
-    @Column(name = "medium")
-    private int medium;
+    @Column(name = "median")
+    private double median;
 
-    @Column(name = "quarter3")
-    private int quarter3;
+    @Column(name = "quartile3")
+    private double quartile3;
 
     @ManyToOne
     @JoinColumn(name = "discount_adjustment", nullable = false)
     private DiscountRateComputaion discountRateComputation;
-
-
 }

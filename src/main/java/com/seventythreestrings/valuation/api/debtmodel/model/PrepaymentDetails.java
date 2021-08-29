@@ -2,7 +2,7 @@ package com.seventythreestrings.valuation.api.debtmodel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.seventythreestrings.valuation.api.common.entity.BaseEntity;
-import com.seventythreestrings.valuation.api.debtmodel.dto.PrincipalRepaymentPattern;
+import com.seventythreestrings.valuation.api.debtmodel.enums.PrincipalRepaymentPattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,14 +28,15 @@ public class PrepaymentDetails extends BaseEntity {
 
     @NotNull
     @Column(name = "principal_repayment_pattern")
+    @Enumerated(EnumType.STRING)
     private PrincipalRepaymentPattern principalRepaymentPattern;
+
+    @Column(name = "version_id")
+    private int versionId;
 
     @OneToOne
     @JoinColumn(name = "debt_model_id", nullable = false)
     private DebtModel debtModel;
-
-    @Column(name = "version_id")
-    private int versionId;
 
     @OneToMany(mappedBy="prepaymentDetails", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("date ASC")

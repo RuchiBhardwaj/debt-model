@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PaginatedResponse<T> {
+public class PaginatedResponseDto<T> {
     private List<T> items;
 
     private int pageNumber;

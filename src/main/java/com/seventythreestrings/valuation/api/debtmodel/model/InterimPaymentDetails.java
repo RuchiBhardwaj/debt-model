@@ -34,6 +34,6 @@ public class InterimPaymentDetails extends BaseEntity {
     private double amount;
 
     @ManyToOne
-    @JoinColumn(name = "cutomizable_cashflow_excel", nullable = false)
+    @JoinColumn(name = "customizable_cashflow_excel", nullable = false)
     private CustomizableCashflowExcel customizableCashflowExcel;
 }

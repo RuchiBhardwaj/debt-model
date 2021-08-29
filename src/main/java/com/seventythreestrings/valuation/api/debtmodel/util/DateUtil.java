@@ -1,6 +1,6 @@
 package com.seventythreestrings.valuation.api.debtmodel.util;
 
-import com.seventythreestrings.valuation.api.debtmodel.dto.PaymentFrequency;
+import com.seventythreestrings.valuation.api.debtmodel.enums.PaymentFrequency;
 
 import java.time.LocalDate;
 import java.time.ZoneId;

@@ -1,9 +1,9 @@
 package com.seventythreestrings.valuation.api.debtmodel.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.seventythreestrings.valuation.api.common.converter.LocalDateTimeAttributeConverter;
 import com.seventythreestrings.valuation.api.common.entity.BaseEntity;
-import com.seventythreestrings.valuation.api.debtmodel.dto.DebtModelInput;
+import com.seventythreestrings.valuation.api.debtmodel.enums.DebtModelInput;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,10 +56,11 @@ public class DebtModel extends BaseEntity {
     private String fundName;
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
     private List<DebtModelInput> inputs = new ArrayList<>();
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "UTC")
     @Column(name = "analysis_date")
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
     private LocalDateTime analysisDate;
 
     @OneToOne(mappedBy="debtModel", fetch = FetchType.LAZY)

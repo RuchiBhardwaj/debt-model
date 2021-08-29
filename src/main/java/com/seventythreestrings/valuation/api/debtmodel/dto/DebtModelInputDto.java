@@ -1,5 +1,6 @@
 package com.seventythreestrings.valuation.api.debtmodel.dto;
 
+import com.seventythreestrings.valuation.api.debtmodel.enums.DebtModelInput;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

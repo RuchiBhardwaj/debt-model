@@ -2,8 +2,9 @@ package com.seventythreestrings.valuation.api.debtmodel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.seventythreestrings.valuation.api.common.converter.LocalDateAttributeConverter;
 import com.seventythreestrings.valuation.api.common.entity.BaseEntity;
-import com.seventythreestrings.valuation.api.debtmodel.dto.PaymentFrequency;
+import com.seventythreestrings.valuation.api.debtmodel.enums.PaymentFrequency;
 import com.seventythreestrings.valuation.api.debtmodel.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,12 +42,15 @@ public class Skims extends BaseEntity {
     private String skimBase;
 
     @Column(name = "regime_start_date")
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate regimeStartDate;
 
     @Column(name = "regime_end_date")
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate regimeEndDate;
 
     @Column(name = "first_payment_date")
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate firstPaymentDate;
 
     @Min(0)
@@ -55,6 +59,7 @@ public class Skims extends BaseEntity {
     private int dayOfPayment;
 
     @Column(name = "skim_payment_frequency")
+    @Enumerated(EnumType.STRING)
     private PaymentFrequency skimPaymentFrequency;
 
     @Column(name = "version_id")

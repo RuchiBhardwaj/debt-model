@@ -2,8 +2,8 @@ package com.seventythreestrings.valuation.api.debtmodel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.seventythreestrings.valuation.api.common.entity.BaseEntity;
-import com.seventythreestrings.valuation.api.debtmodel.dto.CashflowDates;
-import com.seventythreestrings.valuation.api.debtmodel.dto.CustomizableCashflowType;
+import com.seventythreestrings.valuation.api.debtmodel.enums.CashflowDates;
+import com.seventythreestrings.valuation.api.debtmodel.enums.CustomizableCashflowType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,22 +19,22 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Table(name = "cutomizable_cashflow_excel")
+@Table(name = "customizable_cashflow_excel")
 public class CustomizableCashflowExcel extends BaseEntity {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-
     @Column(name = "name_of_the_property")
     private String nameOfTheProperty;
 
     @Column(name = "cashflow_type")
+    @Enumerated(EnumType.STRING)
     private CustomizableCashflowType cashflowType;
 
     @Column(name = "cashflow_dates")
+    @Enumerated(EnumType.STRING)
     private CashflowDates cashflowDates;
 
     @OneToOne

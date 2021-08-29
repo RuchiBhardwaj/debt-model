@@ -24,41 +24,37 @@ public class DiscountRateComputaion extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(name = "concluded_credit_spread_quarter1")
-    private double concludedCreditSpreadQuarter1;
+    @Column(name = "concluded_credit_spread_quartile1")
+    private double concludedCreditSpreadQuartile1;
 
-    @Column(name = "concluded_credit_spread_medium")
-    private double concludedCreditSpreadMedium;
+    @Column(name = "concluded_credit_spread_median")
+    private double concludedCreditSpreadMedian;
 
-    @Column(name = "concluded_credit_spread_quarter3")
-    private double concludedCreditSpreadQuarter3;
+    @Column(name = "concluded_credit_spread_quartile3")
+    private double concludedCreditSpreadQuartile3;
 
-    @Column(name = "risk_free_rate_quarter1")
-    private double riskFreeRateQuarter1;
+    @Column(name = "risk_free_rate_quartile1")
+    private double riskFreeRateQuartile1;
 
-    @Column(name = "risk_free_rate_medium")
-    private double riskFreeRateMedium;
+    @Column(name = "risk_free_rate_median")
+    private double riskFreeRateMedian;
 
-    @Column(name = "risk_free_rate_quarter3")
-    private double riskFreeRateQuarter3;
+    @Column(name = "risk_free_rate_quartile3")
+    private double riskFreeRateQuartile3;
 
-    @Column(name = "ytm_quarter1")
-    private double ytmQuarter1;
+    @Column(name = "ytm_quartile1")
+    private double ytmQuartile1;
 
-    @Column(name = "ytm_medium")
-    private double ytmMedium;
+    @Column(name = "ytm_median")
+    private double ytmMedian;
 
-    @Column(name = "ytm_quarter3")
-    private double ytmQuarter3;
-
+    @Column(name = "ytm_quartile3")
+    private double ytmQuartile3;
 
     @OneToMany(mappedBy="discountRateComputation", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("date ASC")
     private Set<DiscountAdjustment> discountAdjustments = new HashSet<>();
 
     @OneToOne
     @JoinColumn(name = "debt_model_id", nullable = false)
     private DebtModel debtModel;
-
-
 }
