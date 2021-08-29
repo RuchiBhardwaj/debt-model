@@ -65,8 +65,8 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                     }
                     break;
                 case REPAYMENT_DETAILS:
-                    Optional<PrepaymentDetails> prepaymentDetails = prepaymentDetailsRepository.findFirstByDebtModelId(debtModelId);
-                    prepaymentDetails.ifPresent(details -> inputs.add(new DebtModelInputDto(DebtModelInput.REPAYMENT_DETAILS, modelMapper.map(details, PrepaymentDetailsDto.class))));
+                    Optional<RepaymentDetails> prepaymentDetails = prepaymentDetailsRepository.findFirstByDebtModelId(debtModelId);
+                    prepaymentDetails.ifPresent(details -> inputs.add(new DebtModelInputDto(DebtModelInput.REPAYMENT_DETAILS, modelMapper.map(details, RepaymentDetailsDto.class))));
                     break;
                 case DEAL_FEES:
                     Optional<DealFees> dealFeesVersionIdLatest = dealFeesRepository.findFirstByDebtModelIdOrderByVersionIdDesc(debtModelId);
@@ -183,9 +183,9 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                         .orElseThrow(() -> new AppException(ErrorCodesAndMessages.NOT_FOUND_EXCEPTION));
                 return modelMapper.map(interestDetails, InterestDetailsDto.class);
             case REPAYMENT_DETAILS:
-                PrepaymentDetails prepaymentDetails = prepaymentDetailsRepository.findById(id)
+                RepaymentDetails repaymentDetails = prepaymentDetailsRepository.findById(id)
                         .orElseThrow(() -> new AppException(ErrorCodesAndMessages.NOT_FOUND_EXCEPTION));
-                return modelMapper.map(prepaymentDetails, PrepaymentDetailsDto.class);
+                return modelMapper.map(repaymentDetails, RepaymentDetailsDto.class);
             case DEAL_FEES:
                 DealFees dealFees = dealFeesRepository.findById(id)
                         .orElseThrow(() -> new AppException(ErrorCodesAndMessages.NOT_FOUND_EXCEPTION));
@@ -227,10 +227,10 @@ public class DebtModelInputServiceImpl implements DebtModelInputService {
                 }
                 return Arrays.asList(modelMapper.map(interestDetailsRepository.saveAll(interestDetails), InterestDetailsDto[].class));
             case REPAYMENT_DETAILS:
-                PrepaymentDetails prepaymentDetails = modelMapper.map(o, PrepaymentDetails.class);
-                prepaymentDetails.setDebtModel(debtModel);
-                prepaymentDetails.getPaymentSchedules().forEach(paymentSchedule -> paymentSchedule.setPrepaymentDetails(prepaymentDetails));
-                return modelMapper.map(prepaymentDetailsRepository.save(prepaymentDetails), PrepaymentDetailsDto.class);
+                RepaymentDetails repaymentDetails = modelMapper.map(o, RepaymentDetails.class);
+                repaymentDetails.setDebtModel(debtModel);
+                repaymentDetails.getPaymentSchedules().forEach(paymentSchedule -> paymentSchedule.setRepaymentDetails(repaymentDetails));
+                return modelMapper.map(prepaymentDetailsRepository.save(repaymentDetails), RepaymentDetailsDto.class);
             case CALL_PREMIUM:
                 List<CallPremium> callPremium = Arrays.asList(modelMapper.map(o, CallPremium[].class));
                 for(CallPremium call: callPremium) {

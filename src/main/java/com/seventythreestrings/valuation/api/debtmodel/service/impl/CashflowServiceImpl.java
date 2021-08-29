@@ -88,7 +88,7 @@ public class CashflowServiceImpl implements CashflowService {
         Set<CashflowScheduleDateDto> scheduleDates = getCashflowScheduleDates(inputs);
         Optional<GeneralDetails> generalDetailsInput = getGeneralDetailsFromInputs(inputs);
         List<InterestDetails> interestDetailsInput = getInterestDetailsFromInputs(inputs);
-        Optional<PrepaymentDetails> prepaymentDetailsInput = getPrepaymentDetailsFromInputs(inputs);
+        Optional<RepaymentDetails> prepaymentDetailsInput = getPrepaymentDetailsFromInputs(inputs);
         List<DealFees> dealFeesInput = getDealFeesFromInputs(inputs);
         List<InterestUndrawnCapital> interestUndrawnCapitalsInput = getInterestUndrawnCapitalFromInputs(inputs);
         List<Skims> skimsInput = getSkimsFromInputs(inputs);
@@ -438,7 +438,7 @@ public class CashflowServiceImpl implements CashflowService {
         cashflowSchedule.setPresentValue(presentValue);
     }
 
-    private double getPrepaymentAmountForDate(Optional<PrepaymentDetails> input, LocalDate date) {
+    private double getPrepaymentAmountForDate(Optional<RepaymentDetails> input, LocalDate date) {
         double amount = 0;
         if (!input.isPresent()) {
             return amount;
@@ -717,7 +717,7 @@ public class CashflowServiceImpl implements CashflowService {
         }
 
         // Prepayment dates
-        Optional<PrepaymentDetails> prepaymentDetails = getPrepaymentDetailsFromInputs(inputs);
+        Optional<RepaymentDetails> prepaymentDetails = getPrepaymentDetailsFromInputs(inputs);
         if (prepaymentDetails.isPresent()) {
             Set<PaymentSchedule> schedules = prepaymentDetails.get().getPaymentSchedules();
             schedules.forEach(schedule -> {
@@ -814,9 +814,9 @@ public class CashflowServiceImpl implements CashflowService {
                 .findFirst().orElse(new ArrayList<InterestDetails>());
     }
 
-    private Optional<PrepaymentDetails> getPrepaymentDetailsFromInputs(List<DebtModelInputDto> inputs) {
+    private Optional<RepaymentDetails> getPrepaymentDetailsFromInputs(List<DebtModelInputDto> inputs) {
         return inputs.stream().filter(input -> input.getInputType() == DebtModelInput.REPAYMENT_DETAILS)
-                .map(input -> modelMapper.map(input.getPayload(), PrepaymentDetails.class)).findFirst();
+                .map(input -> modelMapper.map(input.getPayload(), RepaymentDetails.class)).findFirst();
     }
 
     private List<DealFees> getDealFeesFromInputs(List<DebtModelInputDto> inputs) {

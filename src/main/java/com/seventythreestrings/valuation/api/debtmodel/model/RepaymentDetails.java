@@ -19,8 +19,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Table(name = "prepayment_details")
-public class PrepaymentDetails extends BaseEntity {
+@Table(name = "repayment_details")
+public class RepaymentDetails extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -38,7 +38,7 @@ public class PrepaymentDetails extends BaseEntity {
     @JoinColumn(name = "debt_model_id", nullable = false)
     private DebtModel debtModel;
 
-    @OneToMany(mappedBy="prepaymentDetails", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="repaymentDetails", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("date ASC")
     private Set<PaymentSchedule> paymentSchedules = new HashSet<>();
 }

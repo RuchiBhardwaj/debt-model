@@ -32,6 +32,6 @@ public class PaymentSchedule {
     private double amount;
 
     @ManyToOne
-    @JoinColumn(name = "prepayment_details", nullable = false)
-    private PrepaymentDetails prepaymentDetails;
+    @JoinColumn(name = "repayment_details", nullable = false)
+    private RepaymentDetails repaymentDetails;
 }

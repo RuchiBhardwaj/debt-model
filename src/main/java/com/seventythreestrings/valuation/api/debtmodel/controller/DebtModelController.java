@@ -183,11 +183,11 @@ public class DebtModelController {
 					payload = modelMapper.map(interestDetails, InterestDetailsDto.class);
 					break;
 				case REPAYMENT_DETAILS:
-					PrepaymentDetails prepaymentDetails = modelMapper.map(payload, PrepaymentDetails.class);
-					prepaymentDetails.setId(null);
-					prepaymentDetails.getPaymentSchedules().forEach(paymentSchedule -> paymentSchedule.setId(null));
-					prepaymentDetails.setDebtModel(debtModel);
-					payload = modelMapper.map(prepaymentDetails, PrepaymentDetailsDto.class);
+					RepaymentDetails repaymentDetails = modelMapper.map(payload, RepaymentDetails.class);
+					repaymentDetails.setId(null);
+					repaymentDetails.getPaymentSchedules().forEach(paymentSchedule -> paymentSchedule.setId(null));
+					repaymentDetails.setDebtModel(debtModel);
+					payload = modelMapper.map(repaymentDetails, RepaymentDetailsDto.class);
 					break;
 				default:
 					break;

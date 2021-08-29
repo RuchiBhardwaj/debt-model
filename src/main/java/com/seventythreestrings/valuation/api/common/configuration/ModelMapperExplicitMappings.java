@@ -206,8 +206,8 @@ public class ModelMapperExplicitMappings {
     }
 
     // Prepayment Details
-    PropertyMap<PrepaymentDetailsDto, PrepaymentDetails> mapPrepaymentDetailsDtoToModel() {
-        return new PropertyMap<PrepaymentDetailsDto, PrepaymentDetails>() {
+    PropertyMap<RepaymentDetailsDto, RepaymentDetails> mapPrepaymentDetailsDtoToModel() {
+        return new PropertyMap<RepaymentDetailsDto, RepaymentDetails>() {
             @Override
             protected void configure() {
                 map().getDebtModel().setId(source.getDebtModelId());
@@ -215,8 +215,8 @@ public class ModelMapperExplicitMappings {
         };
     }
 
-    PropertyMap<PrepaymentDetails, PrepaymentDetailsDto> mapPrepaymentDetailsModelToDto() {
-        return new PropertyMap<PrepaymentDetails, PrepaymentDetailsDto>() {
+    PropertyMap<RepaymentDetails, RepaymentDetailsDto> mapPrepaymentDetailsModelToDto() {
+        return new PropertyMap<RepaymentDetails, RepaymentDetailsDto>() {
             @Override
             protected void configure() {
                 map().setDebtModelId(source.getDebtModel().getId());
@@ -229,7 +229,7 @@ public class ModelMapperExplicitMappings {
         return new PropertyMap<PaymentScheduleDto, PaymentSchedule>() {
             @Override
             protected void configure() {
-                map().getPrepaymentDetails().setId(source.getPrepaymentDetailsId());
+                map().getRepaymentDetails().setId(source.getPrepaymentDetailsId());
             }
         };
     }
@@ -238,7 +238,7 @@ public class ModelMapperExplicitMappings {
         return new PropertyMap<PaymentSchedule, PaymentScheduleDto>() {
             @Override
             protected void configure() {
-                map().setPrepaymentDetailsId(source.getPrepaymentDetails().getId());
+                map().setPrepaymentDetailsId(source.getRepaymentDetails().getId());
             }
         };
     }

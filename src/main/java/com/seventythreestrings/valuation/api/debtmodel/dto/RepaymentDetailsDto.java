@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class PrepaymentDetailsDto {
+public class RepaymentDetailsDto {
 	private Long id;
 
 	private PrincipalRepaymentPattern principalRepaymentPattern;

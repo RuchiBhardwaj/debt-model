@@ -3,7 +3,7 @@ package com.seventythreestrings.valuation.api.debtmodel.enums;
 public enum DebtModelInput {
     GENERAL_DETAILS("general_details"),
     INTEREST_DETAILS("interest_details"),
-    REPAYMENT_DETAILS("prepayment_details"),
+    REPAYMENT_DETAILS("repayment_details"),
     CALL_PREMIUM("call_premium"),
     DEAL_FEES("deal_fees"),
     INTEREST_UNDRAWN_CAPITAL("interest_undrawn_capital"),
