@@ -182,7 +182,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ApiResponse«PaginatedResponse«DebtModelDto»»"
+              "$ref": "#/definitions/ApiResponse«PaginatedResponseDto«DebtModelDto»»"
             }
           },
           "401": {
@@ -1554,7 +1554,7 @@
       },
       "title": "ApiResponse«LookUpValuationDetailsDto»"
     },
-    "ApiResponse«PaginatedResponse«DebtModelDto»»": {
+    "ApiResponse«PaginatedResponseDto«DebtModelDto»»": {
       "type": "object",
       "properties": {
         "errorCode": {
@@ -1564,13 +1564,13 @@
           "type": "string"
         },
         "response": {
-          "$ref": "#/definitions/PaginatedResponse«DebtModelDto»"
+          "$ref": "#/definitions/PaginatedResponseDto«DebtModelDto»"
         },
         "success": {
           "type": "boolean"
         }
       },
-      "title": "ApiResponse«PaginatedResponse«DebtModelDto»»"
+      "title": "ApiResponse«PaginatedResponseDto«DebtModelDto»»"
     },
     "ApiResponse«boolean»": {
       "type": "object",
@@ -1652,7 +1652,7 @@
         },
         "exitDate": {
           "type": "string",
-          "example": "yyyy-MM-dd"
+          "format": "date"
         },
         "id": {
           "type": "integer",
@@ -1664,11 +1664,11 @@
         },
         "maturityDate": {
           "type": "string",
-          "example": "yyyy-MM-dd"
+          "format": "date"
         },
         "originationDate": {
           "type": "string",
-          "example": "yyyy-MM-dd"
+          "format": "date"
         },
         "percentagePar": {
           "type": "number",
@@ -1702,7 +1702,7 @@
         },
         "valuationDate": {
           "type": "string",
-          "example": "yyyy-MM-dd"
+          "format": "date"
         }
       },
       "title": "Cashflow"
@@ -1804,53 +1804,101 @@
         "dateType": {
           "type": "string",
           "enum": [
+            "CUSTOMIZABLE",
+            "CUSTOMIZABLE_AND_MATURITY",
             "DEALFEES",
+            "DEALFEES_AND_CUSTOMIZABLE",
+            "DEALFEES_AND_CUSTOMIZABLE_AND_MATURITY",
             "DEALFEES_AND_MATURITY",
             "DEALFEES_AND_SKIMS",
+            "DEALFEES_AND_SKIMS_AND_CUSTOMIZABLE",
+            "DEALFEES_AND_SKIMS_AND_CUSTOMIZABLE_AND_MATURITY",
             "DEALFEES_AND_SKIMS_AND_MATURITY",
             "DEALFEES_AND_UNDRAWN_CAPITAL",
+            "DEALFEES_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE",
+            "DEALFEES_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE_AND_MATURITY",
             "DEALFEES_AND_UNDRAWN_CAPITAL_AND_MATURITY",
             "DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE",
+            "DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE_AND_MATURITY",
             "DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_MATURITY",
             "INTEREST",
+            "INTEREST_AND_CUSTOMIZABLE",
+            "INTEREST_AND_CUSTOMIZABLE_AND_MATURITY",
             "INTEREST_AND_DEALFEES",
+            "INTEREST_AND_DEALFEES_AND_CUSTOMIZABLE",
+            "INTEREST_AND_DEALFEES_AND_CUSTOMIZABLE_AND_MATURITY",
             "INTEREST_AND_DEALFEES_AND_MATURITY",
             "INTEREST_AND_DEALFEES_AND_SKIMS",
+            "INTEREST_AND_DEALFEES_AND_SKIMS_AND_CUSTOMIZABLE",
+            "INTEREST_AND_DEALFEES_AND_SKIMS_AND_CUSTOMIZABLE_AND_MATURITY",
             "INTEREST_AND_DEALFEES_AND_SKIMS_AND_MATURITY",
             "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL",
+            "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE",
+            "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE_AND_MATURITY",
             "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_MATURITY",
             "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE",
+            "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE_AND_MATURITY",
             "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_MATURITY",
             "INTEREST_AND_MATURITY",
-            "INTEREST_AND_PREPAYMENT",
-            "INTEREST_AND_PREPAYMENT_AND_DEALFEES",
-            "INTEREST_AND_PREPAYMENT_AND_DEALFEES_AND_SKIMS",
-            "INTEREST_AND_PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL",
-            "INTEREST_AND_PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
-            "INTEREST_AND_PREPAYMENT_AND_SKIMS",
-            "INTEREST_AND_PREPAYMENT_AND_UNDRAWN_CAPITAL",
-            "INTEREST_AND_PREPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "INTEREST_AND_REPAYMENT",
+            "INTEREST_AND_REPAYMENT_AND_CUSTOMIZABLE",
+            "INTEREST_AND_REPAYMENT_AND_DEALFEES",
+            "INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_CUSTOMIZABLE",
+            "INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_SKIMS",
+            "INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_SKIMS_AND_CUSTOMIZABLE",
+            "INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL",
+            "INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE",
+            "INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE",
+            "INTEREST_AND_REPAYMENT_AND_SKIMS",
+            "INTEREST_AND_REPAYMENT_AND_SKIMS_AND_CUSTOMIZABLE",
+            "INTEREST_AND_REPAYMENT_AND_UNDRAWN_CAPITAL",
+            "INTEREST_AND_REPAYMENT_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE",
+            "INTEREST_AND_REPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "INTEREST_AND_REPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE",
             "INTEREST_AND_SKIMS",
+            "INTEREST_AND_SKIMS_AND_CUSTOMIZABLE",
+            "INTEREST_AND_SKIMS_AND_CUSTOMIZABLE_AND_MATURITY",
             "INTEREST_AND_SKIMS_AND_MATURITY",
             "INTEREST_AND_UNDRAWN_CAPITAL",
+            "INTEREST_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE",
+            "INTEREST_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE_AND_MATURITY",
             "INTEREST_AND_UNDRAWN_CAPITAL_AND_MATURITY",
             "INTEREST_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "INTEREST_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE",
+            "INTEREST_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE_AND_MATURITY",
             "INTEREST_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_MATURITY",
             "MATURITY",
             "ORIGINATION",
-            "PREPAYMENT",
-            "PREPAYMENT_AND_DEALFEES",
-            "PREPAYMENT_AND_DEALFEES_AND_SKIMS",
-            "PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL",
-            "PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
-            "PREPAYMENT_AND_SKIMS",
-            "PREPAYMENT_AND_UNDRAWN_CAPITAL",
-            "PREPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "REPAYMENT",
+            "REPAYMENT_AND_CUSTOMIZABLE",
+            "REPAYMENT_AND_DEALFEES",
+            "REPAYMENT_AND_DEALFEES_AND_CUSTOMIZABLE",
+            "REPAYMENT_AND_DEALFEES_AND_SKIMS",
+            "REPAYMENT_AND_DEALFEES_AND_SKIMS_AND_CUSTOMIZABLE",
+            "REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL",
+            "REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE",
+            "REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE",
+            "REPAYMENT_AND_SKIMS",
+            "REPAYMENT_AND_SKIMS_AND_CUSTOMIZABLE",
+            "REPAYMENT_AND_UNDRAWN_CAPITAL",
+            "REPAYMENT_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE",
+            "REPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "REPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE",
             "SKIMS",
+            "SKIMS_AND_CUSTOMIZABLE",
+            "SKIMS_AND_CUSTOMIZABLE_AND_MATURITY",
             "SKIMS_AND_MATURITY",
             "UNDRAWN_CAPITAL",
+            "UNDRAWN_CAPITAL_AND_CUSTOMIZABLE",
+            "UNDRAWN_CAPITAL_AND_CUSTOMIZABLE_AND_MATURITY",
             "UNDRAWN_CAPITAL_AND_MATURITY",
             "UNDRAWN_CAPITAL_AND_SKIMS",
+            "UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE",
+            "UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE_AND_MATURITY",
             "UNDRAWN_CAPITAL_AND_SKIMS_AND_MATURITY"
           ]
         },
@@ -1864,7 +1912,7 @@
         },
         "fromDate": {
           "type": "string",
-          "example": "yyyy-MM-dd"
+          "format": "date"
         },
         "id": {
           "type": "integer",
@@ -1912,7 +1960,7 @@
         },
         "toDate": {
           "type": "string",
-          "example": "yyyy-MM-dd"
+          "format": "date"
         },
         "totalCashMovement": {
           "type": "number",
@@ -1978,53 +2026,101 @@
         "dateType": {
           "type": "string",
           "enum": [
+            "CUSTOMIZABLE",
+            "CUSTOMIZABLE_AND_MATURITY",
             "DEALFEES",
+            "DEALFEES_AND_CUSTOMIZABLE",
+            "DEALFEES_AND_CUSTOMIZABLE_AND_MATURITY",
             "DEALFEES_AND_MATURITY",
             "DEALFEES_AND_SKIMS",
+            "DEALFEES_AND_SKIMS_AND_CUSTOMIZABLE",
+            "DEALFEES_AND_SKIMS_AND_CUSTOMIZABLE_AND_MATURITY",
             "DEALFEES_AND_SKIMS_AND_MATURITY",
             "DEALFEES_AND_UNDRAWN_CAPITAL",
+            "DEALFEES_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE",
+            "DEALFEES_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE_AND_MATURITY",
             "DEALFEES_AND_UNDRAWN_CAPITAL_AND_MATURITY",
             "DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE",
+            "DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE_AND_MATURITY",
             "DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_MATURITY",
             "INTEREST",
+            "INTEREST_AND_CUSTOMIZABLE",
+            "INTEREST_AND_CUSTOMIZABLE_AND_MATURITY",
             "INTEREST_AND_DEALFEES",
+            "INTEREST_AND_DEALFEES_AND_CUSTOMIZABLE",
+            "INTEREST_AND_DEALFEES_AND_CUSTOMIZABLE_AND_MATURITY",
             "INTEREST_AND_DEALFEES_AND_MATURITY",
             "INTEREST_AND_DEALFEES_AND_SKIMS",
+            "INTEREST_AND_DEALFEES_AND_SKIMS_AND_CUSTOMIZABLE",
+            "INTEREST_AND_DEALFEES_AND_SKIMS_AND_CUSTOMIZABLE_AND_MATURITY",
             "INTEREST_AND_DEALFEES_AND_SKIMS_AND_MATURITY",
             "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL",
+            "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE",
+            "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE_AND_MATURITY",
             "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_MATURITY",
             "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE",
+            "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE_AND_MATURITY",
             "INTEREST_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_MATURITY",
             "INTEREST_AND_MATURITY",
-            "INTEREST_AND_PREPAYMENT",
-            "INTEREST_AND_PREPAYMENT_AND_DEALFEES",
-            "INTEREST_AND_PREPAYMENT_AND_DEALFEES_AND_SKIMS",
-            "INTEREST_AND_PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL",
-            "INTEREST_AND_PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
-            "INTEREST_AND_PREPAYMENT_AND_SKIMS",
-            "INTEREST_AND_PREPAYMENT_AND_UNDRAWN_CAPITAL",
-            "INTEREST_AND_PREPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "INTEREST_AND_REPAYMENT",
+            "INTEREST_AND_REPAYMENT_AND_CUSTOMIZABLE",
+            "INTEREST_AND_REPAYMENT_AND_DEALFEES",
+            "INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_CUSTOMIZABLE",
+            "INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_SKIMS",
+            "INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_SKIMS_AND_CUSTOMIZABLE",
+            "INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL",
+            "INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE",
+            "INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "INTEREST_AND_REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE",
+            "INTEREST_AND_REPAYMENT_AND_SKIMS",
+            "INTEREST_AND_REPAYMENT_AND_SKIMS_AND_CUSTOMIZABLE",
+            "INTEREST_AND_REPAYMENT_AND_UNDRAWN_CAPITAL",
+            "INTEREST_AND_REPAYMENT_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE",
+            "INTEREST_AND_REPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "INTEREST_AND_REPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE",
             "INTEREST_AND_SKIMS",
+            "INTEREST_AND_SKIMS_AND_CUSTOMIZABLE",
+            "INTEREST_AND_SKIMS_AND_CUSTOMIZABLE_AND_MATURITY",
             "INTEREST_AND_SKIMS_AND_MATURITY",
             "INTEREST_AND_UNDRAWN_CAPITAL",
+            "INTEREST_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE",
+            "INTEREST_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE_AND_MATURITY",
             "INTEREST_AND_UNDRAWN_CAPITAL_AND_MATURITY",
             "INTEREST_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "INTEREST_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE",
+            "INTEREST_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE_AND_MATURITY",
             "INTEREST_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_MATURITY",
             "MATURITY",
             "ORIGINATION",
-            "PREPAYMENT",
-            "PREPAYMENT_AND_DEALFEES",
-            "PREPAYMENT_AND_DEALFEES_AND_SKIMS",
-            "PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL",
-            "PREPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
-            "PREPAYMENT_AND_SKIMS",
-            "PREPAYMENT_AND_UNDRAWN_CAPITAL",
-            "PREPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "REPAYMENT",
+            "REPAYMENT_AND_CUSTOMIZABLE",
+            "REPAYMENT_AND_DEALFEES",
+            "REPAYMENT_AND_DEALFEES_AND_CUSTOMIZABLE",
+            "REPAYMENT_AND_DEALFEES_AND_SKIMS",
+            "REPAYMENT_AND_DEALFEES_AND_SKIMS_AND_CUSTOMIZABLE",
+            "REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL",
+            "REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE",
+            "REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "REPAYMENT_AND_DEALFEES_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE",
+            "REPAYMENT_AND_SKIMS",
+            "REPAYMENT_AND_SKIMS_AND_CUSTOMIZABLE",
+            "REPAYMENT_AND_UNDRAWN_CAPITAL",
+            "REPAYMENT_AND_UNDRAWN_CAPITAL_AND_CUSTOMIZABLE",
+            "REPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS",
+            "REPAYMENT_AND_UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE",
             "SKIMS",
+            "SKIMS_AND_CUSTOMIZABLE",
+            "SKIMS_AND_CUSTOMIZABLE_AND_MATURITY",
             "SKIMS_AND_MATURITY",
             "UNDRAWN_CAPITAL",
+            "UNDRAWN_CAPITAL_AND_CUSTOMIZABLE",
+            "UNDRAWN_CAPITAL_AND_CUSTOMIZABLE_AND_MATURITY",
             "UNDRAWN_CAPITAL_AND_MATURITY",
             "UNDRAWN_CAPITAL_AND_SKIMS",
+            "UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE",
+            "UNDRAWN_CAPITAL_AND_SKIMS_AND_CUSTOMIZABLE_AND_MATURITY",
             "UNDRAWN_CAPITAL_AND_SKIMS_AND_MATURITY"
           ]
         },
@@ -2111,22 +2207,6 @@
       },
       "title": "CashflowScheduleDto"
     },
-    "Company": {
-      "type": "object",
-      "properties": {
-        "companyId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "valuationDates": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ValuationDates"
-          }
-        }
-      },
-      "title": "Company"
-    },
     "CompanyDetailsDto": {
       "type": "object",
       "properties": {
@@ -2143,7 +2223,7 @@
       },
       "title": "CompanyDetailsDto"
     },
-    "CompanyResponse": {
+    "CompanyDto": {
       "type": "object",
       "properties": {
         "companyId": {
@@ -2153,11 +2233,27 @@
         "valuationDates": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ValuationResponse"
+            "$ref": "#/definitions/ValuationDatesDto"
           }
         }
       },
-      "title": "CompanyResponse"
+      "title": "CompanyDto"
+    },
+    "CompanyResponseDto": {
+      "type": "object",
+      "properties": {
+        "companyId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "valuationDates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValuationResponseDto"
+          }
+        }
+      },
+      "title": "CompanyResponseDto"
     },
     "CustomizableDto": {
       "type": "object",
@@ -2181,7 +2277,7 @@
       "properties": {
         "analysisDate": {
           "type": "string",
-          "example": "yyyy-MM-dd HH:mm:ss.SSS"
+          "format": "date-time"
         },
         "cashflow": {
           "$ref": "#/definitions/Cashflow"
@@ -2330,17 +2426,17 @@
           "type": "integer",
           "format": "int64"
         },
-        "medium": {
-          "type": "integer",
-          "format": "int32"
+        "median": {
+          "type": "number",
+          "format": "double"
         },
-        "quarter1": {
-          "type": "integer",
-          "format": "int32"
+        "quartile1": {
+          "type": "number",
+          "format": "double"
         },
-        "quarter3": {
-          "type": "integer",
-          "format": "int32"
+        "quartile3": {
+          "type": "number",
+          "format": "double"
         },
         "updatedAt": {
           "type": "string",
@@ -2355,15 +2451,15 @@
     "DiscountRateComputaion": {
       "type": "object",
       "properties": {
-        "concludedCreditSpreadMedium": {
+        "concludedCreditSpreadMedian": {
           "type": "number",
           "format": "double"
         },
-        "concludedCreditSpreadQuarter1": {
+        "concludedCreditSpreadQuartile1": {
           "type": "number",
           "format": "double"
         },
-        "concludedCreditSpreadQuarter3": {
+        "concludedCreditSpreadQuartile3": {
           "type": "number",
           "format": "double"
         },
@@ -2388,15 +2484,15 @@
           "type": "integer",
           "format": "int64"
         },
-        "riskFreeRateMedium": {
+        "riskFreeRateMedian": {
           "type": "number",
           "format": "double"
         },
-        "riskFreeRateQuarter1": {
+        "riskFreeRateQuartile1": {
           "type": "number",
           "format": "double"
         },
-        "riskFreeRateQuarter3": {
+        "riskFreeRateQuartile3": {
           "type": "number",
           "format": "double"
         },
@@ -2407,15 +2503,15 @@
         "updatedBy": {
           "type": "string"
         },
-        "ytmMedium": {
+        "ytmMedian": {
           "type": "number",
           "format": "double"
         },
-        "ytmQuarter1": {
+        "ytmQuartile1": {
           "type": "number",
           "format": "double"
         },
-        "ytmQuarter3": {
+        "ytmQuartile3": {
           "type": "number",
           "format": "double"
         }
@@ -2425,15 +2521,15 @@
     "DiscountRateComputationDto": {
       "type": "object",
       "properties": {
-        "concludedCreditSpreadMedium": {
+        "concludedCreditSpreadMedian": {
           "type": "number",
           "format": "double"
         },
-        "concludedCreditSpreadQuarter1": {
+        "concludedCreditSpreadQuartile1": {
           "type": "number",
           "format": "double"
         },
-        "concludedCreditSpreadQuarter3": {
+        "concludedCreditSpreadQuartile3": {
           "type": "number",
           "format": "double"
         },
@@ -2451,27 +2547,27 @@
           "type": "integer",
           "format": "int64"
         },
-        "riskFreeRateMedium": {
+        "riskFreeRateMedian": {
           "type": "number",
           "format": "double"
         },
-        "riskFreeRateQuarter1": {
+        "riskFreeRateQuartile1": {
           "type": "number",
           "format": "double"
         },
-        "riskFreeRateQuarter3": {
+        "riskFreeRateQuartile3": {
           "type": "number",
           "format": "double"
         },
-        "ytmMedium": {
+        "ytmMedian": {
           "type": "number",
           "format": "double"
         },
-        "ytmQuarter1": {
+        "ytmQuartile1": {
           "type": "number",
           "format": "double"
         },
-        "ytmQuarter3": {
+        "ytmQuartile3": {
           "type": "number",
           "format": "double"
         }
@@ -2484,7 +2580,7 @@
         "companies": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Company"
+            "$ref": "#/definitions/CompanyDto"
           }
         },
         "fundId": {
@@ -2500,7 +2596,7 @@
         "companies": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CompanyResponse"
+            "$ref": "#/definitions/CompanyResponseDto"
           }
         },
         "fundId": {
@@ -2555,7 +2651,7 @@
         },
         "exitDate": {
           "type": "string",
-          "example": "yyyy-MM-dd"
+          "format": "date"
         },
         "geography": {
           "type": "string",
@@ -2573,11 +2669,11 @@
         },
         "maturityDate": {
           "type": "string",
-          "example": "yyyy-MM-dd"
+          "format": "date"
         },
         "originationDate": {
           "type": "string",
-          "example": "yyyy-MM-dd"
+          "format": "date"
         },
         "percentageOfCalledDown": {
           "type": "number",
@@ -2615,7 +2711,7 @@
         },
         "valuationDate": {
           "type": "string",
-          "example": "yyyy-MM-dd"
+          "format": "date"
         },
         "versionId": {
           "type": "integer",
@@ -2761,7 +2857,7 @@
       },
       "title": "LookUpValuationDetailsDto"
     },
-    "PaginatedResponse«DebtModelDto»": {
+    "PaginatedResponseDto«DebtModelDto»": {
       "type": "object",
       "properties": {
         "items": {
@@ -2787,9 +2883,9 @@
           "format": "int32"
         }
       },
-      "title": "PaginatedResponse«DebtModelDto»"
+      "title": "PaginatedResponseDto«DebtModelDto»"
     },
-    "ValuationDates": {
+    "ValuationDatesDto": {
       "type": "object",
       "properties": {
         "valuationDateId": {
@@ -2797,16 +2893,16 @@
           "format": "uuid"
         }
       },
-      "title": "ValuationDates"
+      "title": "ValuationDatesDto"
     },
-    "ValuationResponse": {
+    "ValuationResponseDto": {
       "type": "object",
       "properties": {
         "valuationDates": {
           "type": "object"
         }
       },
-      "title": "ValuationResponse"
+      "title": "ValuationResponseDto"
     }
   }
 }
