@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -100,6 +101,16 @@ public class CashflowSchedule extends BaseEntity {
 
     @Column(name = "skims_outflow")
     private double skimsOutflow;
+
+    @Column(name = "custom_cashflow_name")
+    private String customCashflowName;
+
+    @Nullable
+    @Column(name = "custom_cashflow_percentage")
+    private Double customCashflowPercentage;
+
+    @Column(name = "custom_cashflow_amount")
+    private Double customCashflowAmount;
 
     @Column(name = "present_value")
     private double presentValue;

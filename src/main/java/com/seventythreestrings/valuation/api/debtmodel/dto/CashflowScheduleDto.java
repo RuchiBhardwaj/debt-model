@@ -63,6 +63,12 @@ public class CashflowScheduleDto {
 
     private double skimsOutflow;
 
+    private String customCashflowName;
+
+    private Double customCashflowPercentage;
+
+    private Double customCashflowAmount;
+
     private double presentValue;
 
     private DateType dateType;

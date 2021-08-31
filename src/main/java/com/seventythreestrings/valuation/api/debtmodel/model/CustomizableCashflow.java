@@ -1,9 +1,11 @@
 package com.seventythreestrings.valuation.api.debtmodel.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.seventythreestrings.valuation.api.common.converter.LocalDateAttributeConverter;
 import com.seventythreestrings.valuation.api.common.entity.BaseEntity;
 import com.seventythreestrings.valuation.api.debtmodel.enums.*;
+import com.seventythreestrings.valuation.api.debtmodel.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +15,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -22,6 +26,7 @@ import java.time.LocalDate;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "customizable_cashflow")
 public class CustomizableCashflow extends BaseEntity {
+    public static final int END_OF_MONTH = 0;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -93,4 +98,28 @@ public class CustomizableCashflow extends BaseEntity {
 
     @Column(name = "sort_order")
     private Integer sortOrder;
+
+    @JsonIgnore
+    public Set<LocalDate> getCouponDates() {
+        Set<LocalDate> couponDates = new HashSet<>();
+
+        if (this.getCashflowDates() == CashflowDates.SPECIFIC_DATES) {
+            LocalDate firstInterestPaymentDate = this.getFirstPaymentDate();
+            LocalDate regimeEndDate = this.getRegimeEndDate();
+
+            int dayOfPayment = this.getDayOfPayment();
+            int monthIncrement = DateUtil.getMonthIncrementForPaymentFrequency(this.getFrequency());
+
+            LocalDate nextCouponDate = firstInterestPaymentDate;
+            while (nextCouponDate.isBefore(regimeEndDate)) {
+                couponDates.add(nextCouponDate);
+                nextCouponDate = nextCouponDate.plusMonths(monthIncrement);
+                nextCouponDate = nextCouponDate.withDayOfMonth(dayOfPayment == END_OF_MONTH ? nextCouponDate.lengthOfMonth() : dayOfPayment);
+            }
+            // add last payment date
+            couponDates.add(regimeEndDate);
+        }
+
+        return couponDates;
+    }
 }
