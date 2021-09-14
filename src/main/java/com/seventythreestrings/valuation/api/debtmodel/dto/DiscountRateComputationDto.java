@@ -32,6 +32,8 @@ public class DiscountRateComputationDto {
 
     private double ytmQuartile3;
 
+    private int versionId;
+
     private Long debtModelId;
 
     private List<DiscountAdjustment> discountAdjustments;

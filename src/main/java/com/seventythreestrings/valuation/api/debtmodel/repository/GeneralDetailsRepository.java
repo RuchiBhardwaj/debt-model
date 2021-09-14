@@ -1,6 +1,7 @@
 package com.seventythreestrings.valuation.api.debtmodel.repository;
 
 import com.seventythreestrings.valuation.api.debtmodel.model.GeneralDetails;
+import com.seventythreestrings.valuation.api.debtmodel.model.IssuerFinancial;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +19,8 @@ public interface GeneralDetailsRepository extends JpaRepository<GeneralDetails, 
 
     @Query(value = "select gd.* from general_details gd where gd.debt_model_id=:debtModelId",nativeQuery = true)
     GeneralDetails findFirstByDebtModelIdCompanyDetails(Long debtModelId);
+
+    GeneralDetails findByDebtModelIdAndVersionId(Long debModelId, Integer version);
 
     @Query(value = "select gd.* from general_details gd where gd.debt_model_id=:debtModelId",nativeQuery = true)
 //    @Query(value = "select gd from GeneralDetails gd where gd.debtModelId=:debtModelId")

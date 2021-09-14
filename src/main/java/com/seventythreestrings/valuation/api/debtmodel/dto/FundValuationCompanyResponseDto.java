@@ -5,15 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ValuationResponseDto {
+public class FundValuationCompanyResponseDto {
 
-    public Object valuationDates;
+    private UUID fundId;
 
-    public double percentageOfPar;
-
-    public double grossIrr;
+    private List<CompanyValuationResponseDto> companies;
 }

@@ -51,6 +51,9 @@ public class DiscountRateComputaion extends BaseEntity {
     @Column(name = "ytm_quartile3")
     private double ytmQuartile3;
 
+    @Column(name = "version_id")
+    private int versionId;
+
     @OneToMany(mappedBy="discountRateComputation", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DiscountAdjustment> discountAdjustments = new HashSet<>();
 

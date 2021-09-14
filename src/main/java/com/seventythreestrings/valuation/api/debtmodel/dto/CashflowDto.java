@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Column;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -38,6 +39,8 @@ public class CashflowDto {
     private Double percentageParExit;
 
     private double internalRateOfReturn;
+
+    private int versionId;
 
     private List<CashflowScheduleDto> schedules;
 }

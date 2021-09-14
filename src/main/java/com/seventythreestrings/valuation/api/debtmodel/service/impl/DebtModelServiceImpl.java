@@ -2,14 +2,8 @@ package com.seventythreestrings.valuation.api.debtmodel.service.impl;
 
 import com.seventythreestrings.valuation.api.debtmodel.dto.*;
 import com.seventythreestrings.valuation.api.debtmodel.enums.SortOrder;
-import com.seventythreestrings.valuation.api.debtmodel.model.DebtModel;
-import com.seventythreestrings.valuation.api.debtmodel.model.GeneralDetails;
-import com.seventythreestrings.valuation.api.debtmodel.model.LookUpDebtDetails;
-import com.seventythreestrings.valuation.api.debtmodel.model.LookUpValuationDetails;
-import com.seventythreestrings.valuation.api.debtmodel.repository.DebtModelRepository;
-import com.seventythreestrings.valuation.api.debtmodel.repository.GeneralDetailsRepository;
-import com.seventythreestrings.valuation.api.debtmodel.repository.LookUpDebtDetailsRepository;
-import com.seventythreestrings.valuation.api.debtmodel.repository.LookUpValuationDetailsRepository;
+import com.seventythreestrings.valuation.api.debtmodel.model.*;
+import com.seventythreestrings.valuation.api.debtmodel.repository.*;
 import com.seventythreestrings.valuation.api.debtmodel.service.DebtModelService;
 import com.seventythreestrings.valuation.api.exception.AppException;
 import com.seventythreestrings.valuation.api.exception.ErrorCodesAndMessages;
@@ -34,6 +28,9 @@ public class DebtModelServiceImpl implements DebtModelService {
     private final LookUpDebtDetailsRepository lookUpDebtDetailsRepository;
     private final LookUpValuationDetailsRepository lookUpValuationDetailsRepository;
     private final GeneralDetailsRepository generalDetailsRepository;
+    private final CashflowRepository cashflowRepository;
+    private final IssuerFinancialRepository issuerFinancialRepository;
+    private final AnnualHistoricalFinancialRepository annualHistoricalFinancialRepository;
 
     @Override
     public List<DebtModel> getAll() {
@@ -124,25 +121,80 @@ public class DebtModelServiceImpl implements DebtModelService {
                 UUID valuationDateId = v.getValuationDateId();
                 Optional<LookUpValuationDetails> valuationDate = lookUpValuationDetailsRepository.findValuationDateByValuationDateId(valuationDateId);
                 LocalDate valDate = valuationDate.get().getValuationDate();
+                Integer version = valuationDate.get().getVersionId();
                 if(debtId !=null ){
                     CompanyResponseDto companyResponse1 = new CompanyResponseDto();
                     GeneralDetails generalDetails = generalDetailsRepository.findFirstByDebtModelIdAndValuationDate(debtId);
                     fundDetailsResponseDto.setFundId(fund);
                     ValuationResponseDto val = new ValuationResponseDto();
-                    val.setValuationDates(modelMapper.map(generalDetails,GeneralDetailsDto.class));
+                    if(generalDetails!=null) {
+                        val.setValuationDates(modelMapper.map(generalDetails, GeneralDetailsDto.class));
+                    }
                     valuationResponses.add(val);
                     companyResponse1.setCompanyId(companyId);
                     companyResponse1.setValuationDates(valuationResponses);
                     companyResponse.add(companyResponse1);
                 }
-
-
             }
             fundDetailsResponseDto.setCompanies(companyResponse);
         }
         return fundDetailsResponseDto;
 
     }
+
+
+
+    @SneakyThrows
+    @Override
+    public FundValuationCompanyResponseDto getValuationDetails(FundDetailsDto fundDetailsDto){
+        FundValuationCompanyResponseDto fundDetailsResponseDto = new FundValuationCompanyResponseDto();
+        UUID fund = fundDetailsDto.getFundId();
+        List<CompanyValuationResponseDto> companyResponse = new ArrayList<>();
+        for(CompanyDto f : fundDetailsDto.getCompanies()) {
+            UUID companyId = f.getCompanyId();
+            Optional<LookUpDebtDetails> lookUpDebtDetails = lookUpDebtDetailsRepository.findDebtIdByCompanyId(companyId);
+            Long debtId = lookUpDebtDetails.get().getDebtId();
+            List<ValuationDetailsDto> valuationResponses = new ArrayList<>();
+            for (ValuationDatesDto v : f.getValuationDates()) {
+                UUID valuationDateId = v.getValuationDateId();
+                Optional<LookUpValuationDetails> valuationDate = lookUpValuationDetailsRepository.findValuationDateByValuationDateId(valuationDateId);
+                String valDate = String.valueOf(valuationDate.get().getValuationDate());
+                Integer version = valuationDate.get().getVersionId();
+                if (debtId != null) {
+                    CompanyValuationResponseDto companyResponse1 = new CompanyValuationResponseDto();
+                    List<Cashflow> cashflow = cashflowRepository.findAllByDebtModelIdAndVersionId(debtId,version);
+                    fundDetailsResponseDto.setFundId(fund);
+                    ValuationDetailsDto val = new ValuationDetailsDto();
+                    if(cashflow != null && cashflow.size()>0){
+                        val.setValue(cashflow.get(0).getPresentValueSum());
+                        val.setYtm(cashflow.get(0).getInternalRateOfReturn());
+                    }
+                    val.setValuationDateID(v.getValuationDateId());
+                    IssuerFinancial issuerFinancial = issuerFinancialRepository.findByDebtModelIdAndVersionId(debtId, version);
+                    if(issuerFinancial!=null) {
+                        Long issuerId = issuerFinancial.getId();
+                        AnnualHistoricalFinancial annualHistoricalFinancial = annualHistoricalFinancialRepository.findByIssuerFinancialAndYear(issuerId, "LTM");
+                        if (annualHistoricalFinancial != null) {
+                            val.setCash(annualHistoricalFinancial.getCash());
+                            val.setEbitda(annualHistoricalFinancial.getEbitda());
+                            val.setRevenue(annualHistoricalFinancial.getTotalRevenue());
+                        }
+                    }
+                    val.setDate(valDate);
+                    valuationResponses.add(val);
+                    companyResponse1.setCompanyId(companyId);
+                    companyResponse1.setValuationDates(valuationResponses);
+                    companyResponse.add(companyResponse1);
+                }
+            }
+            fundDetailsResponseDto.setCompanies(companyResponse);
+        }
+        return fundDetailsResponseDto;
+    }
+
+
+
+
 
     @SneakyThrows
     @Override

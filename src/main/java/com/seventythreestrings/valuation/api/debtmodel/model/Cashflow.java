@@ -63,6 +63,9 @@ public class Cashflow extends BaseEntity {
     @Column(name = "day_count_convention")
     private DayCountConvention dayCountConvention;
 
+    @Column(name = "version_id")
+    private int versionId;
+
     @OneToMany(mappedBy = "cashflow", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("fromDate ASC")
     private Set<CashflowSchedule> schedules = new LinkedHashSet<>();

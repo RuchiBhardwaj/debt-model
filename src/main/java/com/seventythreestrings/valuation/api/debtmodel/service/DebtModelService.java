@@ -37,5 +37,7 @@ public interface DebtModelService{
 
 	FundDetailsResponseDto getFundDetails(FundDetailsDto fundDetailsDto);
 
+	FundValuationCompanyResponseDto getValuationDetails(FundDetailsDto fundDetailsDto);
+
 	public LookUpValuationDetails updateLookUpValuationDetails(LookUpValuationDetails lookUpValuationDetails);
 }
